@@ -1,0 +1,27 @@
+{
+  "name": "adafruit-io",
+  "version": "0.1.0",
+  "description": "Javascript client for io.adafruit.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adafruit/io-client-node"
+  },
+  "keywords": [
+    "adafruit",
+    "io"
+  ],
+  "author": "Todd Treece <todd@uniontownlabs.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adafruit/io-client-node/issues"
+  },
+  "homepage": "https://github.com/adafruit/io-client-node",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "restler": "^3.2.2"
+  }
+}
