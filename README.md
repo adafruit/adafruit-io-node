@@ -16,11 +16,12 @@ To include this module in your project, you must pass your [AIO Key][4] to the `
 
 var AIO = require('adafruit-io');
 
+// replace xxxxxxxxxxxx with your AIO Key
 aio = AIO('xxxxxxxxxxxx');
 
 ```
 
-### Usage Table of Contents
+## Table of Contents
 
 * [Feeds](#feeds)
   * [Create](#feed-creation)
