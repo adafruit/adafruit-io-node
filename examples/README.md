@@ -15,6 +15,7 @@ To set the `AIO_KEY` environment variable in **Windows based systems**, run this
 
 ```
 set AIO_KEY=xxxxxxxxxx
+```
 
 ## Running the examples
 
