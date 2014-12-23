@@ -5,7 +5,7 @@ aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
 
 // option 1:
 // only pass a name
-aio.create_feed('Test Feed', function(err, success) {
+aio.create_feed('Test', function(err, success) {
 
   if(err) {
     return console.error(err);
