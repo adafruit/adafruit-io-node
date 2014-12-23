@@ -16,9 +16,8 @@ aio.feeds(function(err, feeds) {
 
 });
 
-
-// get a specific feed
-aio.feeds('test-feed-two', function(err, feed) {
+// get a specific feed by Name
+aio.feeds('Test Feed Two', function(err, feed) {
 
   if(err) {
     return console.error(err);

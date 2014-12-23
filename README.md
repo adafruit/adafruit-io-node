@@ -26,7 +26,7 @@ Feeds are the core of the Adafruit IO system. The feed holds metadata about data
 have one feed for each type of data you send to the system. You can have separate feeds for each
 sensor in a project, or you can use one feed to contain JSON encoded data for all of your sensors.
 
-#### Feed Creation
+### Feed Creation
 
 You have two options here, you can create a feed by passing a feed name, or you can pass an object if you would
 like to define more properties.  If you would like to find information about what properties are available, please
@@ -61,6 +61,42 @@ aio.create_feed(feed_options, function(err, success) {
   }
 
   console.log(success ? 'created!' : 'creation failed :(');
+
+});
+```
+
+### Feed Retrieval
+
+You can get a list of your feeds by using the `aio.feeds(cb)` method.
+
+```js
+// create an instance
+aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
+
+// get a list of all feeds
+aio.feeds(function(err, feeds) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log feeds array
+  console.log(feeds);
+
+});
+```
+
+You can also get a specific feed by ID, key, or name.
+
+```js
+aio.feeds('Test Feed Two', function(err, feed) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log feed object
+  console.log(feed);
 
 });
 ```
