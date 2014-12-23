@@ -50,7 +50,7 @@ aio.create_feed('Test Feed', function(err, success) {
 // defining additional options
 
 var feed_options = {
-  name: 'Test Feed 2',
+  name: 'Test Feed Two',
   description: 'Testing adding a description'
 };
 

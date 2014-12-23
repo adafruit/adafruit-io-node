@@ -12,7 +12,7 @@ aio.create_feed('Test Feed', function(err, success) {
     return console.error(err);
   }
 
-  console.log(success ? 'created!' : 'creation failed :(');
+  console.log(success ? 'created feed 1!' : 'creation failed :(');
 
 });
 
@@ -30,6 +30,6 @@ aio.create_feed(feed_options, function(err, success) {
     return console.error(err);
   }
 
-  console.log(success ? 'created!' : 'creation failed :(');
+  console.log(success ? 'created feed 2!' : 'creation failed :(');
 
 });
