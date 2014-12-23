@@ -86,7 +86,7 @@ aio.feeds(function(err, feeds) {
 });
 ```
 
-You can also get a specific feed by ID, key, or name.
+You can also get a specific feed by ID, key, or name by using the `aio.feeds(id, cb)` method.
 
 ```js
 aio.feeds('Test Feed Two', function(err, feed) {
@@ -97,6 +97,28 @@ aio.feeds('Test Feed Two', function(err, feed) {
 
   // log feed object
   console.log(feed);
+
+});
+```
+## Feed Updating
+
+You can update [feed properties][3] using the `aio.feeds(id).update(data, cb)` method.
+
+```js
+// define the data to update
+var update_data = {
+  description: 'Testing updating a description'
+};
+
+// update the description of feed 'Test Feed Two'
+aio.feeds('Test Feed Two').update(update_data, function(err, updated) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log updated feed
+  console.log(updated);
 
 });
 ```
