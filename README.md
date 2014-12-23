@@ -122,6 +122,22 @@ aio.feeds('Test Feed Two').update(update_data, function(err, updated) {
 
 });
 ```
+## Feed Deletion
+
+You can delete a feed by ID, key, or name by using the `aio.feeds(id).delete(cb)` method.
+
+```js
+// delete 'Test Feed Two' by key
+aio.feeds('test-feed-two').delete(function(err, deleted) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  console.log(deleted ? 'Test Feed Two deleted!' : 'deletion failed :(');
+
+});
+```
 
 [1]: http://nodejs.com
 [2]: https://io.adafruit.com

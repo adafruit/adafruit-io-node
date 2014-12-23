@@ -4,8 +4,8 @@ var path = require('path'),
 // create an instance
 aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
 
-// delete 'Test Feed Two' by name
-aio.feeds('Test Feed Two').delete(function(err, deleted) {
+// delete 'Test Feed Two' by key
+aio.feeds('test-feed-two').delete(function(err, deleted) {
 
   if(err) {
     return console.error(err);
