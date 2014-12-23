@@ -1,5 +1,4 @@
-var path = require('path'),
-    AIO = require(path.resolve(__dirname, '..', '..', 'index.js'));
+var AIO = require('../../index');
 
 // create an instance
 aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
