@@ -4,8 +4,17 @@ A [node.js][1] client for use with [io.adafruit.com][2].
 
 ## Installation
 
+You should have the latest stable version of node.js installed to use this module.
+
 ```
-npm install adafruit-io
+$ node -v
+v0.10.35
+```
+
+After node.js is installed, you can install this package using [npm][5], which is bundled with node.js.
+
+```
+$ npm install adafruit-io
 ```
 
 ## Usage
@@ -152,7 +161,8 @@ aio.feeds('test-feed-two').delete(function(err, deleted) {
 ## License
 Copyright (c) 2014 Adafruit Industries. Licensed under the MIT license.
 
-[1]: http://nodejs.com
+[1]: http://nodejs.org
 [2]: https://io.adafruit.com
 [3]: https://learn.adafruit.com/adafruit-io/feeds
 [4]: https://learn.adafruit.com/adafruit-io/api-key
+[5]: https://npmjs.com
