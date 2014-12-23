@@ -149,6 +149,9 @@ aio.feeds('test-feed-two').delete(function(err, deleted) {
 });
 ```
 
+## License
+Copyright (c) 2014 Adafruit Industries. Licensed under the MIT license.
+
 [1]: http://nodejs.com
 [2]: https://io.adafruit.com
 [3]: https://learn.adafruit.com/adafruit-io/feeds
