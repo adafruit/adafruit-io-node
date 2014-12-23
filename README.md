@@ -20,13 +20,22 @@ aio = AIO('xxxxxxxxxxxx');
 
 ```
 
-## Feeds
+### Usage Table of Contents
+
+* [Feeds](#feeds)
+  * [Create](#feed-creation)
+  * [Read](#feed-retrieval)
+  * [Update](#feed-updating)
+  * [Delete](#feed-deletion)
+
+
+### Feeds
 
 Feeds are the core of the Adafruit IO system. The feed holds metadata about data that gets pushed, and you will
 have one feed for each type of data you send to the system. You can have separate feeds for each
 sensor in a project, or you can use one feed to contain JSON encoded data for all of your sensors.
 
-### Feed Creation
+#### Feed Creation
 
 You have two options here, you can create a feed by passing a feed name, or you can pass an object if you would
 like to define more properties.  If you would like to find information about what properties are available, please
@@ -65,7 +74,7 @@ aio.create_feed(feed_options, function(err, success) {
 });
 ```
 
-### Feed Retrieval
+#### Feed Retrieval
 
 You can get a list of your feeds by using the `aio.feeds(cb)` method.
 
@@ -100,7 +109,7 @@ aio.feeds('Test Feed Two', function(err, feed) {
 
 });
 ```
-## Feed Updating
+#### Feed Updating
 
 You can update [feed properties][3] using the `aio.feeds(id).update(data, cb)` method.
 
@@ -122,7 +131,7 @@ aio.feeds('Test Feed Two').update(update_data, function(err, updated) {
 
 });
 ```
-## Feed Deletion
+#### Feed Deletion
 
 You can delete a feed by ID, key, or name by using the `aio.feeds(id).delete(cb)` method.
 
