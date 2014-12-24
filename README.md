@@ -334,7 +334,7 @@ aio.feeds('Test').previous(function(err, data) {
   console.log(data);
 
 });
-
+```
 
 ## License
 Copyright (c) 2014 Adafruit Industries. Licensed under the MIT license.
