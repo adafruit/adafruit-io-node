@@ -3,7 +3,7 @@ var AIO = require('../../index');
 // create an instance
 aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
 
-aio.feeds('Test').streams().next(function(err, data) {
+aio.feeds('Test').next(function(err, data) {
 
   if(err) {
     return console.error(err);
