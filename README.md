@@ -218,7 +218,7 @@ aio.feeds('Test').streams(1, function(err, data) {
 });
 ```
 
-#### Stream Update
+#### Stream Updating
 
 Stream values can be updated by using the `aio.feeds(id).streams(id).update(value, cb);` method.
 
@@ -235,6 +235,23 @@ aio.feeds('Test')streams(1).update(5, function(err, updated) {
 
 });
 
+```
+
+#### Stream Deletion
+
+Stream values can be deleted by using the `aio.feeds(id).streams(id).delete(cb);` method.
+
+```js
+// delete stream ID 1 in `Test' feed
+aio.feeds('Test').streams(1).delete(function(err, deleted) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  console.log(deleted ? 'data deleted!' : 'deletion failed :(');
+
+});
 ```
 
 ## License
