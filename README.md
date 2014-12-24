@@ -37,6 +37,7 @@ aio = AIO('xxxxxxxxxxxx');
   * [Read](#feed-retrieval)
   * [Update](#feed-updating)
   * [Delete](#feed-deletion)
+* [Streams](#streams)
 
 
 ### Feeds
@@ -156,6 +157,48 @@ aio.feeds('test-feed-two').delete(function(err, deleted) {
   console.log(deleted ? 'Test Feed Two deleted!' : 'deletion failed :(');
 
 });
+```
+
+### Streams
+
+Streams represent the data contained in feeds. You can read, add, modify, and delete streams. There are also
+a few convienient methods for sending data to streams and selecting certain pieces of data.
+
+#### Stream Creation
+
+Streams can be created [after you create a feed](#stream-creation), by using the
+`aio.feeds(id).create_stream(value, cb);` method.
+
+```js
+// assumes you have already created 'Test'
+aio.feeds('Test').create_stream(10, function(err, success) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  console.log(success ? 'created stream!' : 'creation failed :(');
+
+});
+```
+
+#### Stream Update
+
+Stream values can be updated by using the `aio.feeds(id).streams(id).update(value, cb);` method.
+
+```js
+// update the value of stream 1
+aio.feeds('Test')streams(1).update(5, function(err, updated) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log updated feed
+  console.log(updated);
+
+});
+
 ```
 
 ## License
