@@ -182,6 +182,42 @@ aio.feeds('Test').create_stream(10, function(err, success) {
 });
 ```
 
+#### Stream Retrieval
+
+You can get all of the stream data by using the `aio.feeds(id).streams(cb);` method. The
+callback will be called with errors and the data array as arguments.
+
+```js
+// get an array of all data from feed 'Test'
+aio.feeds('Test').streams(function(err, data) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log data array
+  console.log(data);
+
+});
+```
+
+You can also get a specific stream value by ID by using the `aio.feeds(id).streams(id, cb);` method.
+
+```js
+// get a specific stream value by id.
+// this example assumes 1 is a valid stream ID in the 'Test' feed
+aio.feeds('Test').streams(1, function(err, data) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log data object
+  console.log(data);
+
+});
+```
+
 #### Stream Update
 
 Stream values can be updated by using the `aio.feeds(id).streams(id).update(value, cb);` method.
