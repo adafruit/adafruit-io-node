@@ -38,7 +38,15 @@ aio = AIO('xxxxxxxxxxxx');
   * [Update](#feed-updating)
   * [Delete](#feed-deletion)
 * [Streams](#streams)
-
+  * [Create](#stream-creation)
+  * [Read](#stream-retrieval)
+  * [Update](#stream-updating)
+  * [Delete](#stream-deletion)
+  * [Helper Methods](#helper-methods)
+    * [Send](#send)
+    * [Next](#next)
+    * [Last](#last)
+    * [Previous](#previous)
 
 ### Feeds
 
@@ -253,6 +261,80 @@ aio.feeds('Test').streams(1).delete(function(err, deleted) {
 
 });
 ```
+
+#### Helper Methods
+
+There are a few helper methods that can make interacting with streams a bit easier.
+
+##### Send
+
+You can use the `aio.send(name, value, cb);` method to find or create the feed based on the name passed,
+and also create a stream based on the value passed.
+
+```js
+aio.('Test Send Stream', 98.6, function(err, data) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  console.log(data);
+
+});
+
+```
+
+##### Last
+
+You can get the last inserted value of the stream by using the `aio.feeds(id).last(cb);` method.
+
+```js
+aio.feeds('Test').last(function(err, data) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log data object
+  console.log(data);
+
+});
+
+```
+
+##### Next
+
+You can get the first inserted stream that has not been processed by using the `aio.feeds(id).next(cb);` method.
+
+```js
+aio.feeds('Test').next(function(err, data) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log data object
+  console.log(data);
+
+});
+```
+
+##### Previous
+
+You can get the the last record that has been processed by using the `aio.feeds(id).previous(cb);` method.
+
+```js
+aio.feeds('Test').previous(function(err, data) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log data object
+  console.log(data);
+
+});
+
 
 ## License
 Copyright (c) 2014 Adafruit Industries. Licensed under the MIT license.
