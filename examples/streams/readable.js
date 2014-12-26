@@ -1,0 +1,6 @@
+var AIO = require('../../index');
+
+// create an instance
+aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
+
+aio.feeds('Test').readable.pipe(process.stdout);
