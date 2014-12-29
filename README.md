@@ -47,6 +47,8 @@ aio = AIO('xxxxxxxxxxxx');
     * [Next](#next)
     * [Last](#last)
     * [Previous](#previous)
+  * [Readable](#readable-stream)
+  * [Writable](#writable-stream)
 
 ### Feeds
 
@@ -334,6 +336,36 @@ aio.feeds('Test').previous(function(err, data) {
   console.log(data);
 
 });
+```
+
+#### Readable Stream
+
+You can get a readable stream of live data from your feed by listening to the data event.
+
+```js
+aio.feeds('Test').on('data', function(data) {
+  console.log(data.toString());
+});
+```
+
+You can also pipe the live data, just like any node.js readable stream.
+
+```js
+aio.feeds('Test').pipe(process.stdout);
+```
+
+#### Writable Stream
+
+You can use node's writable stream interface with any feed.
+
+```js
+aio.feeds('Test').write(100);
+```
+
+You can also pipe data to the stream, just like any node.js writable stream.
+
+```js
+process.stdin.pipe(aio.feeds('Test'));
 ```
 
 ## License
