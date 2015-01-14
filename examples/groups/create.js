@@ -3,7 +3,7 @@ var AIO = require('../../index');
 // create an instance
 aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
 
-aio.create_group({name: 'ToddTest'}, function(err, success) {
+aio.create_group({name: 'Test'}, function(err, success) {
 
   if(err) {
     return console.error(err);

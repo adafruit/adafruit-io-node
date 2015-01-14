@@ -11,6 +11,6 @@ aio.groups('Test').update({name: 'TestTwo'}, function(err, updated) {
   }
 
   // log updated group
-  console.log(updated);
+  console.log(updated ? updated : 'update failed');
 
 });
