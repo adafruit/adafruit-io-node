@@ -49,6 +49,11 @@ aio = AIO('xxxxxxxxxxxx');
     * [Previous](#previous)
   * [Readable](#readable-data)
   * [Writable](#writable-data)
+* [Groups](#groups)
+  * [Create](#group-creation)
+  * [Read](#group-retrieval)
+  * [Update](#group-updating)
+  * [Delete](#group-deletion)
 
 ### Feeds
 
@@ -368,6 +373,96 @@ You can also pipe data to the stream, just like any node.js writable data.
 process.stdin.pipe(aio.feeds('Test'));
 ```
 
+### Groups
+
+Groups allow you to update and retrieve multiple feeds with one request. You can add feeds
+to multiple groups.
+
+#### Group Creation
+
+You can create a group by passing an object of group properties.  If you would like to find
+information about what properties are available, please visit the [Adafruit IO group API docs][6].
+
+```js
+aio.create_group({name: 'Test'}, function(err, success) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  console.log(success ? 'created group!' : 'creation failed :(');
+
+});
+```
+
+#### Group Retrieval
+
+You can get a list of your groups by using the `aio.groups(cb)` method.
+
+```js
+// get a list of all groups
+aio.groups(function(err, data) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log data array
+  console.log(data);
+
+});
+```
+
+You can also get a specific group by ID, key, or name by using the `aio.groups(id, cb)` method.
+
+```js
+// get a specific group by name
+aio.groups('Test', function(err, data) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log data object
+  console.log(data);
+
+});
+```
+#### Group Updating
+
+You can update [group properties][6] using the `aio.groups(id).update(data, cb)` method.
+
+```js
+// update the name of group 'Test'
+aio.groups('Test').update({name: 'TestTwo'}, function(err, updated) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  // log updated group
+  console.log(updated ? updated : 'update failed');
+
+});
+```
+
+#### Group Deletion
+
+You can delete a group by ID, key, or name by using the `aio.group(id).delete(cb)` method.
+
+```js
+// delete group 'Test'
+aio.groups('Test').delete(function(err, deleted) {
+
+  if(err) {
+    return console.error(err);
+  }
+
+  console.log(deleted ? 'group deleted!' : 'deletion failed :(');
+
+});
+```
+
 ## License
 Copyright (c) 2014 Adafruit Industries. Licensed under the MIT license.
 
@@ -376,3 +471,4 @@ Copyright (c) 2014 Adafruit Industries. Licensed under the MIT license.
 [3]: https://learn.adafruit.com/adafruit-io/feeds
 [4]: https://learn.adafruit.com/adafruit-io/api-key
 [5]: https://npmjs.com
+[6]: https://learn.adafruit.com/adafruit-io/groups
