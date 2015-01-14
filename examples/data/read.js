@@ -4,7 +4,7 @@ var AIO = require('../../index');
 aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
 
 // get a list of all data from 'Test'
-aio.feeds('Test').streams(function(err, data) {
+aio.feeds('Test').data(function(err, data) {
 
   if(err) {
     return console.error(err);
@@ -15,8 +15,8 @@ aio.feeds('Test').streams(function(err, data) {
 
 });
 
-// get a specific stream by id (assumes 1 is a valid stream id in this feed)
-aio.feeds('Test').streams(1, function(err, data) {
+// get a specific value by id (assumes 1 is a valid data id in this feed)
+aio.feeds('Test').data(1, function(err, data) {
 
   if(err) {
     return console.error(err);
