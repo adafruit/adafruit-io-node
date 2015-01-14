@@ -37,18 +37,18 @@ aio = AIO('xxxxxxxxxxxx');
   * [Read](#feed-retrieval)
   * [Update](#feed-updating)
   * [Delete](#feed-deletion)
-* [Streams](#streams)
-  * [Create](#stream-creation)
-  * [Read](#stream-retrieval)
-  * [Update](#stream-updating)
-  * [Delete](#stream-deletion)
+* [Data](#data)
+  * [Create](#data-creation)
+  * [Read](#data-retrieval)
+  * [Update](#data-updating)
+  * [Delete](#data-deletion)
   * [Helper Methods](#helper-methods)
     * [Send](#send)
     * [Next](#next)
     * [Last](#last)
     * [Previous](#previous)
-  * [Readable](#readable-stream)
-  * [Writable](#writable-stream)
+  * [Readable](#readable-data)
+  * [Writable](#writable-data)
 
 ### Feeds
 
@@ -169,37 +169,37 @@ aio.feeds('test-feed-two').delete(function(err, deleted) {
 });
 ```
 
-### Streams
+### Data
 
-Streams represent the data contained in feeds. You can read, add, modify, and delete streams. There are also
-a few convienient methods for sending data to streams and selecting certain pieces of data.
+Data represents the data contained in feeds. You can read, add, modify, and delete data. There are also
+a few convienient methods for sending data to feeds and selecting certain pieces of data.
 
-#### Stream Creation
+#### Data Creation
 
-Streams can be created [after you create a feed](#stream-creation), by using the
-`aio.feeds(id).create_stream(value, cb);` method.
+Data can be created [after you create a feed](#data-creation), by using the
+`aio.feeds(id).create_data(value, cb);` method.
 
 ```js
 // assumes you have already created 'Test'
-aio.feeds('Test').create_stream(10, function(err, success) {
+aio.feeds('Test').create_data(10, function(err, success) {
 
   if(err) {
     return console.error(err);
   }
 
-  console.log(success ? 'created stream!' : 'creation failed :(');
+  console.log(success ? 'created data!' : 'creation failed :(');
 
 });
 ```
 
-#### Stream Retrieval
+#### Data Retrieval
 
-You can get all of the stream data by using the `aio.feeds(id).streams(cb);` method. The
+You can get all of the data data by using the `aio.feeds(id).data(cb);` method. The
 callback will be called with errors and the data array as arguments.
 
 ```js
 // get an array of all data from feed 'Test'
-aio.feeds('Test').streams(function(err, data) {
+aio.feeds('Test').data(function(err, data) {
 
   if(err) {
     return console.error(err);
@@ -211,12 +211,12 @@ aio.feeds('Test').streams(function(err, data) {
 });
 ```
 
-You can also get a specific stream value by ID by using the `aio.feeds(id).streams(id, cb);` method.
+You can also get a specific value by ID by using the `aio.feeds(id).data(id, cb);` method.
 
 ```js
-// get a specific stream value by id.
-// this example assumes 1 is a valid stream ID in the 'Test' feed
-aio.feeds('Test').streams(1, function(err, data) {
+// get a specific value by id.
+// this example assumes 1 is a valid data ID in the 'Test' feed
+aio.feeds('Test').data(1, function(err, data) {
 
   if(err) {
     return console.error(err);
@@ -228,32 +228,32 @@ aio.feeds('Test').streams(1, function(err, data) {
 });
 ```
 
-#### Stream Updating
+#### Data Updating
 
-Stream values can be updated by using the `aio.feeds(id).streams(id).update(value, cb);` method.
+Values can be updated by using the `aio.feeds(id).data(id).update(value, cb);` method.
 
 ```js
-// update the value of stream 1
-aio.feeds('Test')streams(1).update(5, function(err, updated) {
+// update the value of ID 1
+aio.feeds('Test')data(1).update(5, function(err, updated) {
 
   if(err) {
     return console.error(err);
   }
 
-  // log updated feed
+  // log updated value
   console.log(updated);
 
 });
 
 ```
 
-#### Stream Deletion
+#### Data Deletion
 
-Stream values can be deleted by using the `aio.feeds(id).streams(id).delete(cb);` method.
+Values can be deleted by using the `aio.feeds(id).data(id).delete(cb);` method.
 
 ```js
-// delete stream ID 1 in `Test' feed
-aio.feeds('Test').streams(1).delete(function(err, deleted) {
+// delete data ID 1 in `Test' feed
+aio.feeds('Test').data(1).delete(function(err, deleted) {
 
   if(err) {
     return console.error(err);
@@ -266,15 +266,15 @@ aio.feeds('Test').streams(1).delete(function(err, deleted) {
 
 #### Helper Methods
 
-There are a few helper methods that can make interacting with streams a bit easier.
+There are a few helper methods that can make interacting with data a bit easier.
 
 ##### Send
 
 You can use the `aio.send(name, value, cb);` method to find or create the feed based on the name passed,
-and also create a stream based on the value passed.
+and also save the value passed.
 
 ```js
-aio.('Test Send Stream', 98.6, function(err, data) {
+aio.('Test Send Data', 98.6, function(err, data) {
 
   if(err) {
     return console.error(err);
@@ -288,7 +288,7 @@ aio.('Test Send Stream', 98.6, function(err, data) {
 
 ##### Last
 
-You can get the last inserted value of the stream by using the `aio.feeds(id).last(cb);` method.
+You can get the last inserted value by using the `aio.feeds(id).last(cb);` method.
 
 ```js
 aio.feeds('Test').last(function(err, data) {
@@ -306,7 +306,7 @@ aio.feeds('Test').last(function(err, data) {
 
 ##### Next
 
-You can get the first inserted stream that has not been processed by using the `aio.feeds(id).next(cb);` method.
+You can get the first inserted value that has not been processed by using the `aio.feeds(id).next(cb);` method.
 
 ```js
 aio.feeds('Test').next(function(err, data) {
@@ -348,7 +348,7 @@ aio.feeds('Test').on('data', function(data) {
 });
 ```
 
-You can also pipe the live data, just like any node.js readable stream.
+You can also pipe the live data, just like any node.js readable data.
 
 ```js
 aio.feeds('Test').pipe(process.stdout);
@@ -362,7 +362,7 @@ You can use node's writable stream interface with any feed.
 aio.feeds('Test').write(100);
 ```
 
-You can also pipe data to the stream, just like any node.js writable stream.
+You can also pipe data to the stream, just like any node.js writable data.
 
 ```js
 process.stdin.pipe(aio.feeds('Test'));
