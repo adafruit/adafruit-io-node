@@ -279,7 +279,7 @@ You can use the `aio.send(name, value, cb);` method to find or create the feed b
 and also save the value passed.
 
 ```js
-aio.('Test Send Data', 98.6, function(err, data) {
+aio.send('Test Send Data', 98.6, function(err, data) {
 
   if(err) {
     return console.error(err);
