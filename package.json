@@ -1,6 +1,6 @@
 {
   "name": "adafruit-io",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Javascript client for io.adafruit.com",
   "main": "index.js",
   "scripts": {
