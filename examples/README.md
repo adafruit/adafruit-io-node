@@ -1,17 +1,25 @@
 # adafruit-io examples
 
-To run these examples, you must make your [AIO Key][1] available to the scripts. In these examples, replace
+To run these examples, you must make your [AIO Key][1] and username available to the scripts. In these examples, replace
 `xxxxxxxxxx` with your AIO Key.
 
-## Setting the AIO_KEY environment variable
+## Setting the AIO environment variables
 
-To set the `AIO_KEY` environment variable in **Unix based systems**, run this from a shell:
+To set the `AIO_USERNAME` and `AIO_KEY` environment variables on **Unix based systems**, run these from a shell:
+
+```
+export AIO_USERNAME=yourusername
+```
 
 ```
 export AIO_KEY=xxxxxxxxxx
 ```
 
-To set the `AIO_KEY` environment variable in **Windows based systems**, run this from a command prompt:
+To set the `AIO_USERNAME` and `AIO_KEY` environment variables on **Windows based systems**, run these from a command prompt:
+
+```
+set AIO_USERNAME=yourusername
+```
 
 ```
 set AIO_KEY=xxxxxxxxxx

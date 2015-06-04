@@ -1,7 +1,10 @@
 var AIO = require('../../index');
 
 // create an instance
-aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
+aio = AIO(
+  process.env.AIO_USERNAME || 'username',
+  process.env.AIO_KEY || 'xxxxxxxxxxxx'
+);
 
 // get a list of all data from 'Test'
 aio.feeds('Test').data(function(err, data) {

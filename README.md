@@ -26,7 +26,7 @@ To include this module in your project, you must pass your [AIO Key][4] to the `
 var AIO = require('adafruit-io');
 
 // replace xxxxxxxxxxxx with your AIO Key
-aio = AIO('xxxxxxxxxxxx');
+aio = AIO('your_username', 'xxxxxxxxxxxx');
 
 ```
 
@@ -106,7 +106,7 @@ You can get a list of your feeds by using the `aio.feeds(cb)` method.
 
 ```js
 // create an instance
-aio = AIO(process.env.AIO_KEY || 'xxxxxxxxxxxx');
+aio = AIO('your_username', 'xxxxxxxxxxxx');
 
 // get a list of all feeds
 aio.feeds(function(err, feeds) {
