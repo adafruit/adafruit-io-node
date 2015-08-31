@@ -1,0 +1,155 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Adafruit IO",
+        "description": "The Internet of Things for Everyone",
+        "version": "1.0.0"
+    },
+    "host": "io.adafruit.com",
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "basePath": "/api",
+    "produces": [
+        "application/json",
+        "application/xml",
+        "text/csv"
+    ],
+    "paths": {
+        "/feeds": {
+            "get": {
+                "summary": "Feeds",
+                "description": "The Feeds endpoint returns information about the user's feeds.\nThe response includes the latest value of each feed, and other\nmetadata about each feed.\n",
+                "parameters": [
+                    {
+                        "name": "group_id",
+                        "in": "query",
+                        "description": "If the group_id is present, then this is a nested resource looking for the feeds in a group.",
+                        "required": false,
+                        "type": "number",
+                        "format": "double"
+                    }
+                ],
+                "tags": [
+                    "Feeds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of feeds",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Feed"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HeaderKey": []
+                    },
+                    {
+                        "QueryKey": []
+                    }
+                ]
+            }
+        },
+        "/feeds/{id}": {
+            "get": {
+                "description": "Returns feed based on ID",
+                "summary": "Get feed by ID, Feed key, or Feed Name",
+                "operationId": "getFeedById",
+                "tags": [
+                    "Feeds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "feed response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Feed"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "error payload",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID, key, or name of feed to use",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "security": [
+                    {
+                        "HeaderKey": []
+                    },
+                    {
+                        "QueryKey": []
+                    }
+                ]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "HeaderKey": {
+            "description": "The AIO Key is used to restrict or grant access to your data. The key is unique, and you can generate a key per feed, and control it in many different ways. The easiest process is to just use your automatically generated master key. You can access this key right from the right-hand side of your dashboard or from an individual feed page.",
+            "type": "apiKey",
+            "in": "header",
+            "name": "X-AIO-Key"
+        },
+        "QueryKey": {
+            "description": "The AIO Key is used to restrict or grant access to your data. The key is unique, and you can generate a key per feed, and control it in many different ways. The easiest process is to just use your automatically generated master key. You can access this key right from the right-hand side of your dashboard or from an individual feed page.",
+            "type": "apiKey",
+            "in": "query",
+            "name": "X-AIO-Key"
+        }
+    },
+    "definitions": {
+        "Feed": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of product."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Display name of feed."
+                }
+            }
+        },
+        "Error": {
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "fields": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
