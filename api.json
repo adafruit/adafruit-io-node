@@ -20,7 +20,7 @@
         "/feeds": {
             "get": {
                 "summary": "Feeds",
-                "description": "The Feeds endpoint returns information about the user's feeds.\nThe response includes the latest value of each feed, and other\nmetadata about each feed.\n",
+                "description": "The Feeds endpoint returns information about the user's feeds. The response includes the latest value of each feed, and other metadata about each feed.",
                 "parameters": [
                     {
                         "name": "group_id",
@@ -71,11 +71,89 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "feed response",
+                        "description": "Feed response",
+                        "schema": {
+                            "type": "Feed",
+                            "items": {
+                                "$ref": "#/definitions/Feed"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "error payload",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID, key, or name of feed to use",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "security": [
+                    {
+                        "HeaderKey": []
+                    },
+                    {
+                        "QueryKey": []
+                    }
+                ]
+            }
+        },
+        "/groups": {
+            "get": {
+                "summary": "All groups for current user",
+                "description": "The Groups endpoint returns information about the user's groups.\nThe response includes the latest value of each feed in the group, and other\nmetadata about the group.\n",
+                "tags": [
+                    "Groups"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of groups",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/Feed"
+                                "$ref": "#/definitions/Group"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HeaderKey": []
+                    },
+                    {
+                        "QueryKey": []
+                    }
+                ]
+            }
+        },
+        "/groups/{id}": {
+            "get": {
+                "description": "Returns group based on ID",
+                "summary": "Get group by ID, key, or Name",
+                "operationId": "getGroupById",
+                "tags": [
+                    "Groups"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Group response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Group"
                             }
                         }
                     },
@@ -121,11 +199,27 @@
         }
     },
     "definitions": {
+        "Group": {
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Unique numeric identifier for group."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of group."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Display name of feed."
+                }
+            }
+        },
         "Feed": {
             "properties": {
                 "id": {
                     "type": "string",
-                    "description": "Unique identifier representing a specific product for a given latitude & longitude. For example, uberX in San Francisco will have a different product_id than uberX in Los Angeles."
+                    "description": "Unique numeric identifier for feed."
                 },
                 "description": {
                     "type": "string",
