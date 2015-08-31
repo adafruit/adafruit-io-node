@@ -139,14 +139,7 @@
         },
         "Error": {
             "properties": {
-                "code": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "fields": {
+                "error": {
                     "type": "string"
                 }
             }
