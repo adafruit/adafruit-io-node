@@ -73,7 +73,7 @@
                     "200": {
                         "description": "Feed response",
                         "schema": {
-                            "type": "Feed",
+                            "type": "object",
                             "items": {
                                 "$ref": "#/definitions/Feed"
                             }
@@ -151,7 +151,7 @@
                     "200": {
                         "description": "Group response",
                         "schema": {
-                            "type": "array",
+                            "type": "object",
                             "items": {
                                 "$ref": "#/definitions/Group"
                             }
