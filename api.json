@@ -16,10 +16,18 @@
         "application/xml",
         "text/csv"
     ],
+    "security": [
+        {
+            "HeaderKey": []
+        },
+        {
+            "QueryKey": []
+        }
+    ],
     "paths": {
         "/feeds": {
             "get": {
-                "summary": "Feeds",
+                "summary": "All feeds for current user",
                 "description": "The Feeds endpoint returns information about the user's feeds. The response includes the latest value of each feed, and other metadata about each feed.",
                 "parameters": [
                     {
@@ -27,8 +35,7 @@
                         "in": "query",
                         "description": "If the group_id is present, then this is a nested resource looking for the feeds in a group.",
                         "required": false,
-                        "type": "number",
-                        "format": "double"
+                        "type": "number"
                     }
                 ],
                 "tags": [
@@ -50,15 +57,7 @@
                             "$ref": "#/definitions/Error"
                         }
                     }
-                },
-                "security": [
-                    {
-                        "HeaderKey": []
-                    },
-                    {
-                        "QueryKey": []
-                    }
-                ]
+                }
             }
         },
         "/feeds/{id}": {
@@ -93,14 +92,6 @@
                         "description": "ID, key, or name of feed to use",
                         "required": true,
                         "type": "string"
-                    }
-                ],
-                "security": [
-                    {
-                        "HeaderKey": []
-                    },
-                    {
-                        "QueryKey": []
                     }
                 ]
             }
@@ -172,14 +163,6 @@
                         "required": true,
                         "type": "string"
                     }
-                ],
-                "security": [
-                    {
-                        "HeaderKey": []
-                    },
-                    {
-                        "QueryKey": []
-                    }
                 ]
             }
         }
@@ -202,32 +185,123 @@
         "Group": {
             "properties": {
                 "id": {
-                    "type": "string",
-                    "description": "Unique numeric identifier for group."
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of group."
+                    "type": "number"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "Display name of feed."
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "properties": {
+                    "type": "string"
+                },
+                "source_keys": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "feeds": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Feed"
+                    }
                 }
             }
         },
         "Feed": {
             "properties": {
                 "id": {
-                    "type": "string",
-                    "description": "Unique numeric identifier for feed."
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description of product."
+                    "type": "number"
                 },
                 "name": {
-                    "type": "string",
-                    "description": "Display name of feed."
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "unit_type": {
+                    "type": "string"
+                },
+                "unit_symbol": {
+                    "type": "string"
+                },
+                "last_value": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "visibility": {
+                    "type": "string"
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "license": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "Data": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "value": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "string"
+                },
+                "feed_id": {
+                    "type": "number"
+                },
+                "group_id": {
+                    "type": "number"
+                },
+                "expiration": {
+                    "type": "string"
+                },
+                "lat": {
+                    "type": "number"
+                },
+                "lon": {
+                    "type": "number"
+                },
+                "ele": {
+                    "type": "number"
+                },
+                "completed_at": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "created_epoch": {
+                    "type": "number"
                 }
             }
         },
