@@ -58,6 +58,44 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "summary": "Create a new Feed",
+                "description": "",
+                "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "feed",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Feed"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Feeds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New feed",
+                        "schema": {
+                            "type": "object",
+                            "items": {
+                                "$ref": "#/definitions/Feed"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
             }
         },
         "/feeds/{id}": {
@@ -295,9 +333,13 @@
             }
         },
         "Feed": {
+            "required": [
+                "name"
+            ],
             "properties": {
                 "id": {
-                    "type": "number"
+                    "type": "number",
+                    "readOnly": true
                 },
                 "name": {
                     "type": "string"
@@ -315,13 +357,19 @@
                     "type": "string"
                 },
                 "last_value": {
-                    "type": "string"
+                    "type": "string",
+                    "readOnly": true
                 },
                 "status": {
-                    "type": "string"
+                    "type": "string",
+                    "readOnly": true
                 },
                 "visibility": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "public",
+                        "private"
+                    ]
                 },
                 "enabled": {
                     "type": "boolean"
@@ -330,13 +378,16 @@
                     "type": "string"
                 },
                 "group_id": {
-                    "type": "number"
+                    "type": "number",
+                    "readOnly": true
                 },
                 "created_at": {
-                    "type": "string"
+                    "type": "string",
+                    "readOnly": true
                 },
                 "updated_at": {
-                    "type": "string"
+                    "type": "string",
+                    "readOnly": true
                 }
             }
         },
