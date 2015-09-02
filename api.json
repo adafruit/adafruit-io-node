@@ -75,11 +75,7 @@
                             "required": [
                                 "name"
                             ],
-                            "example": {
-                                "name": "testing",
-                                "visibility": "private"
-                            },
-                            "$ref": "#/definitions/Feed"
+                            "$ref": "#/definitions/NewFeed"
                         }
                     }
                 ],
@@ -164,11 +160,7 @@
                             "required": [
                                 "name"
                             ],
-                            "example": {
-                                "name": "testing_put",
-                                "visibility": "private"
-                            },
-                            "$ref": "#/definitions/Feed"
+                            "$ref": "#/definitions/NewFeed"
                         }
                     }
                 ],
@@ -217,7 +209,7 @@
                             "example": {
                                 "visibility": "public"
                             },
-                            "$ref": "#/definitions/Feed"
+                            "$ref": "#/definitions/NewFeed"
                         }
                     }
                 ],
@@ -472,12 +464,8 @@
                 }
             }
         },
-        "Feed": {
+        "NewFeed": {
             "properties": {
-                "id": {
-                    "type": "number",
-                    "readOnly": true
-                },
                 "name": {
                     "type": "string"
                 },
@@ -493,14 +481,6 @@
                 "unit_symbol": {
                     "type": "string"
                 },
-                "last_value": {
-                    "type": "string",
-                    "readOnly": true
-                },
-                "status": {
-                    "type": "string",
-                    "readOnly": true
-                },
                 "visibility": {
                     "type": "string",
                     "default": "private",
@@ -509,25 +489,52 @@
                         "public"
                     ]
                 },
-                "enabled": {
-                    "type": "boolean"
-                },
                 "license": {
                     "type": "string"
-                },
-                "group_id": {
-                    "type": "number",
-                    "readOnly": true
-                },
-                "created_at": {
-                    "type": "string",
-                    "readOnly": true
-                },
-                "updated_at": {
-                    "type": "string",
-                    "readOnly": true
                 }
             }
+        },
+        "Feed": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/NewFeed"
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "id"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "number",
+                            "readOnly": true
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "last_value": {
+                            "type": "string",
+                            "readOnly": true
+                        },
+                        "status": {
+                            "type": "string",
+                            "readOnly": true
+                        },
+                        "group_id": {
+                            "type": "number",
+                            "readOnly": true
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "readOnly": true
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "readOnly": true
+                        }
+                    }
+                }
+            ]
         },
         "Data": {
             "required": [
