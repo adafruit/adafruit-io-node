@@ -336,6 +336,11 @@
             "required": [
                 "name"
             ],
+            "example": {
+                "name": "testing",
+                "key": "test",
+                "visibility": "private"
+            },
             "properties": {
                 "id": {
                     "type": "number",
