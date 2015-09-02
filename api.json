@@ -27,6 +27,7 @@
     "paths": {
         "/feeds": {
             "get": {
+                "operationId": "list",
                 "summary": "All feeds for current user",
                 "description": "The Feeds endpoint returns information about the user's feeds. The response includes the latest value of each feed, and other metadata about each feed.",
                 "parameters": [
@@ -62,6 +63,7 @@
             "post": {
                 "summary": "Create a new Feed",
                 "description": "",
+                "operationId": "create",
                 "consumes": [
                     "application/json",
                     "application/x-www-form-urlencoded"
@@ -72,10 +74,19 @@
                         "in": "body",
                         "required": true,
                         "schema": {
+                            "example": {
+                                "name": "testing",
+                                "key": "tester",
+                                "description": "new test feed",
+                                "unit_type": "Fahrenheit Temperature",
+                                "unit_symbol": "°F",
+                                "visibility": "public",
+                                "license": "CC BY-SA 2.0"
+                            },
                             "required": [
                                 "name"
                             ],
-                            "$ref": "#/definitions/NewFeed"
+                            "$ref": "#/definitions/Feed"
                         }
                     }
                 ],
@@ -105,7 +116,7 @@
             "get": {
                 "description": "Returns feed based on ID",
                 "summary": "Get feed by ID, Feed key, or Feed Name",
-                "operationId": "getFeedById",
+                "operationId": "get",
                 "tags": [
                     "Feeds"
                 ],
@@ -138,7 +149,7 @@
             },
             "put": {
                 "summary": "Replace an existing Feed",
-                "operationId": "replaceFeedById",
+                "operationId": "replace",
                 "description": "",
                 "consumes": [
                     "application/json",
@@ -157,10 +168,20 @@
                         "in": "body",
                         "required": true,
                         "schema": {
+                            "type": "object",
+                            "example": {
+                                "name": "temperature",
+                                "key": "temp",
+                                "description": "test feed",
+                                "unit_type": "Fahrenheit Temperature",
+                                "unit_symbol": "°F",
+                                "visibility": "public",
+                                "license": "CC BY-SA 2.0"
+                            },
                             "required": [
                                 "name"
                             ],
-                            "$ref": "#/definitions/NewFeed"
+                            "$ref": "#/definitions/Feed"
                         }
                     }
                 ],
@@ -188,7 +209,7 @@
             "patch": {
                 "summary": "Update properties of an existing Feed",
                 "description": "",
-                "operationId": "updateFeedById",
+                "operationId": "update",
                 "consumes": [
                     "application/json",
                     "application/x-www-form-urlencoded"
@@ -206,10 +227,11 @@
                         "in": "body",
                         "required": true,
                         "schema": {
+                            "type": "object",
                             "example": {
                                 "visibility": "public"
                             },
-                            "$ref": "#/definitions/NewFeed"
+                            "$ref": "#/definitions/Feed"
                         }
                     }
                 ],
@@ -237,7 +259,7 @@
             "delete": {
                 "summary": "Delete an existing Feed",
                 "description": "",
-                "operationId": "deleteFeedById",
+                "operationId": "delete",
                 "parameters": [
                     {
                         "name": "id",
@@ -464,8 +486,13 @@
                 }
             }
         },
-        "NewFeed": {
+        "Feed": {
+            "type": "object",
             "properties": {
+                "id": {
+                    "type": "number",
+                    "readOnly": true
+                },
                 "name": {
                     "type": "string"
                 },
@@ -491,50 +518,32 @@
                 },
                 "license": {
                     "type": "string"
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "readOnly": true
+                },
+                "last_value": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "status": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "group_id": {
+                    "type": "number",
+                    "readOnly": true
+                },
+                "created_at": {
+                    "type": "string",
+                    "readOnly": true
+                },
+                "updated_at": {
+                    "type": "string",
+                    "readOnly": true
                 }
             }
-        },
-        "Feed": {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/NewFeed"
-                },
-                {
-                    "type": "object",
-                    "required": [
-                        "id"
-                    ],
-                    "properties": {
-                        "id": {
-                            "type": "number",
-                            "readOnly": true
-                        },
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "last_value": {
-                            "type": "string",
-                            "readOnly": true
-                        },
-                        "status": {
-                            "type": "string",
-                            "readOnly": true
-                        },
-                        "group_id": {
-                            "type": "number",
-                            "readOnly": true
-                        },
-                        "created_at": {
-                            "type": "string",
-                            "readOnly": true
-                        },
-                        "updated_at": {
-                            "type": "string",
-                            "readOnly": true
-                        }
-                    }
-                }
-            ]
         },
         "Data": {
             "required": [
