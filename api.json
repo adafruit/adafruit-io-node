@@ -63,8 +63,8 @@
                 "summary": "Create a new Feed",
                 "description": "",
                 "consumes": [
-                    "application/x-www-form-urlencoded",
-                    "application/json"
+                    "application/json",
+                    "application/x-www-form-urlencoded"
                 ],
                 "parameters": [
                     {
@@ -72,6 +72,13 @@
                         "in": "body",
                         "required": true,
                         "schema": {
+                            "required": [
+                                "name"
+                            ],
+                            "example": {
+                                "name": "testing",
+                                "visibility": "private"
+                            },
                             "$ref": "#/definitions/Feed"
                         }
                     }
@@ -132,6 +139,139 @@
                         "type": "string"
                     }
                 ]
+            },
+            "put": {
+                "summary": "Replace an existing Feed",
+                "operationId": "replaceFeedById",
+                "description": "",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID, key, or name of feed to use",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "feed",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "required": [
+                                "name"
+                            ],
+                            "example": {
+                                "name": "testing_put",
+                                "visibility": "private"
+                            },
+                            "$ref": "#/definitions/Feed"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Feeds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated feed",
+                        "schema": {
+                            "type": "object",
+                            "items": {
+                                "$ref": "#/definitions/Feed"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "summary": "Update properties of an existing Feed",
+                "description": "",
+                "operationId": "updateFeedById",
+                "consumes": [
+                    "application/json",
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID, key, or name of feed to use",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "feed",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "example": {
+                                "visibility": "public"
+                            },
+                            "$ref": "#/definitions/Feed"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Feeds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated feed",
+                        "schema": {
+                            "type": "object",
+                            "items": {
+                                "$ref": "#/definitions/Feed"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete an existing Feed",
+                "description": "",
+                "operationId": "deleteFeedById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID, key, or name of feed to use",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Feeds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted feed successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
             }
         },
         "/feeds/{feed_id}/data": {
@@ -333,14 +473,6 @@
             }
         },
         "Feed": {
-            "required": [
-                "name"
-            ],
-            "example": {
-                "name": "testing",
-                "key": "test",
-                "visibility": "private"
-            },
             "properties": {
                 "id": {
                     "type": "number",
@@ -371,9 +503,10 @@
                 },
                 "visibility": {
                     "type": "string",
+                    "default": "private",
                     "enum": [
-                        "public",
-                        "private"
+                        "private",
+                        "public"
                     ]
                 },
                 "enabled": {
@@ -397,6 +530,15 @@
             }
         },
         "Data": {
+            "required": [
+                "value"
+            ],
+            "example": {
+                "value": 11,
+                "lat": 30,
+                "lng": -82,
+                "ele": 42
+            },
             "properties": {
                 "id": {
                     "type": "number"
