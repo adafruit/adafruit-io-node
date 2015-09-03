@@ -27,7 +27,7 @@
     "paths": {
         "/feeds": {
             "get": {
-                "operationId": "list",
+                "operationId": "all",
                 "summary": "All feeds for current user",
                 "description": "The Feeds endpoint returns information about the user's feeds. The response includes the latest value of each feed, and other metadata about each feed.",
                 "parameters": [
@@ -259,7 +259,7 @@
             "delete": {
                 "summary": "Delete an existing Feed",
                 "description": "",
-                "operationId": "delete",
+                "operationId": "destroy",
                 "parameters": [
                     {
                         "name": "id",
