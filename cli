@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+var cli = require('commander'),
+    package = require('./package.json');
+
+cli._name = 'adafruit-io';
+
+cli
+  .version(package.version)
+  .command('service [cmd]', 'start or stop Adafruit IO service (linux only)')
+  .command('server [cmd]', 'start or stop the Adafruit IO server')
+  .parse(process.argv);
+
+if (!process.argv.slice(2).length)
+  cli.outputHelp();

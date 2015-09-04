@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+var spawn = require('child_process').spawn,
+    fs = require('fs'),
+    path = require('path'),
+    logo = fs.readFileSync(path.join(__dirname,'logo.txt'), 'utf8'),
+    cli = require('commander'),
+    package = require('./package.json');
+
+
+function start() {
+
+  var child = spawn('sudo', ['forever-service', 'install', '-s', 'index.js', '--start', '--runAsUser', 'root', 'aiotunnel'], {
+    cwd: __dirname,
+    env: process.env,
+    detached: true
+  });
+
+  console.log(logo);
+  console.log('starting tunnel on ports 80 and 1883...');
+
+  child.on('error', console.log);
+
+}
+
+function stop() {
+
+  var child = spawn('sudo', ['forever-service', 'delete', 'aiotunnel'], {
+    cwd: __dirname,
+    env: process.env,
+    detached: true
+  });
+
+  console.log('stopping tunnel...');
+
+  child.on('error', console.log);
+
+}
+
+cli.version(package.version);
+cli.command('start').description('installs and starts the service').action(start);
+cli.command('stop').description('stops and removes the service').action(stop);
+cli.parse(process.argv);
+
+if (!process.argv.slice(2).length) {
+  cli.outputHelp();
+}
+
