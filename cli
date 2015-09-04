@@ -7,8 +7,8 @@ cli._name = 'adafruit-io';
 
 cli
   .version(package.version)
-  .command('service [cmd]', 'start or stop Adafruit IO service (linux only)')
-  .command('server [cmd]', 'start or stop the Adafruit IO server')
+  .command('server [cmd]', 'Local Adafruit IO server')
+  .command('tunnel [cmd]', 'io.adafruit.com TLS tunnel')
   .parse(process.argv);
 
 if (!process.argv.slice(2).length)

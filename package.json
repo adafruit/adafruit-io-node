@@ -5,7 +5,7 @@
   "bin": {
     "adafruit-io": "./cli",
     "adafruit-io-server": "./cli-server",
-    "adafruit-io-service": "./cli-service"
+    "adafruit-io-tunnel": "./cli-tunnel"
   },
   "main": "index.js",
   "scripts": {

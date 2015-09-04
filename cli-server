@@ -10,6 +10,45 @@ var spawn = require('child_process').spawn,
 var command = process.platform === 'win32' ? 'forever.cmd' : 'forever';
 server._name = 'adafruit-io server';
 
+function install() {
+
+  if(require('os').platform() !== 'linux')
+    return console.error('[error]   running adafruit io as a service is only supported on linux');
+
+  process.env.AIO_PORT = server.port || 8080;
+  process.stdout.write(logo);
+  console.log('[status]  starting service...');
+
+  var child = spawn('forever-service', ['install', '-s', 'index.js', '--start', 'aioserver'], {
+    cwd: path.join(__dirname, 'server'),
+    env: process.env,
+    detached: true
+  });
+
+  console.log('[status]  adafruit io is now ready at http://localhost:%d/api', process.env.AIO_PORT);
+  console.log('[info]    documentation is available at http://localhost:%d/api/docs\n', process.env.AIO_PORT);
+
+  child.on('error', console.log);
+
+}
+
+function remove() {
+
+ if(require('os').platform() !== 'linux')
+    return console.error('[error]   running adafruit io as a service is only supported on linux');
+
+  var child = spawn('forever-service', ['delete', 'aioserver'], {
+    cwd: path.join(__dirname, 'server'),
+    env: process.env,
+    detached: true
+  });
+
+  console.log('[status] stopping service...\n');
+
+  child.on('error', console.log);
+
+}
+
 function start() {
 
   process.env.AIO_PORT = server.port || 8080;
@@ -17,7 +56,7 @@ function start() {
   console.log('[status]  starting server...');
 
   var child = spawn(command, ['start', '-s', 'index.js'], {
-    cwd: __dirname,
+    cwd: path.join(__dirname, 'server'),
     env: process.env,
     detached: true
   });
@@ -32,7 +71,7 @@ function start() {
 function restart() {
 
   var child = spawn(command, ['restart', 'index.js'], {
-    cwd: __dirname,
+    cwd: path.join(__dirname, 'server'),
     env: process.env,
     detached: true
   });
@@ -46,7 +85,7 @@ function restart() {
 function stop() {
 
   var child = spawn(command, ['stop', 'index.js'], {
-    cwd: __dirname,
+    cwd: path.join(__dirname, 'server'),
     env: process.env,
     detached: true
   });
@@ -59,12 +98,14 @@ function stop() {
 
 server.version(package.version);
 server.option('-p, --port <n>', 'http port', parseInt);
-server.command('start').description('starts the server').action(start);
-server.command('restart').description('restarts the server').action(restart);
-server.command('stop').description('stops the server').action(stop);
+server.command('install').description('installs server service (linux only)').action(install);
+server.command('remove').description('removes server service (linux only)').action(remove);
+server.command('start').description('starts server daemon').action(start);
+server.command('restart').description('restarts server daemon').action(restart);
+server.command('stop').description('stops server daemon').action(stop);
 server.parse(process.argv);
 
 if (!process.argv.slice(2).length)
-  service.outputHelp();
+  server.outputHelp();
 
 

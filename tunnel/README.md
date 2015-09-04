@@ -30,38 +30,34 @@ pi@tunnel ~ $ npm install -g forever forever-service adafruit-io-tunnel
 If everything has been installed, you can start the service by running the following command:
 
 ```
-pi@tunnel ~ $ adafruit-io-tunnel start
-
-                             `:-
-                            +NMMy
-                          `yMMMMM:
-                         :mMMMMMMm`
-                       `sMMMMMMMMMs
-                      `dMMMMMMMMMMM-
-                      hMMMMMMMMMMMMh
-   -syyyyyyyyyyso/:` .MMMMMMMMMMMMMN
-   yMMMMMMMMMMMMMMNmy:NMMMMMMMMMMMMd
-   `sNMMMMMMMMMMMMMMMNNMMMMo:mMMMMm//ossso/:.`
-     :mMMMMMMMMMMMMMMMMMMMy  yMMMMmNMMMMMMMMNmhs+:-`
-      `sMMMMMMMMMMmsydNMMM+ `mMMMMMMMMMMMMMMMMMMMMNmy
-        /mMMMMMMMMd:` ./dMd:hMNmdhhdMMMMMMMMMMMMMMMNy
-         .omMMMMMMMMdy+/yMMMMd-```.:mMMMMMMMMMMMNd+.
-           `:oymNMMMMMMmdNMMNNdhhdmMMMMMMMMMMMms-`
-             :ymNMMMMh:``dMd-+mMMMMMMMMMMMNmy:`
-           `yMMMMMMMo `:dMMN. .mMMMMdysso+-`
-          `dMMMMMMMMssdMMMMMd- +MMMMMm/
-          sMMMMMMMMMMMMMMMMMMNhdMMMMMMM:
-         -MMMMMMMMMMMMMMNyMMMMMMMMMMMMMd
-        `dMMMMMMMMMMMMMd-:MMMMMMMMMMMMMN
-        oMMMMMMMMMMNNy/   +NMMMMMMMMMMMN
-       .MMMMMMNmho/-`      -yNMMMMMMMMMN
-       `sdho/-`              .omMMMMMMMM
-                                -sNMMMMM
-                                  `/hMMh
-                                      `
-
-starting tunnel on ports 80 and 1883...
-```
+pi@tunnel ~ $ adafruit-io tunnel install
+                                     ▄▄
+                                   ▄████
+                                 ▄███████
+                                █████████▌
+                               ███████████
+                              ████████████▌
+             ███████████████▄ ████████████▌
+              █████████████████████▀▀█████ ▄▄▄▄▄▄▄
+               ▐██████████████████   █████████████████▄▄
+                 ▀█████████  ▀▀███  ██████████████████████
+                   █████████▄▄  ▐████▀    ▐█████████████▀
+                     ▀▀███████████████▄▄█████████████▀
+                      ▄███████   ██  ▀████████████▀
+                     ███████▀  ▄████  ▐█████▄
+                    █████████████████▄▄██████▄
+                   ███████████████████████████
+                  ██████████████ ▐████████████▌
+                 ▐██████████▀▀    ▀███████████▌
+                 █████▀▀            ▀█████████▌
+                                       ▀██████
+                                          ▀███
+----------------------------------------------------------------------
+                           adafruit io
+----------------------------------------------------------------------
+[status]  starting service...
+[status]  io.adafruit.com HTTPS tunnel running: http://localhost:8888/
+[status]  io.adafruit.com MQTTS tunnel running: mqtt://localhost:1883
 
 ## Using the Tunnel
 
@@ -69,16 +65,16 @@ Instead of pointing your MQTT or HTTP client at io.adafruit.com, use the IP addr
 or hostname of your Raspberry Pi.
 
 ### HTTP
-Requests to port 80 on the Pi will be tunneled to HTTPS port 443 on io.adafruit.com.
+Requests to port 8888 on the Pi will be tunneled to HTTPS port 443 on io.adafruit.com.
 
 ### MQTT
 Connections to port 1883 on the Pi will be tunneled to MQTTS port 8883 on io.adafruit.com.
 
-## Stopping the Service
+## Removing the Service
 
 ```console
-pi@tunnel ~ $ adafruit-io-tunnel stop
-stopping service...
+pi@tunnel ~ $ adafruit-io tunnel remove
+[status] stopping service...
 ```
 
 ## Security Considerations
