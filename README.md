@@ -21,7 +21,9 @@ $ npm install -g forever-service
 ```
 ## Table of Contents
 * [Server](#server)
-* [TLS Tunnel](#tunnel)
+* [TLS Tunnel](#tls-tunnel)
+  * [Security Considerations](#security-considerations)
+  * [Usage](#usage)
 * [Client](#client)
   * [Feeds](#feeds)
     * [Create](#feed-creation)
