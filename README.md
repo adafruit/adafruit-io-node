@@ -1,5 +1,5 @@
 # Adafruit IO
-This is an open source API compatible version of Adafruit IO that you can run locally.
+A Node.js Adafruit IO Client, Local Server, & io.adafruit.com TLS Tunnel.
 
 ## Installation
 Make sure you have the latest stable version of [Node.js][3] installed on your computer.
@@ -72,6 +72,11 @@ $ adafruit-io help
 The three main commands available are `service`, `tunnel`, and `help`.
 
 ## Server
+The server included in this package is an open source API compatible version of
+Adafruit IO that you can run locally. Future additions to io.adafruit.com will
+allow you to sync your local data with the hosted service.
+
+## Usage
 Let's look at the available commands for `adafruit-io server`:
 
 ```console
