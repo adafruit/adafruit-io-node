@@ -1,0 +1,233 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Adafruit IO",
+    "description": "The Internet of Things for Everyone",
+    "version": "1.0.0"
+  },
+  "produces": ["application/json"],
+  "host": "localhost:8080",
+  "basePath": "/api",
+  "paths": {
+  
+  "/groups/{id}": {
+    
+    "get": {
+      "summary": "Get group by ID, key, or Name",
+      "description":"Returns group based on ID",
+      "x-swagger-router-controller": "Groups",
+      "tags": ["Groups"],
+      "operationId": "getGroupById",
+      "parameters": [
+        {
+  "name" : "id",
+  "in" : "path",
+  "description" : "ID, key, or name of feed to use",
+  "required" : true,
+  "type" : "string"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "Group response",
+  "schema" : {
+    "type" : "object",
+    "properties" : { }
+  }
+}
+        ,
+        "default": {
+  "description" : "error payload",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/groups": {
+    
+    "get": {
+      "summary": "All groups for current user",
+      "description":"The Groups endpoint returns information about the user&#39;s groups.\nThe response includes the latest value of each feed in the group, and other\nmetadata about the group.\n",
+      "x-swagger-router-controller": "Groups",
+      "tags": ["Groups"],
+      "operationId": "groupsGet",
+      "responses": {
+        "200": {
+  "description" : "An array of groups",
+  "schema" : {
+    "type" : "array",
+    "items" : {
+      "$ref" : "#/definitions/Group"
+    }
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  
+  
+  }, "definitions": {
+  "Group": {
+  "properties" : {
+    "id" : {
+      "type" : "number"
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "description" : {
+      "type" : "string"
+    },
+    "source" : {
+      "type" : "string"
+    },
+    "properties" : {
+      "type" : "string"
+    },
+    "source_keys" : {
+      "type" : "string"
+    },
+    "created_at" : {
+      "type" : "string"
+    },
+    "updated_at" : {
+      "type" : "string"
+    },
+    "feeds" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Feed"
+      }
+    }
+  }
+},"Feed": {
+  "type" : "object",
+  "properties" : {
+    "id" : {
+      "type" : "number",
+      "readOnly" : true
+    },
+    "name" : {
+      "type" : "string"
+    },
+    "key" : {
+      "type" : "string"
+    },
+    "description" : {
+      "type" : "string"
+    },
+    "unit_type" : {
+      "type" : "string"
+    },
+    "unit_symbol" : {
+      "type" : "string"
+    },
+    "visibility" : {
+      "type" : "string",
+      "default" : "private",
+      "enum" : [ "private", "public" ]
+    },
+    "license" : {
+      "type" : "string"
+    },
+    "enabled" : {
+      "type" : "boolean",
+      "readOnly" : true
+    },
+    "last_value" : {
+      "type" : "string",
+      "readOnly" : true
+    },
+    "status" : {
+      "type" : "string",
+      "readOnly" : true
+    },
+    "group_id" : {
+      "type" : "number",
+      "readOnly" : true
+    },
+    "created_at" : {
+      "type" : "string",
+      "readOnly" : true
+    },
+    "updated_at" : {
+      "type" : "string",
+      "readOnly" : true
+    }
+  }
+},"Data": {
+  "required" : [ "value" ],
+  "properties" : {
+    "id" : {
+      "type" : "number"
+    },
+    "value" : {
+      "type" : "string"
+    },
+    "position" : {
+      "type" : "string"
+    },
+    "feed_id" : {
+      "type" : "number"
+    },
+    "group_id" : {
+      "type" : "number"
+    },
+    "expiration" : {
+      "type" : "string"
+    },
+    "lat" : {
+      "type" : "number"
+    },
+    "lon" : {
+      "type" : "number"
+    },
+    "ele" : {
+      "type" : "number"
+    },
+    "completed_at" : {
+      "type" : "string"
+    },
+    "created_at" : {
+      "type" : "string"
+    },
+    "updated_at" : {
+      "type" : "string"
+    },
+    "created_epoch" : {
+      "type" : "number"
+    }
+  },
+  "example" : {
+    "value" : 11,
+    "lat" : 30,
+    "lng" : -82,
+    "ele" : 42
+  }
+},"Error": {
+  "properties" : {
+    "error" : {
+      "type" : "string"
+    }
+  }
+}
+  }
+}
