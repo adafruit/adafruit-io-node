@@ -1,26 +1,33 @@
 'use strict';
 
-var app = require('connect')(),
-    http = require('http'),
-    swaggerTools = require('swagger-tools'),
-    swaggerDoc = require('./api/swagger.json'),
-    serverPort = process.env.AIO_PORT || 8080;
+var SwaggerHapi = require('swagger-hapi');
+var Hapi = require('hapi');
+var app = new Hapi.Server();
 
-swaggerTools.initializeMiddleware(swaggerDoc, function(middleware) {
+module.exports = app;
 
-  app.use(middleware.swaggerMetadata());
-  app.use(middleware.swaggerValidator());
-  app.use(middleware.swaggerUi());
+var config = {
+  appRoot: __dirname
+};
 
-  app.use(middleware.swaggerRouter({
-    swaggerUi: '/swagger.json',
-    controllers: './controllers',
-    useStubs: false
-  }));
+SwaggerHapi.create(config, function(err, swaggerHapi) {
 
-  http.createServer(app).listen(serverPort, function() {
-    console.log('[status] Adafruit IO is now ready at http://localhost:%d/api', serverPort, serverPort);
-    console.log('[info] Documentation is available at http://localhost:%d/api/docs\n', serverPort);
+  if(err)
+    throw err; 
+
+  var port = process.env.HTTP_PORT || 8080;
+  app.connection({ port: port });
+
+  app.register(swaggerHapi.plugin, function(err) {
+
+    if(err)
+      return console.error('Failed to load plugin:', err);
+
+    app.start(function() {
+      console.log('[status] Adafruit IO is now ready at http://localhost:%d/api', port);
+    });
+
   });
 
 });
+
