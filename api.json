@@ -27,6 +27,7 @@
     "paths": {
         "/feeds": {
             "get": {
+                "x-swagger-router-controller": "Feeds",
                 "operationId": "all",
                 "summary": "All feeds for current user",
                 "description": "The Feeds endpoint returns information about the user's feeds. The response includes the latest value of each feed, and other metadata about each feed.",
@@ -61,6 +62,7 @@
                 }
             },
             "post": {
+                "x-swagger-router-controller": "Feeds",
                 "summary": "Create a new Feed",
                 "description": "",
                 "operationId": "create",
@@ -114,6 +116,7 @@
         },
         "/feeds/{id}": {
             "get": {
+                "x-swagger-router-controller": "Feeds",
                 "description": "Returns feed based on ID",
                 "summary": "Get feed by ID, Feed key, or Feed Name",
                 "operationId": "get",
@@ -207,6 +210,7 @@
                 }
             },
             "patch": {
+                "x-swagger-router-controller": "Feeds",
                 "summary": "Update properties of an existing Feed",
                 "description": "",
                 "operationId": "update",
@@ -257,6 +261,7 @@
                 }
             },
             "delete": {
+                "x-swagger-router-controller": "Feeds",
                 "summary": "Delete an existing Feed",
                 "description": "",
                 "operationId": "destroy",
@@ -290,6 +295,7 @@
         },
         "/feeds/{feed_id}/data": {
             "get": {
+                "x-swagger-router-controller": "Data",
                 "summary": "All data for current feed",
                 "description": " ",
                 "parameters": [
@@ -325,6 +331,7 @@
         },
         "/feeds/{feed_id}/data/{data_id}": {
             "get": {
+                "x-swagger-router-controller": "Data",
                 "description": "Returns data based on ID",
                 "summary": "",
                 "operationId": "getDataById",
@@ -368,6 +375,7 @@
         },
         "/groups": {
             "get": {
+                "x-swagger-router-controller": "Groups",
                 "summary": "All groups for current user",
                 "description": "The Groups endpoint returns information about the user's groups.\nThe response includes the latest value of each feed in the group, and other\nmetadata about the group.\n",
                 "tags": [
@@ -402,6 +410,7 @@
         },
         "/groups/{id}": {
             "get": {
+                "x-swagger-router-controller": "Groups",
                 "description": "Returns group based on ID",
                 "summary": "Get group by ID, key, or Name",
                 "operationId": "getGroupById",
