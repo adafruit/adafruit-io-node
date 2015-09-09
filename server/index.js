@@ -30,14 +30,23 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
   app.use(middleware.swaggerMetadata());
   app.use(middleware.swaggerValidator());
   app.use(middleware.swaggerRouter({
-    swaggerUi: './swagger.json',
     controllers: './lib/controllers',
     useStubs: false
   }));
-  app.use(middleware.swaggerUi());
+  app.use(middleware.swaggerUi({
+    swaggerUi: '/api/docs'
+  }));
+
+  app.get('/', function(req, res) {
+    res.redirect('/api/docs');
+  });
+
+  app.get('/api', function(req, res) {
+    res.redirect('/api/docs');
+  });
 
   app.listen(port);
-  console.log(`[status]  Adafruit IO is now ready at http://${hostname}:${port}/api`);
+  console.log(`[status]  Adafruit IO is now ready at http://${hostname}:${port}/`);
 
 });
 

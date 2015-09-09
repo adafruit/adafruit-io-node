@@ -26,7 +26,7 @@ function install() {
     detached: true
   });
 
-  console.log(`[status]  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/api`);
+  console.log(`[status]  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/`);
   console.log(`[info]    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
 
   child.on('error', console.log);
@@ -62,7 +62,7 @@ function start() {
     detached: true
   });
 
-  console.log(`[status]  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/api`);
+  console.log(`[status]  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/`);
   console.log(`[info]    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
 
   child.on('error', console.log);
