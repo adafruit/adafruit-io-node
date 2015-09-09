@@ -5,6 +5,7 @@ var spawn = require('child_process').spawn,
     path = require('path'),
     logo = fs.readFileSync(path.join(__dirname,'logo.txt'), 'utf8'),
     tunnel = require('commander'),
+    hostname = require('os').hostname(),
     package = require('./package.json');
 
 var forever = process.platform === 'win32' ? 'forever.cmd' : 'forever';
@@ -27,8 +28,8 @@ function install() {
     detached: true
   });
 
-  console.log('[status]  io.adafruit.com HTTPS tunnel running: http://localhost:%d/', process.env.TUNNEL_HTTP);
-  console.log('[status]  io.adafruit.com MQTTS tunnel running: mqtt://localhost:%d\n', process.env.TUNNEL_MQTT);
+  console.log(`[status]  io.adafruit.com HTTPS tunnel running: http://${hostname}:${process.env.TUNNEL_HTTP}/`);
+  console.log(`[status]  io.adafruit.com MQTTS tunnel running: mqtt://${hostname}:${process.env.TUNNEL_MQTT}\n`);
 
   child.on('error', console.log);
 
@@ -65,8 +66,8 @@ function start() {
     detached: true
   });
 
-  console.log('[status]  io.adafruit.com HTTPS tunnel running: http://localhost:%d/', process.env.TUNNEL_HTTP);
-  console.log('[status]  io.adafruit.com MQTTS tunnel running: mqtt://localhost:%d\n', process.env.TUNNEL_MQTT);
+  console.log(`[status]  io.adafruit.com HTTPS tunnel running: http://${hostname}:${process.env.TUNNEL_HTTP}/`);
+  console.log(`[status]  io.adafruit.com MQTTS tunnel running: mqtt://${hostname}:${process.env.TUNNEL_MQTT}\n`);
 
   child.on('error', console.log);
 

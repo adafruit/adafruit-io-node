@@ -5,7 +5,7 @@ const swaggerTools = require('swagger-tools'),
       api = require('./swagger.json'),
       hostname = require('os').hostname(),
       app = require('express')(),
-      port = process.env.HTTP_PORT || 8080;
+      port = process.env.AIO_PORT || 8080;
 
 // swagger api overrides
 api.host = `${hostname}:${port}`;

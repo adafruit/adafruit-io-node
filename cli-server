@@ -5,6 +5,7 @@ var spawn = require('child_process').spawn,
     path = require('path'),
     logo = fs.readFileSync(path.join(__dirname,'logo.txt'), 'utf8'),
     server = require('commander'),
+    hostname = require('os').hostname(),
     package = require('./package.json');
 
 var command = process.platform === 'win32' ? 'forever.cmd' : 'forever';
@@ -25,8 +26,8 @@ function install() {
     detached: true
   });
 
-  console.log('[status]  adafruit io is now ready at http://localhost:%d/api', process.env.AIO_PORT);
-  console.log('[info]    documentation is available at http://localhost:%d/api/docs\n', process.env.AIO_PORT);
+  console.log(`[status]  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/api`);
+  console.log(`[info]    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
 
   child.on('error', console.log);
 
@@ -61,8 +62,8 @@ function start() {
     detached: true
   });
 
-  console.log('[status]  adafruit io is now ready at http://localhost:%d/api', process.env.AIO_PORT);
-  console.log('[info]    documentation is available at http://localhost:%d/api/docs\n', process.env.AIO_PORT);
+  console.log(`[status]  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/api`);
+  console.log(`[info]    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
 
   child.on('error', console.log);
 
