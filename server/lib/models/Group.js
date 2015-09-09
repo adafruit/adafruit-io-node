@@ -1,32 +1,32 @@
 'use strict';
 /************************ DEPENDENCIES *****************************/
-var util = require('util'),
-    model = require('./index');
+const util = require('util'),
+      Model = require('./Base');
 
-util.inherits(Group, model);
-var proto = Group.prototype;
-exports = module.exports = Group;
+class Group extends Model {
 
-/************************* CONSTRUCTOR ****************************/
-function Group(properties) {
+  constructor(properties) {
+    super(properties);
+  }
 
-  if (! (this instanceof Group))
-    return new Group(properties);
-
-  model.call(this);
-  util._extend(this, properties || {});
+  static type() {
+    return 'Group';
+  }
+  static fields() {
+    return [
+      'id',
+      'name',
+      'description',
+      'source',
+      'properties',
+      'source_keys',
+      'created_at',
+      'updated_at',
+      'feeds'
+    ];
+  }
 
 }
 
-/*************************** DEFAULTS *****************************/
-proto._fields = [
-  'id',
-  'name',
-  'description',
-  'source',
-  'properties',
-  'source_keys',
-  'created_at',
-  'updated_at',
-  'feeds'
-];
+exports = module.exports = Group;
+

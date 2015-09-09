@@ -1,36 +1,36 @@
 'use strict';
 /************************ DEPENDENCIES *****************************/
-var util = require('util'),
-    model = require('./index');
+const util = require('util'),
+      Model = require('./Base');
 
-util.inherits(Data, model);
-var proto = Data.prototype;
-exports = module.exports = Data;
+class Data extends Model {
 
-/************************* CONSTRUCTOR ****************************/
-function Data(properties) {
+  constructor(properties) {
+    super(properties);
+  }
 
-  if (! (this instanceof Data))
-    return new Data(properties);
-
-  model.call(this);
-  util._extend(this, properties || {});
+  static type() {
+    return 'Data';
+  }
+  static fields() {
+    return [
+      'id',
+      'value',
+      'position',
+      'feed_id',
+      'group_id',
+      'expiration',
+      'lat',
+      'lon',
+      'ele',
+      'completed_at',
+      'created_at',
+      'updated_at',
+      'created_epoch'
+    ];
+  }
 
 }
 
-/*************************** DEFAULTS *****************************/
-proto._fields = [
-  'id',
-  'value',
-  'position',
-  'feed_id',
-  'group_id',
-  'expiration',
-  'lat',
-  'lon',
-  'ele',
-  'completed_at',
-  'created_at',
-  'updated_at',
-  'created_epoch'
-];
+exports = module.exports = Data;
+

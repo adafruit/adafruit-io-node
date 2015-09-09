@@ -1,24 +1,24 @@
 'use strict';
 /************************ DEPENDENCIES *****************************/
-var util = require('util'),
-    model = require('./index');
+const util = require('util'),
+      Model = require('./Base');
 
-util.inherits(Error, model);
-var proto = Error.prototype;
-exports = module.exports = Error;
+class Error extends Model {
 
-/************************* CONSTRUCTOR ****************************/
-function Error(properties) {
+  constructor(properties) {
+    super(properties);
+  }
 
-  if (! (this instanceof Error))
-    return new Error(properties);
-
-  model.call(this);
-  util._extend(this, properties || {});
+  static type() {
+    return 'Error';
+  }
+  static fields() {
+    return [
+      'error'
+    ];
+  }
 
 }
 
-/*************************** DEFAULTS *****************************/
-proto._fields = [
-  'error'
-];
+exports = module.exports = Error;
+

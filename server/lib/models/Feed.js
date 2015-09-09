@@ -1,37 +1,37 @@
 'use strict';
 /************************ DEPENDENCIES *****************************/
-var util = require('util'),
-    model = require('./index');
+const util = require('util'),
+      Model = require('./Base');
 
-util.inherits(Feed, model);
-var proto = Feed.prototype;
-exports = module.exports = Feed;
+class Feed extends Model {
 
-/************************* CONSTRUCTOR ****************************/
-function Feed(properties) {
+  constructor(properties) {
+    super(properties);
+  }
 
-  if (! (this instanceof Feed))
-    return new Feed(properties);
-
-  model.call(this);
-  util._extend(this, properties || {});
+  static type() {
+    return 'Feed';
+  }
+  static fields() {
+    return [
+      'id',
+      'name',
+      'key',
+      'description',
+      'unit_type',
+      'unit_symbol',
+      'visibility',
+      'license',
+      'enabled',
+      'last_value',
+      'status',
+      'group_id',
+      'created_at',
+      'updated_at'
+    ];
+  }
 
 }
 
-/*************************** DEFAULTS *****************************/
-proto._fields = [
-  'id',
-  'name',
-  'key',
-  'description',
-  'unit_type',
-  'unit_symbol',
-  'visibility',
-  'license',
-  'enabled',
-  'last_value',
-  'status',
-  'group_id',
-  'created_at',
-  'updated_at'
-];
+exports = module.exports = Feed;
+
