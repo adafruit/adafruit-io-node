@@ -34,7 +34,9 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
     useStubs: false
   }));
   app.use(middleware.swaggerUi({
-    swaggerUi: '/api/docs'
+    apiDocs: '/api/docs/api.json',
+    swaggerUi: '/api/docs',
+    swaggerUiDir: './docs'
   }));
 
   app.get('/', function(req, res) {
