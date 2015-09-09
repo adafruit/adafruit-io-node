@@ -1,35 +1,75 @@
 'use strict';
 
-var util = require('util'),
-    boom = require('boom'),
-    model = require('../models/Data.js');
+const util = require('util'),
+      xml = require('xml'),
+      model = require('../models/Data');
 
-module.exports.feedsFeedIdDataGet = function feedsFeedIdDataGet(req, res) {
+module.exports.feedsFeedIdDataGet = function feedsFeedIdDataGet(req, res, next) {
 
-  var feedId = req.swagger.params['feed_id'].value;
+  const feedId = req.swagger.params['feed_id'].value;
 
   model.feedsFeedIdDataGet(feedId)
     .then(function(data) {
-      res.json(data);
+      res.format({
+        'application/json': function() {
+          res.json(data);
+        },
+        'text/csv': function() {
+          res.csv(data);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.send(xml(data));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.json(data);
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.json(data);
+        }
+      });
     }).
     catch(function(err) {
-      return reply(boom.badRequest('bad request'));
+      res.writeHead(500);
+      res.end();
     });
 
 };
 
 
-module.exports.getDataById = function getDataById(req, res) {
+module.exports.getDataById = function getDataById(req, res, next) {
 
-  var feedId = req.swagger.params['feed_id'].value,
+  const feedId = req.swagger.params['feed_id'].value,
       dataId = req.swagger.params['data_id'].value;
 
   model.getDataById(feedId, dataId)
     .then(function(data) {
-      res.json(data);
+      res.format({
+        'application/json': function() {
+          res.json(data);
+        },
+        'text/csv': function() {
+          res.csv(data);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.send(xml(data));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.json(data);
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.json(data);
+        }
+      });
     }).
     catch(function(err) {
-      return reply(boom.badRequest('bad request'));
+      res.writeHead(500);
+      res.end();
     });
 
 };

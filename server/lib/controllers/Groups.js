@@ -1,34 +1,72 @@
 'use strict';
 
-var util = require('util'),
-    boom = require('boom'),
-    model = require('../models/Group.js');
+const util = require('util'),
+      xml = require('xml'),
+      model = require('../models/Group');
 
-module.exports.groupsGet = function groupsGet(req, res) {
-
-  
+module.exports.groupsGet = function groupsGet(req, res, next) {
 
   model.groupsGet()
     .then(function(data) {
-      res.json(data);
+      res.format({
+        'application/json': function() {
+          res.json(data);
+        },
+        'text/csv': function() {
+          res.csv(data);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.send(xml(data));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.json(data);
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.json(data);
+        }
+      });
     }).
     catch(function(err) {
-      return reply(boom.badRequest('bad request'));
+      res.writeHead(500);
+      res.end();
     });
 
 };
 
 
-module.exports.getGroupById = function getGroupById(req, res) {
+module.exports.getGroupById = function getGroupById(req, res, next) {
 
-  var id = req.swagger.params['id'].value;
+  const id = req.swagger.params['id'].value;
 
   model.getGroupById(id)
     .then(function(data) {
-      res.json(data);
+      res.format({
+        'application/json': function() {
+          res.json(data);
+        },
+        'text/csv': function() {
+          res.csv(data);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.send(xml(data));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.json(data);
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.json(data);
+        }
+      });
     }).
     catch(function(err) {
-      return reply(boom.badRequest('bad request'));
+      res.writeHead(500);
+      res.end();
     });
 
 };

@@ -1,33 +1,43 @@
 'use strict';
 
-var SwaggerHapi = require('swagger-hapi');
-var Hapi = require('hapi');
-var app = new Hapi.Server();
+const swaggerTools = require('swagger-tools'),
+      csv = require('express-csv'),
+      api = require('./swagger.json'),
+      hostname = require('os').hostname(),
+      app = require('express')(),
+      port = process.env.HTTP_PORT || 8080;
 
-module.exports = app;
+// swagger api overrides
+api.host = `${hostname}:${port}`;
+api.schemes = [
+  'http'
+];
 
-var config = {
-  appRoot: __dirname
-};
+swaggerTools.initializeMiddleware(api, function(middleware) {
 
-SwaggerHapi.create(config, function(err, swaggerHapi) {
+  app.use(function(req, res, next) {
 
-  if(err)
-    throw err; 
+    res.header("Access-Control-Allow-Origin", '*');
+    res.header("Access-Control-Allow-Headers", "Origin, X-AIO-Key, X-Requested-With, Content-Type, Accept");
 
-  var port = process.env.HTTP_PORT || 8080;
-  app.connection({ port: port });
+    if(req.method != 'OPTIONS')
+      return next();
 
-  app.register(swaggerHapi.plugin, function(err) {
-
-    if(err)
-      return console.error('Failed to load plugin:', err);
-
-    app.start(function() {
-      console.log('[status] Adafruit IO is now ready at http://localhost:%d/api', port);
-    });
+    res.send();
 
   });
+
+  app.use(middleware.swaggerMetadata());
+  app.use(middleware.swaggerValidator());
+  app.use(middleware.swaggerRouter({
+    swaggerUi: './swagger.json',
+    controllers: './lib/controllers',
+    useStubs: false
+  }));
+  app.use(middleware.swaggerUi());
+
+  app.listen(port);
+  console.log(`[status]  Adafruit IO is now ready at http://${hostname}:${port}/api`);
 
 });
 

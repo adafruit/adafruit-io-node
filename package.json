@@ -42,13 +42,20 @@
     "raspberry pi",
     "raspi"
   ],
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "dependencies": {
     "commander": "^2.8.1",
-    "hapi": "^9.3.0",
+    "express": "^4.13.3",
+    "express-csv": "^0.6.0",
     "jsonquery-engine": "^1.0.2",
-    "levelup": "^1.2.1",
+    "level": "^1.3.0",
+    "level-queryengine": "^3.0.1",
     "mqtt": "^1.1.2",
     "restler": "^3.2.2",
-    "swagger-hapi": "0.0.3"
+    "swagger-tools": "^0.9.5",
+    "uuid": "^2.0.1",
+    "xml": "^1.0.0"
   }
 }
