@@ -1,8 +1,8 @@
 'use strict';
-const db = require('../db'),
-      uuid = require('uuid');
+const db = require('../db');
 
 class Base {
+
   constructor(properties) {
     Object.assign(this, properties);
   }
