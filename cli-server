@@ -8,7 +8,9 @@ var spawn = require('child_process').spawn,
     hostname = require('os').hostname(),
     package = require('./package.json');
 
-var command = process.platform === 'win32' ? 'forever.cmd' : 'forever';
+var command = process.platform === 'win32' ? 'forever.cmd' : 'forever',
+    node_command = process.platform === 'win32' ? 'node.cmd --es_staging' : 'node --es_staging';
+
 server._name = 'adafruit-io server';
 
 function install() {
@@ -20,7 +22,7 @@ function install() {
   process.stdout.write(logo);
   console.log('[status]  starting service...');
 
-  var child = spawn('forever-service', ['install', '-s', 'index.js', '--start', 'aioserver'], {
+  var child = spawn('forever-service', ['install', '-s', 'index.js', '--foreverOptions', '" -c node --es_staging"', '--start', 'aioserver'], {
     cwd: path.join(__dirname, 'server'),
     env: process.env,
     detached: true
@@ -56,7 +58,7 @@ function start() {
   process.stdout.write(logo);
   console.log('[status]  starting server...');
 
-  var child = spawn(command, ['start', '-s', 'index.js'], {
+  var child = spawn(command, ['start',  '-c', node_command, '-s', 'index.js'], {
     cwd: path.join(__dirname, 'server'),
     env: process.env,
     detached: true

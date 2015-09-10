@@ -197,7 +197,6 @@ class Base {
         if(removed !== 1)
           return reject('delete failed');
 
-
         resolve();
 
       });
