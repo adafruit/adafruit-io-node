@@ -166,7 +166,6 @@ class Base {
       delete sent.id;
       sent.updated_at = (new Date()).toISOString();
 
-
       db.update(id_query(type, id), set_fields(type, sent), {}, (err, replaced, doc) => {
 
         if(err)
@@ -177,6 +176,29 @@ class Base {
 
 
         resolve(this.get(sent.id || sent.key || sent.name || id));
+
+      });
+
+    });
+
+  }
+
+  static destroy(id) {
+
+    const type = this.type();
+
+    return new Promise((resolve, reject) => {
+
+      db.remove(id_query(type, id), {}, (err, removed) => {
+
+        if(err)
+          return reject(err.message);
+
+        if(removed !== 1)
+          return reject('delete failed');
+
+
+        resolve();
 
       });
 
