@@ -32,7 +32,7 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
   app.use(middleware.swaggerMetadata());
   app.use(middleware.swaggerValidator());
   app.use(middleware.swaggerRouter({
-    controllers: path.join(__dirname, '/lib', 'controllers'),
+    controllers: path.join(__dirname, 'lib', 'controllers'),
     useStubs: false
   }));
   app.use(middleware.swaggerUi({

@@ -146,8 +146,6 @@ class Base {
         if(replaced !== 1)
           return reject('update failed');
 
-        console.log(doc);
-
         doc[type].id = doc._id;
         resolve(new this(doc[type]));
 
@@ -188,25 +186,24 @@ class Base {
 
 }
 
-const id_query = function id_query(type, id_key_name) {
+const id_query = function(type, id_key_name) {
 
-  const query = {type: type},
-        id = {}, key = {}, name = {};
-
-  id[`${type}.id`] = id_key_name;
-  key[`${type}.key`] = id_key_name;
-  name[`${type}.name`] = id_key_name;
-  query['$or'] = [id, key, name];
-
-  return query;
+  return {
+    type: type,
+    '$or': [
+      {[`${type}.id`]: id_key_name},
+      {[`${type}.key`]: id_key_name},
+      {[`${type}.name`]: id_key_name}
+    ]
+  };
 
 };
 
-const set_fields = function set_fields(type, sent) {
+const set_fields = function(type, sent) {
 
   const obj = { '$set': {} };
 
-  Object.keys(sent).forEach(function set_field_for(key) {
+  Object.keys(sent).forEach(key => {
     obj['$set'][`${type}.${key}`] = sent[key];
   });
 
