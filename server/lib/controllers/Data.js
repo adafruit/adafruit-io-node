@@ -34,8 +34,26 @@ module.exports.feedsFeedIdDataGet = function feedsFeedIdDataGet(req, res, next) 
       });
     }).
     catch(function(err) {
-      res.writeHead(500);
-      res.end();
+      res.format({
+        'application/json': function() {
+          res.status(500).json({ error: err });
+        },
+        'text/csv': function() {
+          res.status(500).csv(err);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.status(500).send(xml({ error: err }));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        }
+      });
     });
 
 };
@@ -70,8 +88,26 @@ module.exports.getDataById = function getDataById(req, res, next) {
       });
     }).
     catch(function(err) {
-      res.writeHead(500);
-      res.end();
+      res.format({
+        'application/json': function() {
+          res.status(500).json({ error: err });
+        },
+        'text/csv': function() {
+          res.status(500).csv(err);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.status(500).send(xml({ error: err }));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        }
+      });
     });
 
 };

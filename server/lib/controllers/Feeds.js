@@ -34,8 +34,26 @@ module.exports.all = function all(req, res, next) {
       });
     }).
     catch(function(err) {
-      res.writeHead(500);
-      res.end();
+      res.format({
+        'application/json': function() {
+          res.status(500).json({ error: err });
+        },
+        'text/csv': function() {
+          res.status(500).csv(err);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.status(500).send(xml({ error: err }));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        }
+      });
     });
 
 };
@@ -69,8 +87,26 @@ module.exports.create = function create(req, res, next) {
       });
     }).
     catch(function(err) {
-      res.writeHead(500);
-      res.end();
+      res.format({
+        'application/json': function() {
+          res.status(500).json({ error: err });
+        },
+        'text/csv': function() {
+          res.status(500).csv(err);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.status(500).send(xml({ error: err }));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        }
+      });
     });
 
 };
@@ -104,8 +140,26 @@ module.exports.get = function get(req, res, next) {
       });
     }).
     catch(function(err) {
-      res.writeHead(500);
-      res.end();
+      res.format({
+        'application/json': function() {
+          res.status(500).json({ error: err });
+        },
+        'text/csv': function() {
+          res.status(500).csv(err);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.status(500).send(xml({ error: err }));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        }
+      });
     });
 
 };
@@ -140,8 +194,26 @@ module.exports.replace = function replace(req, res, next) {
       });
     }).
     catch(function(err) {
-      res.writeHead(500);
-      res.end();
+      res.format({
+        'application/json': function() {
+          res.status(500).json({ error: err });
+        },
+        'text/csv': function() {
+          res.status(500).csv(err);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.status(500).send(xml({ error: err }));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        }
+      });
     });
 
 };
@@ -175,8 +247,26 @@ module.exports.destroy = function destroy(req, res, next) {
       });
     }).
     catch(function(err) {
-      res.writeHead(500);
-      res.end();
+      res.format({
+        'application/json': function() {
+          res.status(500).json({ error: err });
+        },
+        'text/csv': function() {
+          res.status(500).csv(err);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.status(500).send(xml({ error: err }));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        }
+      });
     });
 
 };
@@ -211,8 +301,26 @@ module.exports.update = function update(req, res, next) {
       });
     }).
     catch(function(err) {
-      res.writeHead(500);
-      res.end();
+      res.format({
+        'application/json': function() {
+          res.status(500).json({ error: err });
+        },
+        'text/csv': function() {
+          res.status(500).csv(err);
+        },
+        'application/xml': function() {
+          res.set('Content-Type', 'text/xml');
+          res.status(500).send(xml({ error: err }));
+        },
+        'text/html': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        },
+        'default': function() {
+          res.set('Content-Type', 'application/json');
+          res.status(500).json({ error: err });
+        }
+      });
     });
 
 };
