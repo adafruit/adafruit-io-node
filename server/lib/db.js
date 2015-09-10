@@ -1,11 +1,13 @@
 const nedb = require('nedb'),
       path = require('path');
 
-const db = ({
+const db = new nedb({
   filename: path.join(__dirname, '..', 'adafruit-io.db')
 });
 
-db.ensureIndex({ fieldName: 'type', unique: true, sparse: true });
+db.loadDatabase();
+
+db.ensureIndex({ fieldName: 'type'});
 db.ensureIndex({ fieldName: 'Feed.id', unique: true, sparse: true });
 db.ensureIndex({ fieldName: 'Feed.key', unique: true, sparse: true });
 db.ensureIndex({ fieldName: 'Feed.name', unique: true, sparse: true });
