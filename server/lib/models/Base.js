@@ -1,10 +1,35 @@
 'use strict';
+
 const db = require('../db');
 
 class Base {
 
   constructor(properties) {
-    Object.assign(this, properties);
+
+    properties = properties || {};
+
+    this.constructor.validate(properties);
+    this.properties = properties;
+
+    this.constructor.fields().forEach(key => {
+      Object.defineProperty(this, key, {
+        get: () => this.properties[key],
+        set: value => { this.properties[key] = value }
+      });
+    });
+
+  }
+
+  toJSON() {
+    return this.toObject();
+  }
+
+  toObject() {
+    return this.properties;
+  }
+
+  toString() {
+    return JSON.stringify(this.toObject());
   }
 
   static type() {
@@ -15,20 +40,31 @@ class Base {
     return [];
   }
 
+  static validate(properties) {
+
+    Object.keys(properties).forEach(key => {
+
+      if(this.fields().indexOf(key) < 0)
+        throw `invalid property ${key} for ${this.type()}`;
+
+    });
+
+  }
+
   static all() {
 
     const type = this.type();
 
-    return new Promise(function all_promise(resolve, reject) {
+    return new Promise((resolve, reject) => {
 
-      db.find({type: type}, function all_db(err, docs) {
+      db.find({type: type}, (err, docs) => {
 
         if(err)
-          return reject('database error');
+          return reject(err.message);
 
-        resolve(docs.map(function all_map(doc) {
+        resolve(docs.map(doc => {
           doc[type].id = doc._id;
-          resolve(doc[type]);
+          return new this(doc[type]);
         }));
 
       });
@@ -42,15 +78,18 @@ class Base {
     const type = this.type(),
           id = args.pop();
 
-    return new Promise(function get_promise(resolve, reject) {
+    return new Promise((resolve, reject) => {
 
-      db.findOne(id_query(type, id), function get_db(err, doc) {
+      db.findOne(id_query(type, id), (err, doc) => {
 
         if(err)
-          return reject('database error');
+          return reject(err.message);
+
+        if(! doc)
+          return reject('not found');
 
         doc[type].id = doc._id;
-        resolve(doc[type]);
+        resolve(new this(doc[type]));
 
       });
 
@@ -62,7 +101,7 @@ class Base {
 
     const type = this.type();
 
-    return new Promise(function create_promise(resolve, reject) {
+    return new Promise((resolve, reject) => {
 
       const obj = {type: type};
 
@@ -71,13 +110,13 @@ class Base {
       sent.created_at = sent.updated_at;
       obj[type] = sent;
 
-      db.insert(obj, function create_db(err, doc) {
+      db.insert(obj, (err, doc) => {
 
         if(err)
-          return reject('creation failed');
+          return reject(err.message);
 
         doc[type].id = doc._id;
-        resolve(doc[type]);
+        resolve(new this(doc[type]));
 
       });
 
@@ -91,7 +130,7 @@ class Base {
           sent = args.pop(),
           id = args.pop();
 
-    return new Promise(function replace_promise(resolve, reject) {
+    return new Promise((resolve, reject) => {
 
       const obj = {type: type};
 
@@ -99,13 +138,18 @@ class Base {
       sent.updated_at = (new Date()).toISOString();
       obj[type] = sent;
 
-      db.update(id_query(type, id), obj, function replace_db(err, doc) {
+      db.update(id_query(type, id), obj, {}, (err, replaced, doc) => {
 
         if(err)
+          return reject(err.message);
+
+        if(replaced !== 1)
           return reject('update failed');
 
+        console.log(doc);
+
         doc[type].id = doc._id;
-        resolve(doc[type]);
+        resolve(new this(doc[type]));
 
       });
 
@@ -119,28 +163,28 @@ class Base {
           sent = args.pop(),
           id = args.pop();
 
-    return new Promise(function update_promise(resolve, reject) {
-
-      const obj = {type: type};
+    return new Promise((resolve, reject) => {
 
       delete sent.id;
       sent.updated_at = (new Date()).toISOString();
-      obj[type] = set_fields(type, sent);
 
-      db.update(id_query(type, id), obj, function update_db(err, doc) {
+
+      db.update(id_query(type, id), set_fields(type, sent), {}, (err, replaced, doc) => {
 
         if(err)
+          return reject(err.message);
+
+        if(replaced !== 1)
           return reject('update failed');
 
-        doc[type].id = doc._id;
-        resolve(doc[type]);
+
+        resolve(this.get(sent.id || sent.key || sent.name || id));
 
       });
 
     });
 
   }
-
 
 }
 
@@ -165,6 +209,8 @@ const set_fields = function set_fields(type, sent) {
   Object.keys(sent).forEach(function set_field_for(key) {
     obj['$set'][`${type}.${key}`] = sent[key];
   });
+
+  return obj;
 
 };
 
