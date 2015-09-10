@@ -5,6 +5,7 @@ const swaggerTools = require('swagger-tools'),
       api = require('./swagger.json'),
       hostname = require('os').hostname(),
       app = require('express')(),
+      path = require('path'),
       port = process.env.AIO_PORT || 8080;
 
 // swagger api overrides
@@ -19,6 +20,7 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
 
     res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Headers", "Origin, X-AIO-Key, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "OPTIONS, GET, PATCH, PUT, DELETE, POST");
 
     if(req.method != 'OPTIONS')
       return next();
@@ -30,13 +32,13 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
   app.use(middleware.swaggerMetadata());
   app.use(middleware.swaggerValidator());
   app.use(middleware.swaggerRouter({
-    controllers: './lib/controllers',
+    controllers: path.join(__dirname, '/lib', 'controllers'),
     useStubs: false
   }));
   app.use(middleware.swaggerUi({
     apiDocs: '/api/docs/api.json',
     swaggerUi: '/api/docs',
-    swaggerUiDir: './docs'
+    swaggerUiDir: path.join(__dirname, 'docs')
   }));
 
   app.get('/', function(req, res) {
