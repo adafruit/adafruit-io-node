@@ -6,7 +6,7 @@ Make sure you have the latest stable version of [Node.js][3] installed on your c
 
 ```console
 $ node -v
-v0.12.6
+v4.0.0
 ```
 Install `forever` and `adafruit-io` on your computer using `npm`.
 
