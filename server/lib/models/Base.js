@@ -113,6 +113,35 @@ class Base {
 
   }
 
+  static update(...args) {
+
+    const type = this.type(),
+          sent = args.pop(),
+          id = args.pop();
+
+    return new Promise(function update_promise(resolve, reject) {
+
+      const obj = {type: type};
+
+      delete sent.id;
+      sent.updated_at = (new Date()).toISOString();
+      obj[type] = set_fields(type, sent);
+
+      db.update(id_query(type, id), obj, function update_db(err, doc) {
+
+        if(err)
+          return reject('update failed');
+
+        doc[type].id = doc._id;
+        resolve(doc[type]);
+
+      });
+
+    });
+
+  }
+
+
 }
 
 const id_query = function id_query(type, id_key_name) {
@@ -126,6 +155,16 @@ const id_query = function id_query(type, id_key_name) {
   query['$or'] = [id, key, name];
 
   return query;
+
+};
+
+const set_fields = function set_fields(type, sent) {
+
+  const obj = { '$set': {} };
+
+  Object.keys(sent).forEach(function set_field_for(key) {
+    obj['$set'][`${type}.${key}`] = sent[key];
+  });
 
 };
 
