@@ -98,12 +98,11 @@ class MQTT extends stream.Duplex {
 
   authenticate(client, username, key, callback) {
 
-    // don't require auth if it hasn't been configured
-    if(! this.auth)
-      return callback(null, true);
-
     if(! username && ! key)
       return callback(null, true);
+
+    if(! this.auth)
+      return callback(null, false);
 
     this.auth.authenticate(username, key, (authorized) => {
 
@@ -167,7 +166,7 @@ class MQTT extends stream.Duplex {
       topic: `${username}/throttle`,
       payload: message,
       qos: 0,
-      retain: true
+      retain:false
     };
 
     this.broker.publish(packet, () => {
