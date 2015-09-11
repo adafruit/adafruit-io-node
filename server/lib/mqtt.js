@@ -247,4 +247,140 @@ class MQTT extends stream.Duplex {
 
 }
 
+class Message {
+
+  constructor(packet) {
+
+    this.username = false;
+    this.type = false;
+    this.id = false;
+    this.payload = false;
+
+  }
+
+  toJSON() {
+    return this.toObject();
+  }
+
+  toObject() {
+
+    if(topic[3] === 'csv') {
+
+      try {
+        packet.payload = this.parseCSV(type, packet.payload);
+      } catch(e) {
+        return false;
+      }
+
+    }
+
+    return message = {
+      username: topic[0],
+      type: type,
+      id: topic[2],
+      payload: packet.payload
+    };
+
+  }
+
+  parseCSV() {
+
+    const csv = this.payload.toString().split(',');
+
+    if(this.type == 'feed') {
+
+      if(csv.length < 2)
+        return this.payload;
+
+      return JSON.stringify({
+        value: csv[0].toString().trim(),
+        lat: (csv[1] || '0').trim(),
+        lon: (csv[2] || '0').trim(),
+        ele: (csv[3] || '0').trim()
+      });
+
+    }
+
+    const lines = this.payload.toString().split('\n');
+
+    this.payload = { feeds: {} };
+
+    lines.forEach((line) => {
+
+      const csv = line.toString().split(',');
+
+      if(csv.length < 2)
+        return;
+
+      if(csv[0].trim() === 'location') {
+
+        return this.payload.location = {
+          lat: (csv[1] || '0').trim(),
+          lon: (csv[2] || '0').trim(),
+          ele: (csv[3] || '0').trim()
+        };
+
+      }
+
+      this.payload.feeds[csv[0].trim()] = csv[1].trim();
+
+    });
+
+    this.payload = JSON.stringify(this.payload);
+
+  }
+
+  static topicToType(topic) {
+
+    switch(topic) {
+      case 'g':
+      case 'groups':
+        return 'group';
+      case 'f':
+      case 'feeds':
+        return 'feed';
+      case 'b':
+      case 'blocks':
+        return 'block';
+      case 's':
+      case 'streams':
+        return 'stream';
+      case 't':
+      case 'tokens':
+        return 'token';
+      default:
+        return false;
+    }
+
+  }
+
+}
+
+class Packet {
+
+  static typeToShort(t) {
+    return t.charAt(0);
+  }
+
+  static typeToLong(t) {
+    return t + 's';
+  }
+
+  toJSON() {
+    return this.toObject();
+  }
+
+  toObject() {
+
+    return {
+      topic: this.topic(),
+      payload: this.payload(),
+      qos: 1,
+      retain: true
+    };
+
+  }
+
+}
+
 exports = module.exports = MQTT;
