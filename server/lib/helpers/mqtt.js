@@ -43,26 +43,19 @@ Class MqttHelper {
     if(topic[3] === 'csv') {
 
       try {
-
-        if(type === 'feed')
-          packet.payload = this.parseFeedCSV(packet.payload);
-        else if(type === 'group')
-          packet.payload = this.parseGroupCSV(packet.payload);
-
+        packet.payload = this.parseCSV(type, packet.payload);
       } catch(e) {
         return false;
       }
 
     }
 
-    const message = {
+    return message = {
       username: topic[0],
       type: type,
       id: topic[2],
       payload: packet.payload
     };
-
-    return message;
 
   };
 
