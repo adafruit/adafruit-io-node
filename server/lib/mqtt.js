@@ -358,12 +358,12 @@ class Message {
 
 class Packet {
 
-  static typeToShort(t) {
-    return t.charAt(0);
+  get topic() {
+
   }
 
-  static typeToLong(t) {
-    return t + 's';
+  get packet() {
+
   }
 
   toJSON() {
@@ -379,6 +379,14 @@ class Packet {
       retain: true
     };
 
+  }
+
+  static typeToShort(t) {
+    return t.charAt(0);
+  }
+
+  static typeToLong(t) {
+    return t + 's';
   }
 
 }
