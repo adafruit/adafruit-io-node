@@ -5,23 +5,129 @@
 const xml = require('xml'),
       Data = require('../models/Data');
 
-module.exports.feedsFeedIdDataGet = function feedsFeedIdDataGet(req, res, next) {
+module.exports.all = function all(req, res, next) {
 
   const feedId = req.swagger.params['feed_id'].value;
 
-  Data.feedsFeedIdDataGet(feedId)
+  Data.all(feedId)
     .then(handle_response.bind(this, res))
     .catch(handle_error.bind(this, res));
 
 };
 
 
-module.exports.getDataById = function getDataById(req, res, next) {
+module.exports.create = function create(req, res, next) {
 
   const feedId = req.swagger.params['feed_id'].value,
-      dataId = req.swagger.params['data_id'].value;
+      data = req.swagger.params['data'].value;
 
-  Data.getDataById(feedId, dataId)
+  Data.create(feedId, data)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.last = function last(req, res, next) {
+
+  const feedId = req.swagger.params['feed_id'].value;
+
+  Data.last(feedId)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.next = function next(req, res, next) {
+
+  const feedId = req.swagger.params['feed_id'].value;
+
+  Data.next(feedId)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.previous = function previous(req, res, next) {
+
+  const feedId = req.swagger.params['feed_id'].value;
+
+  Data.previous(feedId)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.receive = function receive(req, res, next) {
+
+  const feedId = req.swagger.params['feed_id'].value;
+
+  Data.receive(feedId)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.send = function send(req, res, next) {
+
+  const feedId = req.swagger.params['feed_id'].value,
+      data = req.swagger.params['data'].value;
+
+  Data.send(feedId, data)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.get = function get(req, res, next) {
+
+  const feedId = req.swagger.params['feed_id'].value,
+      id = req.swagger.params['id'].value;
+
+  Data.get(feedId, id)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.replace = function replace(req, res, next) {
+
+  const feedId = req.swagger.params['feed_id'].value,
+      id = req.swagger.params['id'].value,
+      data = req.swagger.params['data'].value;
+
+  Data.replace(feedId, id, data)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.destroy = function destroy(req, res, next) {
+
+  const feedId = req.swagger.params['feed_id'].value,
+      id = req.swagger.params['id'].value;
+
+  Data.destroy(feedId, id)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.update = function update(req, res, next) {
+
+  const feedId = req.swagger.params['feed_id'].value,
+      id = req.swagger.params['id'].value,
+      data = req.swagger.params['data'].value;
+
+  Data.update(feedId, id, data)
     .then(handle_response.bind(this, res))
     .catch(handle_error.bind(this, res));
 

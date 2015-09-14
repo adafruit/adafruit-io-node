@@ -61,9 +61,9 @@
         }
       },
       "post": {
-        "x-swagger-router-controller": "Feeds",
         "summary": "Create a new Feed",
         "description": "",
+        "x-swagger-router-controller": "Feeds",
         "operationId": "create",
         "consumes": [
           "application/json",
@@ -75,6 +75,7 @@
             "in": "body",
             "required": true,
             "schema": {
+              "type": "object",
               "example": {
                 "name": "testing",
                 "key": "tester",
@@ -98,10 +99,7 @@
           "200": {
             "description": "New feed",
             "schema": {
-              "type": "object",
-              "items": {
-                "$ref": "#/definitions/Feed"
-              }
+              "$ref": "#/definitions/Feed"
             }
           },
           "default": {
@@ -115,9 +113,9 @@
     },
     "/feeds/{id}": {
       "get": {
-        "x-swagger-router-controller": "Feeds",
         "description": "Returns feed based on ID",
         "summary": "Get feed by ID, Feed key, or Feed Name",
+        "x-swagger-router-controller": "Feeds",
         "operationId": "get",
         "tags": [
           "Feeds"
@@ -126,10 +124,7 @@
           "200": {
             "description": "Feed response",
             "schema": {
-              "type": "object",
-              "items": {
-                "$ref": "#/definitions/Feed"
-              }
+              "$ref": "#/definitions/Feed"
             }
           },
           "default": {
@@ -151,6 +146,7 @@
       },
       "put": {
         "summary": "Replace an existing Feed",
+        "x-swagger-router-controller": "Feeds",
         "operationId": "replace",
         "description": "",
         "consumes": [
@@ -161,7 +157,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "ID, key, or name of feed to use",
+            "description": "ID, key, or name of Feed",
             "required": true,
             "type": "string"
           },
@@ -175,8 +171,6 @@
                 "name": "temperature",
                 "key": "temp",
                 "description": "test feed",
-                "unit_type": "Fahrenheit Temperature",
-                "unit_symbol": "°F",
                 "visibility": "public",
                 "license": "CC BY-SA 2.0"
               },
@@ -195,9 +189,7 @@
             "description": "Updated feed",
             "schema": {
               "type": "object",
-              "items": {
-                "$ref": "#/definitions/Feed"
-              }
+              "$ref": "#/definitions/Feed"
             }
           },
           "default": {
@@ -209,9 +201,9 @@
         }
       },
       "patch": {
-        "x-swagger-router-controller": "Feeds",
         "summary": "Update properties of an existing Feed",
         "description": "",
+        "x-swagger-router-controller": "Feeds",
         "operationId": "update",
         "consumes": [
           "application/json",
@@ -245,10 +237,7 @@
           "200": {
             "description": "Updated feed",
             "schema": {
-              "type": "object",
-              "items": {
-                "$ref": "#/definitions/Feed"
-              }
+              "$ref": "#/definitions/Feed"
             }
           },
           "default": {
@@ -260,9 +249,9 @@
         }
       },
       "delete": {
-        "x-swagger-router-controller": "Feeds",
         "summary": "Delete an existing Feed",
         "description": "",
+        "x-swagger-router-controller": "Feeds",
         "operationId": "destroy",
         "parameters": [
           {
@@ -295,19 +284,20 @@
     "/feeds/{feed_id}/data": {
       "get": {
         "x-swagger-router-controller": "Data",
+        "operationId": "all",
         "summary": "All data for current feed",
-        "description": " ",
+        "description": "",
+        "tags": [
+          "Data"
+        ],
         "parameters": [
           {
             "name": "feed_id",
             "in": "path",
-            "description": "ID, key, or name of feed to use",
+            "description": "ID, key, or name of feed",
             "required": true,
             "type": "string"
           }
-        ],
-        "tags": [
-          "Data"
         ],
         "responses": {
           "200": {
@@ -326,14 +316,151 @@
             }
           }
         }
+      },
+      "post": {
+        "summary": "Create new Data",
+        "description": "",
+        "x-swagger-router-controller": "Data",
+        "operationId": "create",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "description": "ID, key, or name of feed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "lat": {
+                  "type": "string"
+                },
+                "lon": {
+                  "type": "string"
+                },
+                "ele": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Data"
+        ],
+        "responses": {
+          "200": {
+            "description": "New data",
+            "schema": {
+              "$ref": "#/definitions/Data"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
       }
     },
-    "/feeds/{feed_id}/data/{data_id}": {
-      "get": {
+    "/feeds/{feed_id}/data/send": {
+      "post": {
+        "summary": "Create new Data and Feed",
+        "description": "",
         "x-swagger-router-controller": "Data",
-        "description": "Returns data based on ID",
-        "summary": "",
-        "operationId": "getDataById",
+        "operationId": "send",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "description": "ID, key, or name of feed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "lat": {
+                  "type": "string"
+                },
+                "lon": {
+                  "type": "string"
+                },
+                "ele": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Data"
+        ],
+        "responses": {
+          "200": {
+            "description": "New data",
+            "schema": {
+              "$ref": "#/definitions/Data"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/feeds/{feed_id}/data/receive": {
+      "get": {
+        "summary": "Receive data?",
+        "description": "",
+        "x-swagger-router-controller": "Data",
+        "operationId": "receive",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "description": "ID, key, or name of feed",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "tags": [
           "Data"
         ],
@@ -342,13 +469,151 @@
             "description": "Data response",
             "schema": {
               "type": "object",
-              "items": {
-                "$ref": "#/definitions/Data"
-              }
+              "$ref": "#/definitions/Data"
             }
           },
           "default": {
-            "description": "error payload",
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/feeds/{feed_id}/data/previous": {
+      "get": {
+        "summary": "Previous Data in Queue",
+        "description": "",
+        "x-swagger-router-controller": "Data",
+        "operationId": "previous",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "description": "ID, key, or name of feed",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Data"
+        ],
+        "responses": {
+          "200": {
+            "description": "Data response",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Data"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/feeds/{feed_id}/data/next": {
+      "get": {
+        "summary": "Next Data in Queue",
+        "description": "",
+        "x-swagger-router-controller": "Data",
+        "operationId": "next",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "description": "ID, key, or name of feed",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Data"
+        ],
+        "responses": {
+          "200": {
+            "description": "Data response",
+            "schema": {
+              "$ref": "#/definitions/Data"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/feeds/{feed_id}/data/last": {
+      "get": {
+        "summary": "Last Data in Queue",
+        "description": "",
+        "x-swagger-router-controller": "Data",
+        "operationId": "last",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "description": "ID, key, or name of feed",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Data"
+        ],
+        "responses": {
+          "200": {
+            "description": "Data response",
+            "schema": {
+              "$ref": "#/definitions/Data"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/feeds/{feed_id}/data/{id}": {
+      "get": {
+        "summary": "Returns data based on ID",
+        "description": "",
+        "x-swagger-router-controller": "Data",
+        "operationId": "get",
+        "tags": [
+          "Data"
+        ],
+        "responses": {
+          "200": {
+            "description": "Data response",
+            "schema": {
+              "$ref": "#/definitions/Data"
+            }
+          },
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -363,20 +628,193 @@
             "type": "string"
           },
           {
-            "name": "data_id",
+            "name": "id",
             "in": "path",
-            "description": "ID, key, or name of data to use",
+            "description": "ID, key, or name of Data",
             "required": true,
             "type": "string"
           }
         ]
+      },
+      "put": {
+        "summary": "Replace existing Data",
+        "x-swagger-router-controller": "Data",
+        "operationId": "replace",
+        "description": "",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "description": "ID, key, or name of feed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID, key, or name of Data",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "lat": {
+                  "type": "string"
+                },
+                "lon": {
+                  "type": "string"
+                },
+                "ele": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Data"
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated Data",
+            "schema": {
+              "$ref": "#/definitions/Data"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update properties of existing Data",
+        "description": "",
+        "x-swagger-router-controller": "Data",
+        "operationId": "update",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "description": "ID, key, or name of feed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID, key, or name of Data",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "lat": {
+                  "type": "string"
+                },
+                "lon": {
+                  "type": "string"
+                },
+                "ele": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Data"
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated Data",
+            "schema": {
+              "$ref": "#/definitions/Data"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete existing Data",
+        "description": "",
+        "x-swagger-router-controller": "Data",
+        "operationId": "destroy",
+        "parameters": [
+          {
+            "name": "feed_id",
+            "in": "path",
+            "description": "ID, key, or name of feed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID, key, or name of Data",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Data"
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted Group successfully",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
       }
     },
     "/groups": {
       "get": {
-        "x-swagger-router-controller": "Groups",
         "summary": "All groups for current user",
         "description": "The Groups endpoint returns information about the user's groups.\nThe response includes the latest value of each feed in the group, and other\nmetadata about the group.\n",
+        "x-swagger-router-controller": "Groups",
+        "operationId": "all",
         "tags": [
           "Groups"
         ],
@@ -396,23 +834,63 @@
               "$ref": "#/definitions/Error"
             }
           }
-        },
-        "security": [
+        }
+      },
+      "post": {
+        "summary": "Create a new Group",
+        "description": "",
+        "x-swagger-router-controller": "Groups",
+        "operationId": "create",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
           {
-            "HeaderKey": []
-          },
-          {
-            "QueryKey": []
+            "name": "group",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
           }
-        ]
+        ],
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "New Group",
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
       }
     },
     "/groups/{id}": {
       "get": {
+        "summary": "Returns Group based on ID",
+        "description": "",
         "x-swagger-router-controller": "Groups",
-        "description": "Returns group based on ID",
-        "summary": "Get group by ID, key, or Name",
-        "operationId": "getGroupById",
+        "operationId": "get",
         "tags": [
           "Groups"
         ],
@@ -420,14 +898,11 @@
           "200": {
             "description": "Group response",
             "schema": {
-              "type": "object",
-              "items": {
-                "$ref": "#/definitions/Group"
-              }
+              "$ref": "#/definitions/Group"
             }
           },
           "default": {
-            "description": "error payload",
+            "description": "Unexpected error",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -437,11 +912,150 @@
           {
             "name": "id",
             "in": "path",
-            "description": "ID, key, or name of feed to use",
+            "description": "ID, key, or name of Group",
             "required": true,
             "type": "string"
           }
         ]
+      },
+      "put": {
+        "summary": "Replace an existing Group",
+        "x-swagger-router-controller": "Groups",
+        "operationId": "replace",
+        "description": "",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID, key, or name of Group",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated group",
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update properties of an existing Group",
+        "description": "",
+        "x-swagger-router-controller": "Groups",
+        "operationId": "update",
+        "consumes": [
+          "application/json",
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID, key, or name of Group",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "group",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated Group",
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an existing Group",
+        "description": "",
+        "x-swagger-router-controller": "Groups",
+        "operationId": "destroy",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID, key, or name of Group",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted Group successfully",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
       }
     }
   },
@@ -461,9 +1075,11 @@
   },
   "definitions": {
     "Group": {
+      "type": "object",
       "properties": {
         "id": {
-          "type": "number"
+          "type": "number",
+          "readOnly": true
         },
         "name": {
           "type": "string"
@@ -471,26 +1087,20 @@
         "description": {
           "type": "string"
         },
-        "source": {
-          "type": "string"
-        },
-        "properties": {
-          "type": "string"
-        },
-        "source_keys": {
-          "type": "string"
-        },
-        "created_at": {
-          "type": "string"
-        },
-        "updated_at": {
-          "type": "string"
-        },
         "feeds": {
           "type": "array",
+          "readOnly": true,
           "items": {
             "$ref": "#/definitions/Feed"
           }
+        },
+        "created_at": {
+          "type": "string",
+          "readOnly": true
+        },
+        "updated_at": {
+          "readOnly": true,
+          "type": "string"
         }
       }
     },
@@ -554,18 +1164,11 @@
       }
     },
     "Data": {
-      "required": [
-        "value"
-      ],
-      "example": {
-        "value": 11,
-        "lat": 30,
-        "lng": -82,
-        "ele": 42
-      },
+      "type": "object",
       "properties": {
         "id": {
-          "type": "number"
+          "type": "number",
+          "readOnly": true
         },
         "value": {
           "type": "string"
@@ -577,6 +1180,7 @@
           "type": "number"
         },
         "group_id": {
+          "readOnly": true,
           "type": "number"
         },
         "expiration": {
@@ -592,15 +1196,19 @@
           "type": "number"
         },
         "completed_at": {
+          "readOnly": true,
           "type": "string"
         },
         "created_at": {
+          "readOnly": true,
           "type": "string"
         },
         "updated_at": {
+          "readOnly": true,
           "type": "string"
         },
         "created_epoch": {
+          "readOnly": true,
           "type": "number"
         }
       }

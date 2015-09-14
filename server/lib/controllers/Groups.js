@@ -5,20 +5,66 @@
 const xml = require('xml'),
       Group = require('../models/Group');
 
-module.exports.groupsGet = function groupsGet(req, res, next) {
+module.exports.all = function all(req, res, next) {
 
-  Group.groupsGet()
+  Group.all()
     .then(handle_response.bind(this, res))
     .catch(handle_error.bind(this, res));
 
 };
 
 
-module.exports.getGroupById = function getGroupById(req, res, next) {
+module.exports.create = function create(req, res, next) {
+
+  const group = req.swagger.params['group'].value;
+
+  Group.create(group)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.get = function get(req, res, next) {
 
   const id = req.swagger.params['id'].value;
 
-  Group.getGroupById(id)
+  Group.get(id)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.replace = function replace(req, res, next) {
+
+  const id = req.swagger.params['id'].value,
+      group = req.swagger.params['group'].value;
+
+  Group.replace(id, group)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.destroy = function destroy(req, res, next) {
+
+  const id = req.swagger.params['id'].value;
+
+  Group.destroy(id)
+    .then(handle_response.bind(this, res))
+    .catch(handle_error.bind(this, res));
+
+};
+
+
+module.exports.update = function update(req, res, next) {
+
+  const id = req.swagger.params['id'].value,
+      group = req.swagger.params['group'].value;
+
+  Group.update(id, group)
     .then(handle_response.bind(this, res))
     .catch(handle_error.bind(this, res));
 

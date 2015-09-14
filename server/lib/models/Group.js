@@ -20,12 +20,9 @@ class Group extends Model {
       'id',
       'name',
       'description',
-      'source',
-      'properties',
-      'source_keys',
+      'feeds',
       'created_at',
-      'updated_at',
-      'feeds'
+      'updated_at'
     ];
   }
 
