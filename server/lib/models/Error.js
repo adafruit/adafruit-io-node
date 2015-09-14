@@ -16,9 +16,11 @@ class Error extends Model {
   }
 
   static fields() {
-    return [
-      'error'
-    ];
+    return {
+      error: {
+        type: 'string'
+      }
+    };
   }
 
 }

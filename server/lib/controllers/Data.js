@@ -19,9 +19,9 @@ module.exports.all = function all(req, res, next) {
 module.exports.create = function create(req, res, next) {
 
   const feedId = req.swagger.params['feed_id'].value,
-      data = req.swagger.params['data'].value;
+        group = req.swagger.params['group'].value;
 
-  Data.create(feedId, data)
+  Data.create(feedId, group)
     .then(handle_response.bind(this, res))
     .catch(handle_error.bind(this, res));
 
@@ -75,9 +75,9 @@ module.exports.receive = function receive(req, res, next) {
 module.exports.send = function send(req, res, next) {
 
   const feedId = req.swagger.params['feed_id'].value,
-      data = req.swagger.params['data'].value;
+        group = req.swagger.params['group'].value;
 
-  Data.send(feedId, data)
+  Data.send(feedId, group)
     .then(handle_response.bind(this, res))
     .catch(handle_error.bind(this, res));
 
@@ -87,7 +87,7 @@ module.exports.send = function send(req, res, next) {
 module.exports.get = function get(req, res, next) {
 
   const feedId = req.swagger.params['feed_id'].value,
-      id = req.swagger.params['id'].value;
+        id = req.swagger.params['id'].value;
 
   Data.get(feedId, id)
     .then(handle_response.bind(this, res))
@@ -99,10 +99,10 @@ module.exports.get = function get(req, res, next) {
 module.exports.replace = function replace(req, res, next) {
 
   const feedId = req.swagger.params['feed_id'].value,
-      id = req.swagger.params['id'].value,
-      data = req.swagger.params['data'].value;
+        id = req.swagger.params['id'].value,
+        group = req.swagger.params['group'].value;
 
-  Data.replace(feedId, id, data)
+  Data.replace(feedId, id, group)
     .then(handle_response.bind(this, res))
     .catch(handle_error.bind(this, res));
 
@@ -112,7 +112,7 @@ module.exports.replace = function replace(req, res, next) {
 module.exports.destroy = function destroy(req, res, next) {
 
   const feedId = req.swagger.params['feed_id'].value,
-      id = req.swagger.params['id'].value;
+        id = req.swagger.params['id'].value;
 
   Data.destroy(feedId, id)
     .then(handle_response.bind(this, res))
@@ -124,10 +124,10 @@ module.exports.destroy = function destroy(req, res, next) {
 module.exports.update = function update(req, res, next) {
 
   const feedId = req.swagger.params['feed_id'].value,
-      id = req.swagger.params['id'].value,
-      data = req.swagger.params['data'].value;
+        id = req.swagger.params['id'].value,
+        group = req.swagger.params['group'].value;
 
-  Data.update(feedId, id, data)
+  Data.update(feedId, id, group)
     .then(handle_response.bind(this, res))
     .catch(handle_error.bind(this, res));
 

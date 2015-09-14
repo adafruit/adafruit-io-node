@@ -7,9 +7,7 @@ const xml = require('xml'),
 
 module.exports.all = function all(req, res, next) {
 
-  const groupId = req.swagger.params['group_id'].value;
-
-  Feed.all(groupId)
+  Feed.all()
     .then(handle_response.bind(this, res))
     .catch(handle_error.bind(this, res));
 
@@ -41,7 +39,7 @@ module.exports.get = function get(req, res, next) {
 module.exports.replace = function replace(req, res, next) {
 
   const id = req.swagger.params['id'].value,
-      feed = req.swagger.params['feed'].value;
+        feed = req.swagger.params['feed'].value;
 
   Feed.replace(id, feed)
     .then(handle_response.bind(this, res))
@@ -64,7 +62,7 @@ module.exports.destroy = function destroy(req, res, next) {
 module.exports.update = function update(req, res, next) {
 
   const id = req.swagger.params['id'].value,
-      feed = req.swagger.params['feed'].value;
+        feed = req.swagger.params['feed'].value;
 
   Feed.update(id, feed)
     .then(handle_response.bind(this, res))

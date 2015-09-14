@@ -16,14 +16,27 @@ class Group extends Model {
   }
 
   static fields() {
-    return [
-      'id',
-      'name',
-      'description',
-      'feeds',
-      'created_at',
-      'updated_at'
-    ];
+    return {
+      id: {
+        type: 'number'
+      },
+      name: {
+        type: 'string'
+      },
+      description: {
+        type: 'string'
+      },
+      feeds: {
+        type: 'array',
+        children: 'Feed'
+      },
+      created_at: {
+        type: 'string'
+      },
+      updated_at: {
+        type: 'string'
+      }
+    };
   }
 
 }

@@ -16,21 +16,47 @@ class Data extends Model {
   }
 
   static fields() {
-    return [
-      'id',
-      'value',
-      'position',
-      'feed_id',
-      'group_id',
-      'expiration',
-      'lat',
-      'lon',
-      'ele',
-      'completed_at',
-      'created_at',
-      'updated_at',
-      'created_epoch'
-    ];
+    return {
+      id: {
+        type: 'number'
+      },
+      value: {
+        type: 'string'
+      },
+      position: {
+        type: 'string'
+      },
+      feed_id: {
+        type: 'number'
+      },
+      group_id: {
+        type: 'number'
+      },
+      expiration: {
+        type: 'string'
+      },
+      lat: {
+        type: 'number'
+      },
+      lon: {
+        type: 'number'
+      },
+      ele: {
+        type: 'number'
+      },
+      completed_at: {
+        type: 'string'
+      },
+      created_at: {
+        type: 'string'
+      },
+      updated_at: {
+        type: 'string'
+      },
+      created_epoch: {
+        type: 'number'
+      }
+    };
   }
 
 }

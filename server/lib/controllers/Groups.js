@@ -39,7 +39,7 @@ module.exports.get = function get(req, res, next) {
 module.exports.replace = function replace(req, res, next) {
 
   const id = req.swagger.params['id'].value,
-      group = req.swagger.params['group'].value;
+        group = req.swagger.params['group'].value;
 
   Group.replace(id, group)
     .then(handle_response.bind(this, res))
@@ -62,7 +62,7 @@ module.exports.destroy = function destroy(req, res, next) {
 module.exports.update = function update(req, res, next) {
 
   const id = req.swagger.params['id'].value,
-      group = req.swagger.params['group'].value;
+        group = req.swagger.params['group'].value;
 
   Group.update(id, group)
     .then(handle_response.bind(this, res))

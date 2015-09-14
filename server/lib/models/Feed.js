@@ -16,22 +16,50 @@ class Feed extends Model {
   }
 
   static fields() {
-    return [
-      'id',
-      'name',
-      'key',
-      'description',
-      'unit_type',
-      'unit_symbol',
-      'visibility',
-      'license',
-      'enabled',
-      'last_value',
-      'status',
-      'group_id',
-      'created_at',
-      'updated_at'
-    ];
+    return {
+      id: {
+        type: 'number'
+      },
+      name: {
+        type: 'string'
+      },
+      key: {
+        type: 'string'
+      },
+      description: {
+        type: 'string'
+      },
+      unit_type: {
+        type: 'string'
+      },
+      unit_symbol: {
+        type: 'string'
+      },
+      visibility: {
+        type: 'string'
+      },
+      license: {
+        type: 'string'
+      },
+      enabled: {
+        type: 'boolean'
+      },
+      last_value: {
+        type: 'string'
+      },
+      status: {
+        type: 'string'
+      },
+      group_id: {
+        type: 'number'
+      },
+      created_at: {
+        type: 'string'
+      },
+      updated_at: {
+        type: 'string'
+      }
+    };
   }
 
 }
