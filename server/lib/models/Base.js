@@ -11,12 +11,43 @@ class Base {
     this.constructor.validate(properties);
     this.properties = properties;
 
-    this.constructor.fields().forEach(key => {
+    Object.keys(this.constructor.fields()).forEach(key => {
+
       Object.defineProperty(this, key, {
-        get: () => this.properties[key],
-        set: value => { this.properties[key] = value }
+        get: () => {
+          return this.properties[key];
+        },
+        set: (value) => {
+          this.properties[key] = value;
+        }
       });
+
     });
+
+  }
+
+  loadChildren() {
+
+    const id = `${this.constructor.type().toLowerCase()}_id`,
+          promises = [];
+
+    Object.keys(this.constructor.fields()).forEach(key => {
+
+      const cls = this.constructor.field(key).children;
+
+      if(! cls)
+        return;
+
+      promises.push(
+        require(`./${cls}`).find({[id]: this.id})
+          .then(feeds => {
+            this.feeds = feeds.map(feed => { return feed.toObject(); });
+          })
+      );
+
+    });
+
+    return promises;
 
   }
 
@@ -25,7 +56,16 @@ class Base {
   }
 
   toObject() {
-    return this.properties;
+
+    const keys = Object.keys(this.constructor.fields()),
+          obj = {};
+
+    keys.forEach(key => {
+      obj[key] = this[key] || null;
+    });
+
+    return obj;
+
   }
 
   toString() {
@@ -36,15 +76,19 @@ class Base {
     return 'Base';
   }
 
+  static field(key) {
+    return this.fields()[key];
+  }
+
   static fields() {
-    return [];
+    return {};
   }
 
   static validate(properties) {
 
     Object.keys(properties).forEach(key => {
 
-      if(this.fields().indexOf(key) < 0)
+      if(Object.keys(this.fields()).indexOf(key) < 0)
         throw `invalid property ${key} for ${this.type()}`;
 
     });
@@ -52,20 +96,46 @@ class Base {
   }
 
   static all() {
+    return this.find();
+  }
 
-    const type = this.type();
+  static find(q) {
+
+    const type = this.type(),
+          query = {type: type};
+
+    if(q) {
+      Object.keys(q).forEach(function(key) {
+        query[`${type}.${key}`] = q[key];
+      });
+    }
 
     return new Promise((resolve, reject) => {
 
-      db.find({type: type}, (err, docs) => {
+      db.find(query, (err, docs) => {
 
         if(err)
           return reject(err.message);
 
-        resolve(docs.map(doc => {
+        if(! docs)
+          return resolve([]);
+
+        const promises = [];
+
+        docs = docs.map(doc => {
           doc[type].id = doc._id;
-          return new this(doc[type]);
-        }));
+          doc = new this(doc[type]);
+          promises.push(...doc.loadChildren());
+          return doc;
+        });
+
+        Promise.all(promises)
+          .then(() => {
+            resolve(docs);
+          })
+          .catch(err => {
+            reject(err);
+          });
 
       });
 
@@ -89,7 +159,15 @@ class Base {
           return reject('not found');
 
         doc[type].id = doc._id;
-        resolve(new this(doc[type]));
+        doc = new this(doc[type]);
+
+        Promise.all(doc.loadChildren())
+          .then(() => {
+            resolve(doc);
+          })
+          .catch(err => {
+            reject(err);
+          });
 
       });
 
@@ -116,7 +194,16 @@ class Base {
           return reject(err.message);
 
         doc[type].id = doc._id;
-        resolve(new this(doc[type]));
+        doc = new this(doc[type]);
+
+        Promise.all(doc.loadChildren())
+          .then(() => {
+            resolve(doc);
+          })
+          .catch(err => {
+            reject(err);
+          });
+
 
       });
 
@@ -147,7 +234,16 @@ class Base {
           return reject('update failed');
 
         doc[type].id = doc._id;
-        resolve(new this(doc[type]));
+        doc = new this(doc[type]);
+
+        Promise.all(doc.loadChildren())
+          .then(() => {
+            resolve(doc);
+          })
+          .catch(err => {
+            reject(err);
+          });
+
 
       });
 
@@ -174,8 +270,17 @@ class Base {
         if(replaced !== 1)
           return reject('update failed');
 
-
-        resolve(this.get(sent.id || sent.key || sent.name || id));
+        this.get(sent.id || sent.key || sent.name || id)
+          .then(d => {
+            doc = d;
+            return doc.loadChildren();
+          })
+          .then(() => {
+            resolve(doc);
+          })
+          .catch(err => {
+            reject(err);
+          });
 
       });
 
