@@ -1,8 +1,8 @@
 'use strict';
 
-const db = require('../db');
+const db = require('./db');
 
-class Base {
+class Model {
 
   constructor(properties) {
 
@@ -156,7 +156,7 @@ class Base {
           return reject(err.message);
 
         if(! doc)
-          return reject('not found');
+          return resolve();
 
         doc[type].id = doc._id;
         doc = new this(doc[type]);
@@ -337,4 +337,4 @@ const set_fields = function(type, sent) {
 
 };
 
-exports = module.exports = Base;
+exports = module.exports = Model;
