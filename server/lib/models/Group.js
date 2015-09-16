@@ -1,8 +1,7 @@
 'use strict';
 
 const GeneratedModel = require('../generated/models/Group.js'),
-      Feed = require('./Feed'),
-      db = require('../db');
+      Feed = require('./Feed');
 
 class Group extends GeneratedModel {
 
@@ -43,22 +42,15 @@ class Group extends GeneratedModel {
 
     return new Promise((resolve, reject) => {
 
-      db.find({type: 'Feed', 'Feed.group_id': group.id}).sort({ 'Feed.created_at': -1 }).exec((err, docs) => {
-
-        if(err)
-          return reject(err.message);
-
-        if(! docs)
-          return resolve(group);
-
-        group.feeds = docs.map(feed => {
-          feed['Feed'].id = feed._id;
-          return new Feed(feed['Feed']);
+      Feed.find({group_id: group.id})
+        .then(feeds => {
+          group.feeds = feeds;
+          resolve(group);
+        })
+        .catch(err => {
+          group.feeds = [];
+          resolve(group);
         });
-
-        resolve(group);
-
-      });
 
     });
 
