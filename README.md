@@ -88,6 +88,7 @@ $ adafruit-io help server
 
   Commands:
 
+    config    configure the local server
     install   installs server service (linux only)
     remove    removes server service (linux only)
     start     starts server daemon
@@ -99,11 +100,26 @@ $ adafruit-io help server
     -h, --help      output usage information
     -V, --version   output the version number
     -p, --port <n>  http port
+
 ```
 
-To start the server daemon, you can run the following command on the default port of `8080`:
+To start the server daemon, you can run the following command on the default port of `8080`
 ```console
 $ adafruit-io server start
+```
+You will then be prompted to enter a `username` and `AIO Key`. The `username`
+and `AIO Key` you set here will be used by the server to authenticate requests from
+your devices. You can set them to any value, but make sure the `AIO Key` is not easily
+guessable.
+```console
+Adafruit IO Local Setup
+? Username to use when authenticating requests locally: testing
+? Adafruit IO Key to use when authenticating requests locally: askjh33rfsdfkjhwer342r2rois
+```
+After you have entered the `username` and `AIO Key`, the server will start. These values will be saved,
+but you can change them by running `adafruit-io server config` and restarting the server.
+```console
+
                                      ▄▄
                                    ▄████
                                  ▄███████
