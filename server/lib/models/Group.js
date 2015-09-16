@@ -1,3 +1,5 @@
+'use strict';
+
 const GeneratedModel = require('../generated/models/Group.js');
 
 class Group extends GeneratedModel {

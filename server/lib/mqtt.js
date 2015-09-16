@@ -1,3 +1,5 @@
+'use strict';
+
 const mosca = require('mosca'),
       stream = require('stream');
 

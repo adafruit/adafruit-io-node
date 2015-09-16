@@ -1,3 +1,5 @@
+'use strict';
+
 const GeneratedModel = require('../generated/models/Error.js');
 
 class Error extends GeneratedModel {

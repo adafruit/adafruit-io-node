@@ -1,3 +1,5 @@
+'use strict';
+
 const GeneratedModel = require('../generated/models/Feed.js');
 
 class Feed extends GeneratedModel {

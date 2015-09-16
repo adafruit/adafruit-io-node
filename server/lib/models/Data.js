@@ -32,7 +32,6 @@ class Data extends GeneratedModel {
 
     return Feed.get(feed_id)
       .catch(err => {
-        console.log(err);
         return Feed.create({name: feed_id});
       })
       .then(feed => {

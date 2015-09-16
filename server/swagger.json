@@ -879,16 +879,22 @@
   },
   "parameters": {
     "Data": {
-      "name": "group",
+      "name": "data",
       "in": "body",
       "required": true,
       "schema": {
         "type": "object",
         "properties": {
-          "name": {
+          "value": {
             "type": "string"
           },
-          "description": {
+          "lat": {
+            "type": "string"
+          },
+          "lon": {
+            "type": "string"
+          },
+          "ele": {
             "type": "string"
           }
         }

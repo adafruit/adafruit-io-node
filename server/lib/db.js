@@ -1,3 +1,5 @@
+'use strict';
+
 const nedb = require('nedb'),
       path = require('path');
 
