@@ -147,7 +147,6 @@ function configure(cb, override) {
     process.env.AIO_SERVER_KEY = answers.key;
 
     fs.writeFileSync(path.join(__dirname, 'server', '.aio_auth'), JSON.stringify(answers));
-    console.log(JSON.parse(fs.readFileSync(path.join(__dirname, 'server', '.aio_auth'))));
 
     cb();
 
