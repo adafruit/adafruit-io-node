@@ -6,6 +6,8 @@ var spawn = require('child_process').spawn,
     logo = fs.readFileSync(path.join(__dirname,'logo.txt'), 'utf8'),
     server = require('commander'),
     hostname = require('os').hostname(),
+    inquirer = require('inquirer'),
+    chalk = require('chalk'),
     package = require('./package.json');
 
 var command = process.platform === 'win32' ? 'forever.cmd' : 'forever',
@@ -20,7 +22,7 @@ function install() {
 
   process.env.AIO_PORT = server.port || 8080;
   process.stdout.write(logo);
-  console.log('[status]  starting service...');
+  console.log(chalk.bold('[status]') + '  starting service...');
 
   var child = spawn('forever-service', ['install', '-s', 'index.js', '--foreverOptions', '" -c node --es_staging"', '--start', 'aioserver'], {
     cwd: path.join(__dirname, 'server'),
@@ -28,8 +30,8 @@ function install() {
     detached: true
   });
 
-  console.log(`[status]  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/`);
-  console.log(`[info]    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
+  console.log(chalk.bold('[status]') + `  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/`);
+  console.log(chalk.bold('[info]') + `    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
 
   child.on('error', console.log);
 
@@ -46,7 +48,7 @@ function remove() {
     detached: true
   });
 
-  console.log('[status] stopping service...\n');
+  console.log(chalk.bold('[status]') + ' stopping service...\n');
 
   child.on('error', console.log);
 
@@ -56,7 +58,7 @@ function start() {
 
   process.env.AIO_PORT = server.port || 8080;
   process.stdout.write(logo);
-  console.log('[status]  starting server...');
+  console.log(chalk.bold('[status]') + '  starting server...');
 
   var child = spawn(command, ['start',  '-c', node_command, '-s', 'index.js'], {
     cwd: path.join(__dirname, 'server'),
@@ -64,8 +66,8 @@ function start() {
     detached: true
   });
 
-  console.log(`[status]  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/`);
-  console.log(`[info]    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
+  console.log(chalk.bold('[status]') + `  adafruit io is now ready at http://${hostname}:${process.env.AIO_PORT}/`);
+  console.log(chalk.bold('[info]') + `    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
 
   child.on('error', console.log);
 
@@ -79,7 +81,7 @@ function restart() {
     detached: true
   });
 
-  console.log('[status] restarting server...\n');
+  console.log(chalk.bold('[status]') + ' restarting server...\n');
 
   child.on('error', console.log);
 
@@ -93,17 +95,72 @@ function stop() {
     detached: true
   });
 
-  console.log('[status] stopping server...\n');
+  console.log(chalk.bold('[status]') + ' stopping server...\n');
 
   child.on('error', console.log);
 
 }
 
+function configure(cb, override) {
+
+  override = override || false;
+  cb = cb || function() {};
+
+  var config = {username: '', key: ''};
+
+  if(! override) {
+
+    if(process.env.AIO_SERVER_USER && process.env.AIO_SERVER_KEY)
+      return cb();
+
+    try {
+      config = JSON.parse(fs.readFileSync(path.join(__dirname, 'server', '.aio_auth')));
+      process.env.AIO_SERVER_USER = config.username;
+      process.env.AIO_SERVER_KEY = config.key;
+    } catch(err){}
+
+    if(process.env.AIO_SERVER_USER && process.env.AIO_SERVER_KEY)
+      return cb();
+
+  }
+
+  var questions = [
+    {
+      type: 'input',
+      name: 'username',
+      message: 'Username to use when authenticating requests locally:',
+      default: config.username
+    },
+    {
+      type: 'input',
+      name: 'key',
+      message: 'Adafruit IO Key to use when authenticating requests locally:',
+      default: config.key
+    }
+  ];
+
+  console.log(chalk.bold.underline('Adafruit IO Local Setup'));
+
+  inquirer.prompt(questions, function(answers) {
+
+    process.env.AIO_SERVER_USER = answers.username;
+    process.env.AIO_SERVER_KEY = answers.key;
+
+    fs.writeFileSync(path.join(__dirname, 'server', '.aio_auth'), JSON.stringify(answers));
+    console.log(JSON.parse(fs.readFileSync(path.join(__dirname, 'server', '.aio_auth'))));
+
+    cb();
+
+  });
+
+}
+
 server.version(package.version);
 server.option('-p, --port <n>', 'http port', parseInt);
-server.command('install').description('installs server service (linux only)').action(install);
+server.command('config').description('configure the local server').action(configure.bind(this, console.log, true));
+server.command('install').description('installs server service (linux only)').action(configure.bind(this, install, false));
 server.command('remove').description('removes server service (linux only)').action(remove);
-server.command('start').description('starts server daemon').action(start);
+server.command('start').description('starts server daemon').action(configure.bind(this, start, false));
 server.command('restart').description('restarts server daemon').action(restart);
 server.command('stop').description('stops server daemon').action(stop);
 server.parse(process.argv);
