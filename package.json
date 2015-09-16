@@ -1,28 +1,60 @@
 {
   "name": "adafruit-io",
-  "version": "2.0.0",
-  "description": "Javascript client for io.adafruit.com",
+  "version": "3.1.1",
+  "description": "Adafruit IO Client, Local Server, & io.adafruit.com TLS Tunnel",
+  "bin": {
+    "adafruit-io": "./cli",
+    "adafruit-io-server": "./cli-server",
+    "adafruit-io-tunnel": "./cli-tunnel"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/adafruit/io-client-node"
+    "url": "git+https://github.com/adafruit/adafruit-io-node.git"
   },
-  "keywords": [
-    "adafruit",
-    "io"
-  ],
   "author": "Todd Treece <todd@uniontownlabs.org>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/adafruit/io-client-node/issues"
+    "url": "https://github.com/adafruit/adafruit-io-node/issues"
   },
-  "homepage": "https://github.com/adafruit/io-client-node",
+  "homepage": "https://github.com/adafruit/adafruit-io-node#readme",
+  "devDependencies": {
+    "dotenv": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-mocha": "^2.1.3",
+    "jshint-stylish": "^2.0.1"
+  },
+  "keywords": [
+    "adafruit",
+    "io",
+    "adafruit io",
+    "iot",
+    "internet",
+    "of",
+    "things",
+    "tunnel",
+    "raspberry",
+    "pi",
+    "raspberry pi",
+    "raspi"
+  ],
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "dependencies": {
-    "grunt": "^0.4.5",
+    "chalk": "^1.1.1",
+    "commander": "^2.8.1",
+    "express": "^4.13.3",
+    "express-csv": "^0.6.0",
+    "inquirer": "^0.10.0",
     "mqtt": "^1.1.2",
-    "restler": "^3.2.2"
+    "nedb": "^1.1.3",
+    "restler": "^3.2.2",
+    "swagger-tools": "^0.9.5",
+    "xml": "^1.0.0"
   }
 }

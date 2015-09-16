@@ -2,3 +2,4 @@ node_modules
 .DS_Store
 *.swp
 *.swo
+server/.aio_auth
