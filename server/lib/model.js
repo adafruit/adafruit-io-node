@@ -26,31 +26,6 @@ class Model {
 
   }
 
-  loadChildren() {
-
-    const id = `${this.constructor.type().toLowerCase()}_id`,
-          promises = [];
-
-    Object.keys(this.constructor.fields()).forEach(key => {
-
-      const cls = this.constructor.field(key).children;
-
-      if(! cls)
-        return;
-
-      promises.push(
-        require(`./${cls}`).find({[id]: this.id})
-          .then(feeds => {
-            this.feeds = feeds.map(feed => { return feed.toObject(); });
-          })
-      );
-
-    });
-
-    return promises;
-
-  }
-
   toJSON() {
     return this.toObject();
   }
@@ -120,22 +95,10 @@ class Model {
         if(! docs)
           return resolve([]);
 
-        const promises = [];
-
-        docs = docs.map(doc => {
+        resolve(docs.map(doc => {
           doc[type].id = doc._id;
-          doc = new this(doc[type]);
-          promises.push(...doc.loadChildren());
-          return doc;
-        });
-
-        Promise.all(promises)
-          .then(() => {
-            resolve(docs);
-          })
-          .catch(err => {
-            reject(err);
-          });
+          return new this(doc[type]);
+        }));
 
       });
 
@@ -143,31 +106,23 @@ class Model {
 
   }
 
-  static get(...args) {
+  static get(id) {
 
-    const type = this.type(),
-          id = args.pop();
+    const type = this.type();
 
     return new Promise((resolve, reject) => {
 
+      console.log(JSON.stringify(id_query(type, id)));
       db.findOne(id_query(type, id), (err, doc) => {
 
         if(err)
           return reject(err.message);
 
         if(! doc)
-          return resolve();
+          return reject(`${this.type()} not found`);
 
         doc[type].id = doc._id;
-        doc = new this(doc[type]);
-
-        Promise.all(doc.loadChildren())
-          .then(() => {
-            resolve(doc);
-          })
-          .catch(err => {
-            reject(err);
-          });
+        resolve(new this(doc[type]));
 
       });
 
@@ -194,16 +149,7 @@ class Model {
           return reject(err.message);
 
         doc[type].id = doc._id;
-        doc = new this(doc[type]);
-
-        Promise.all(doc.loadChildren())
-          .then(() => {
-            resolve(doc);
-          })
-          .catch(err => {
-            reject(err);
-          });
-
+        resolve(new this(doc[type]));
 
       });
 
@@ -211,11 +157,9 @@ class Model {
 
   }
 
-  static replace(...args) {
+  static replace(id, sent) {
 
-    const type = this.type(),
-          sent = args.pop(),
-          id = args.pop();
+    const type = this.type();
 
     return new Promise((resolve, reject) => {
 
@@ -234,16 +178,7 @@ class Model {
           return reject('update failed');
 
         doc[type].id = doc._id;
-        doc = new this(doc[type]);
-
-        Promise.all(doc.loadChildren())
-          .then(() => {
-            resolve(doc);
-          })
-          .catch(err => {
-            reject(err);
-          });
-
+        resolve(new this(doc[type]));
 
       });
 
@@ -251,11 +186,9 @@ class Model {
 
   }
 
-  static update(...args) {
+  static update(id, sent) {
 
-    const type = this.type(),
-          sent = args.pop(),
-          id = args.pop();
+    const type = this.type();
 
     return new Promise((resolve, reject) => {
 
@@ -271,10 +204,6 @@ class Model {
           return reject('update failed');
 
         this.get(sent.id || sent.key || sent.name || id)
-          .then(d => {
-            doc = d;
-            return doc.loadChildren();
-          })
           .then(() => {
             resolve(doc);
           })
@@ -314,14 +243,17 @@ class Model {
 
 const id_query = function(type, id_key_name) {
 
-  return {
+  const query = {
     type: type,
     '$or': [
-      {[`${type}.id`]: id_key_name},
-      {[`${type}.key`]: id_key_name},
-      {[`${type}.name`]: id_key_name}
+      {_id: id_key_name}
     ]
   };
+
+  query['$or'].push({[`${type}.key`]: id_key_name});
+  query['$or'].push({[`${type}.name`]: id_key_name});
+
+  return query;
 
 };
 
