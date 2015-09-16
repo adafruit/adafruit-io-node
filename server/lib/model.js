@@ -9,7 +9,7 @@ class Model {
     properties = properties || {};
 
     this.constructor.validate(properties);
-    this.properties = properties;
+    this.properties = Object.assign({}, properties);
 
     Object.keys(this.constructor.fields()).forEach(key => {
 
@@ -112,7 +112,6 @@ class Model {
 
     return new Promise((resolve, reject) => {
 
-      console.log(JSON.stringify(id_query(type, id)));
       db.findOne(id_query(type, id), (err, doc) => {
 
         if(err)
@@ -139,7 +138,7 @@ class Model {
       const obj = {type: type};
 
       delete sent.id;
-      sent.updated_at = (new Date()).toISOString();
+      sent.updated_at = new Date();
       sent.created_at = sent.updated_at;
       obj[type] = sent;
 
@@ -166,7 +165,7 @@ class Model {
       const obj = {type: type};
 
       delete sent.id;
-      sent.updated_at = (new Date()).toISOString();
+      sent.updated_at = new Date();
       obj[type] = sent;
 
       db.update(id_query(type, id), obj, {}, (err, replaced, doc) => {
@@ -193,7 +192,7 @@ class Model {
     return new Promise((resolve, reject) => {
 
       delete sent.id;
-      sent.updated_at = (new Date()).toISOString();
+      sent.updated_at = new Date();
 
       db.update(id_query(type, id), set_fields(type, sent), {}, (err, replaced, doc) => {
 
@@ -204,8 +203,8 @@ class Model {
           return reject('update failed');
 
         this.get(sent.id || sent.key || sent.name || id)
-          .then(() => {
-            resolve(doc);
+          .then(d => {
+            resolve(d);
           })
           .catch(err => {
             reject(err);
