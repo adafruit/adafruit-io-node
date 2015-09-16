@@ -14,6 +14,8 @@ api.schemes = [
   'http'
 ];
 
+const AIO_KEY = process.env.AIO_SERVER_KEY || '';
+
 swaggerTools.initializeMiddleware(api, function(middleware) {
 
   app.use(function(req, res, next) {
@@ -30,6 +32,31 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
   });
 
   app.use(middleware.swaggerMetadata());
+  app.use(middleware.swaggerSecurity({
+    HeaderKey: function(req, def, scopes, next) {
+
+      if(req.headers['x-aio-key'] == AIO_KEY) {
+        return next();
+      }
+
+      next(new Error('unauthorized'));
+
+    },
+    QueryKey: function(req, def, scopes, next) {
+
+      if(req.query['x-aio-key'] == AIO_KEY) {
+        return next();
+      }
+
+      if(req.query['X-AIO-Key'] == AIO_KEY) {
+        return next();
+      }
+
+      next(new Error('unauthorized'));
+
+    }
+  }));
+
   app.use(middleware.swaggerValidator());
   app.use(middleware.swaggerRouter({
     controllers: path.join(__dirname, 'lib', 'controllers'),
@@ -47,6 +74,10 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
 
   app.get('/api', function(req, res) {
     res.redirect('/api/docs');
+  });
+
+  app.use(function(err, req, res, next) {
+    res.send(err.message);
   });
 
   app.listen(port);
