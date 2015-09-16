@@ -34,7 +34,9 @@ function install() {
   console.log(chalk.bold('[info]') + `    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
 
   child.on('error', console.log);
-
+  child.on('exit', function(code) {
+    process.exit(code);
+  });
 }
 
 function remove() {
@@ -51,7 +53,9 @@ function remove() {
   console.log(chalk.bold('[status]') + ' stopping service...\n');
 
   child.on('error', console.log);
-
+  child.on('exit', function(code) {
+    process.exit(code);
+  });
 }
 
 function start() {
@@ -70,7 +74,9 @@ function start() {
   console.log(chalk.bold('[info]') + `    documentation is available at http://${hostname}:${process.env.AIO_PORT}/api/docs\n`);
 
   child.on('error', console.log);
-
+  child.on('exit', function(code) {
+    process.exit(code);
+  });
 }
 
 function restart() {
@@ -84,7 +90,9 @@ function restart() {
   console.log(chalk.bold('[status]') + ' restarting server...\n');
 
   child.on('error', console.log);
-
+  child.on('exit', function(code) {
+    process.exit(code);
+  });
 }
 
 function stop() {
@@ -98,7 +106,9 @@ function stop() {
   console.log(chalk.bold('[status]') + ' stopping server...\n');
 
   child.on('error', console.log);
-
+  child.on('exit', function(code) {
+    process.exit(code);
+  });
 }
 
 function configure(cb, override) {

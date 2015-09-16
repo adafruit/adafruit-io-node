@@ -1,2 +1,2 @@
-exports = module.exports = require('./client');
+exports = module.exports = require('./client/index');
 

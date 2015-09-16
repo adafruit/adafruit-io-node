@@ -6,7 +6,6 @@ var spawn = require('child_process').spawn,
     logo = fs.readFileSync(path.join(__dirname,'logo.txt'), 'utf8'),
     tunnel = require('commander'),
     hostname = require('os').hostname(),
-    inquirer = require('inquirer'),
     chalk = require('chalk'),
     package = require('./package.json');
 
@@ -34,7 +33,9 @@ function install() {
   console.log(chalk.bold('[status]') + `  io.adafruit.com MQTTS tunnel running: mqtt://${hostname}:${process.env.TUNNEL_MQTT}\n`);
 
   child.on('error', console.log);
-
+  child.on('exit', function(code) {
+    process.exit(code);
+  });
 }
 
 function remove() {
@@ -51,7 +52,9 @@ function remove() {
   console.log(chalk.bold('[status]') + ' stopping tunnel...\n');
 
   child.on('error', console.log);
-
+  child.on('exit', function(code) {
+    process.exit(code);
+  });
 }
 
 function start() {
@@ -72,7 +75,9 @@ function start() {
   console.log(chalk.bold('[status]') + `  io.adafruit.com MQTTS tunnel running: mqtt://${hostname}:${process.env.TUNNEL_MQTT}\n`);
 
   child.on('error', console.log);
-
+  child.on('exit', function(code) {
+    process.exit(code);
+  });
 }
 
 function restart() {
@@ -86,7 +91,9 @@ function restart() {
   console.log(chalk.bold('[status]') + ' restarting tunnel...\n');
 
   child.on('error', console.log);
-
+  child.on('exit', function(code) {
+    process.exit(code);
+  });
 }
 
 function stop() {
@@ -100,58 +107,9 @@ function stop() {
   console.log(chalk.bold('[status]') + ' stopping tunnel...\n');
 
   child.on('error', console.log);
-
-}
-
-function auth(cb, override) {
-
-  override = false;
-  cb = cb || function() {};
-
-  var config = {username: '', key: ''};
-
-  if(! override) {
-
-    if(process.env.AIO_SERVER_USER && process.env.AIO_SERVER_KEY)
-      return cb();
-
-    try {
-      config = JSON.parse(fs.readFileSync(path.join(__dirname, 'server', '.aio_auth')));
-      process.env.AIO_SERVER_USER = config.username;
-      process.env.AIO_SERVER_KEY = config.key;
-    } catch(err){}
-
-    if(process.env.AIO_SERVER_USER && process.env.AIO_SERVER_KEY)
-      return cb();
-
-  }
-
-  var questions = [
-    {
-      type: 'input',
-      name: 'username',
-      message: 'Username to use when authenticating requests locally:',
-      default: config.username
-    },
-    {
-      type: 'input',
-      name: 'key',
-      message: 'Adafruit IO Key to use when authenticating requests locally:',
-      default: config.key
-    }
-  ];
-
-  inquirer.prompt(questions, function(answers) {
-
-    process.env.AIO_SERVER_USER = answers.username;
-    process.env.AIO_SERVER_KEY = answers.key;
-
-    fs.writeFileSync(path.join(__dirname, 'server', '.aio_auth'), JSON.stringify(answers));
-
-    cb();
-
+  child.on('exit', function(code) {
+    process.exit(code);
   });
-
 }
 
 tunnel.version(package.version);
