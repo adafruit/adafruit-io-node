@@ -11,7 +11,7 @@ var spawn = require('child_process').spawn,
     package = require('./package.json');
 
 var command = process.platform === 'win32' ? 'forever.cmd' : 'forever',
-    node_command = process.platform === 'win32' ? 'node.cmd --es_staging' : 'node --es_staging';
+    node_command = 'node --es_staging';
 
 server._name = 'adafruit-io server';
 
