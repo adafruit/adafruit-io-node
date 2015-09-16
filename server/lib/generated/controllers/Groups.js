@@ -5,68 +5,65 @@
 const Controller = require('../../controller'),
       Group = require('../../models/Group');
 
-class GroupsController extends Controller {
+exports = module.exports = Object.assign({}, Controller);
 
-  static all(req, res, next) {
+module.exports.all = function all(req, res, next) {
 
-    Group.all()
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Group.all()
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static create(req, res, next) {
+module.exports.create = function create(req, res, next) {
 
-    const group = req.swagger.params['group'].value;
+  const group = req.swagger.params['group'].value;
 
-    Group.create(group)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Group.create(group)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static get(req, res, next) {
+module.exports.get = function get(req, res, next) {
 
-    const id = req.swagger.params['id'].value;
+  const id = req.swagger.params['id'].value;
 
-    Group.get(id)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Group.get(id)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static replace(req, res, next) {
+module.exports.replace = function replace(req, res, next) {
 
-    const id = req.swagger.params['id'].value,
-          group = req.swagger.params['group'].value;
+  const id = req.swagger.params['id'].value,
+        group = req.swagger.params['group'].value;
 
-    Group.replace(id, group)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Group.replace(id, group)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static destroy(req, res, next) {
+module.exports.destroy = function destroy(req, res, next) {
 
-    const id = req.swagger.params['id'].value;
+  const id = req.swagger.params['id'].value;
 
-    Group.destroy(id)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Group.destroy(id)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static update(req, res, next) {
+module.exports.update = function update(req, res, next) {
 
-    const id = req.swagger.params['id'].value,
-          group = req.swagger.params['group'].value;
+  const id = req.swagger.params['id'].value,
+        group = req.swagger.params['group'].value;
 
-    Group.update(id, group)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Group.update(id, group)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-}
-
-exports = module.exports = GroupsController;

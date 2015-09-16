@@ -5,126 +5,123 @@
 const Controller = require('../../controller'),
       Data = require('../../models/Data');
 
-class DataController extends Controller {
+exports = module.exports = Object.assign({}, Controller);
 
-  static all(req, res, next) {
+module.exports.all = function all(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value;
+  const feedId = req.swagger.params['feed_id'].value;
 
-    Data.all(feedId)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.all(feedId)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static create(req, res, next) {
+module.exports.create = function create(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value,
-          group = req.swagger.params['group'].value;
+  const feedId = req.swagger.params['feed_id'].value,
+        data = req.swagger.params['data'].value;
 
-    Data.create(feedId, group)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.create(feedId, data)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static last(req, res, next) {
+module.exports.last = function last(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value;
+  const feedId = req.swagger.params['feed_id'].value;
 
-    Data.last(feedId)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.last(feedId)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static next(req, res, next) {
+module.exports.next = function next(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value;
+  const feedId = req.swagger.params['feed_id'].value;
 
-    Data.next(feedId)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.next(feedId)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static previous(req, res, next) {
+module.exports.previous = function previous(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value;
+  const feedId = req.swagger.params['feed_id'].value;
 
-    Data.previous(feedId)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.previous(feedId)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static receive(req, res, next) {
+module.exports.receive = function receive(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value;
+  const feedId = req.swagger.params['feed_id'].value;
 
-    Data.receive(feedId)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.receive(feedId)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static send(req, res, next) {
+module.exports.send = function send(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value,
-          group = req.swagger.params['group'].value;
+  const feedId = req.swagger.params['feed_id'].value,
+        data = req.swagger.params['data'].value;
 
-    Data.send(feedId, group)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.send(feedId, data)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static get(req, res, next) {
+module.exports.get = function get(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value,
-          id = req.swagger.params['id'].value;
+  const feedId = req.swagger.params['feed_id'].value,
+        id = req.swagger.params['id'].value;
 
-    Data.get(feedId, id)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.get(feedId, id)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static replace(req, res, next) {
+module.exports.replace = function replace(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value,
-          id = req.swagger.params['id'].value,
-          group = req.swagger.params['group'].value;
+  const feedId = req.swagger.params['feed_id'].value,
+        id = req.swagger.params['id'].value,
+        data = req.swagger.params['data'].value;
 
-    Data.replace(feedId, id, group)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.replace(feedId, id, data)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static destroy(req, res, next) {
+module.exports.destroy = function destroy(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value,
-          id = req.swagger.params['id'].value;
+  const feedId = req.swagger.params['feed_id'].value,
+        id = req.swagger.params['id'].value;
 
-    Data.destroy(feedId, id)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.destroy(feedId, id)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-  static update(req, res, next) {
+module.exports.update = function update(req, res, next) {
 
-    const feedId = req.swagger.params['feed_id'].value,
-          id = req.swagger.params['id'].value,
-          group = req.swagger.params['group'].value;
+  const feedId = req.swagger.params['feed_id'].value,
+        id = req.swagger.params['id'].value,
+        data = req.swagger.params['data'].value;
 
-    Data.update(feedId, id, group)
-      .then(this.handleResponse.bind(this, res))
-      .catch(this.handleError.bind(this, res));
+  Data.update(feedId, id, data)
+    .then(exports.handleResponse.bind(this, res))
+    .catch(exports.handleError.bind(this, res));
 
-  }
+};
 
-}
-
-exports = module.exports = DataController;
