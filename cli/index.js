@@ -10,18 +10,14 @@ const yargs = require('yargs'),
 
 class CLI {
 
-  constructor(options) {
+  constructor(type) {
 
-    this.type = 'cli';
-    this.yargs = yargs;
-    this.argv = false;
-    this.required = 1;
-
-    Object.assign(this, options || {});
+    this.type = type || 'cli';
 
     this.logger = new (winston.Logger)({
       transports: [
         new (winston.transports.Console)({
+          level: 'debug',
           formatter: options => {
             const level = chalk.bold(`[${options.level}]`);
             return `${level}: ${options.message || '' }`;
@@ -32,27 +28,37 @@ class CLI {
 
     this.logger.extend(this);
 
-    this.setup();
-
   }
 
-  validate(argv) {
+  init() {
 
-    if(argv._.length < this.required)
-      this.yargs.showHelp();
-
-  }
-
-  setup() {
-
-    this.argv = this.yargs
+    const argv = yargs
       .usage('Usage: adafruit-io <command>')
-      .command('server', 'Adafruit IO local server', yargs => { const server = require('./server'); new server(yargs); })
-      .command('client', 'Adafruit IO client', yargs => { const client = require('./client'); new client(yargs); })
-      .command('tunnel', 'TLS tunnel to io.adafruit.com', yargs => { const tunnel = require('./tunnel'); new tunnel(yargs); })
-      .help('help').version(version).wrap(null).argv;
+      .command('server', 'Adafruit IO local server')
+      .command('client', 'Adafruit IO client')
+      .command('tunnel', 'TLS tunnel to io.adafruit.com')
+      .command('help', 'Show help')
+      .command('version', 'Show version info')
+      .demand(1, 'must provide a valid command')
+      .argv;
 
-    this.validate(this.argv);
+    const command = argv._[0];
+
+    if(command === 'help')
+      return yargs.showHelp();
+
+    if(command === 'version') {
+      console.log(version);
+      process.exit();
+    }
+
+    const sub = {
+      client: require('./client'),
+      server: require('./server'),
+      tunnel: require('./tunnel')
+    };
+
+    new sub[command]();
 
   }
 
@@ -75,7 +81,7 @@ class CLI {
       detached: true
     });
 
-    child.on('error', this.error);
+    child.stderr.on('data', this.error);
     child.on('exit', function(code) {
       process.exit(code);
     });
@@ -91,9 +97,6 @@ class CLI {
   }
 
   foreverService(command) {
-
-    if(require('os').platform() !== 'linux')
-      return this.error('running adafruit io as a service is only supported on linux');
 
     if(command === 'install')
       this.spawn('forever-service', ['install', '-s', 'index.js', '--foreverOptions', '" -c node --es_staging"', '--start', `aio${this.type}`]);
