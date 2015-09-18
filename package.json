@@ -3,9 +3,7 @@
   "version": "3.1.1",
   "description": "Adafruit IO Client, Local Server, & io.adafruit.com TLS Tunnel",
   "bin": {
-    "adafruit-io": "./cli",
-    "adafruit-io-server": "./cli-server",
-    "adafruit-io-tunnel": "./cli-tunnel"
+    "adafruit-io": "./aio-cli"
   },
   "main": "index.js",
   "scripts": {
@@ -56,6 +54,7 @@
     "restler": "^3.2.2",
     "swagger-client-promises": "^1.0.1",
     "swagger-tools": "^0.9.5",
-    "xml": "^1.0.0"
+    "xml": "^1.0.0",
+    "yargs": "^3.25.0"
   }
 }
