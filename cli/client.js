@@ -1,29 +1,30 @@
 'use strict';
 
 const Client = require('../client'),
-      CLI = require('./index');
+      CLI = require('./index'),
+      Yargs = require('yargs'),
+      util = require('util');
 
 class ClientCLI extends CLI {
 
-  constructor(yargs) {
+  constructor() {
 
+    super('client');
+
+    this.yargs = Yargs(process.argv.slice(3));
     this.client = false;
 
-    super({
-      type: 'client',
-      yargs: yargs,
-      required: 2
-    });
+    this.init();
 
   }
 
-  setup() {
+  init() {
 
     if(! process.env.AIO_CLIENT_USER || ! process.env.AIO_CLIENT_KEY)
       return this.requireAuth(this.yargs);
 
     const options = {
-      success: this.setupAPI.bind(this),
+      success: this.setupAPI.bind(this, this.yargs),
       failure: this.error.bind(this)
     };
 
@@ -37,12 +38,11 @@ class ClientCLI extends CLI {
 
   }
 
-  setupAPI() {
+  setupAPI(yargs) {
 
-    this.yargs.usage('Usage: adafruit-io client <api> [options]');
-    this.required = 1;
-
-    this.yargs.command('config', 'configure the client', this.requireAuth.bind(this));
+    yargs
+      .usage('Usage: adafruit-io client <command> [options]')
+      .command('config', 'configure the client');
 
     const apis = this.client.swagger.apis;
 
@@ -50,13 +50,25 @@ class ClientCLI extends CLI {
 
       if(api === 'help') return;
 
-      const lower = api.toLowerCase();
-
-      this.yargs.command(lower, `${lower} API`, this.setupOperations.bind(this, api));
+      yargs.command(api.toLowerCase(), `Adafruit IO ${api} API commands`);
 
     });
 
-    this.argv = this.yargs.help('help').wrap(null).argv;
+    yargs.command('help', 'Show help');
+
+    const argv = yargs
+      .demand(1, 'You must supply a valid client command')
+      .help('help').argv;
+
+    const command = argv._[0];
+
+    if(command === 'help')
+      return yargs.showHelp();
+
+    if(command === 'config')
+      return this.requireAuth(Yargs(process.argv.slice(4)));
+
+    this.setupOperations(command[0].toUpperCase() + command.slice(1), Yargs(process.argv.slice(4)));
 
   }
 
@@ -64,38 +76,44 @@ class ClientCLI extends CLI {
 
     const operations = this.client.swagger.apis[api].operations;
 
-    yargs.usage(`Usage: $0 client ${api} [options]`);
+    yargs.usage(`Usage: adafruit-io client ${api.toLowerCase()} <action>`);
 
     Object.keys(operations).forEach(operation => {
-      yargs.command(operation, operations[operation].summary, y => {
-        this.info(`${api} ${operation}`);
-      });
+      yargs.command(operation, operations[operation].summary);
     });
 
+    yargs.command('help', 'Show help');
+
     const argv = yargs
-      .help('help')
+      .demand(1, 'you must supply a valid command')
       .updateStrings({
         'Commands:': 'Actions:'
       })
-      .wrap(null)
       .argv;
+
+    const command = argv._[0];
+
+    if(command === 'help')
+      return yargs.showHelp();
+
+    this.client[api][command]({}).then(res => this.info(util.inspect(res.obj))).catch(console.log);
 
   }
 
   requireAuth(yargs) {
 
-    this.argv = yargs
+    const argv = yargs
       .usage('Usage: adafruit-io client [options]')
       .alias('h', 'host').nargs('h', 1).default('h','io.adafruit.com').describe('h', 'Server hostname')
       .alias('p', 'port').nargs('p', 1).default('p', '8080').describe('p', 'Server port')
       .alias('u', 'username').demand('username').nargs('u', 1).describe('u', 'Adafruit IO Username')
       .alias('k', 'key').demand('key').nargs('k', 1).describe('k', 'Adafruit IO Key')
-      .help('help').wrap(null).argv;
+      .help('help').argv;
 
-    process.env.AIO_CLIENT_HOST = this.argv.host;
-    process.env.AIO_CLIENT_PORT = this.argv.port;
-    process.env.AIO_CLIENT_USER = this.argv.username;
-    process.env.AIO_CLIENT_KEY  = this.argv.key;
+    process.env.AIO_CLIENT_HOST = argv.host;
+    process.env.AIO_CLIENT_PORT = argv.port;
+    process.env.AIO_CLIENT_USER = argv.username;
+    process.env.AIO_CLIENT_KEY  = argv.key;
 
     this.saveEnv();
 
