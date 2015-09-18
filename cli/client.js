@@ -104,8 +104,8 @@ class ClientCLI extends CLI {
 
     const argv = yargs
       .usage('Usage: adafruit-io client [options]')
-      .alias('h', 'host').nargs('h', 1).default('h','io.adafruit.com').describe('h', 'Server hostname')
-      .alias('p', 'port').nargs('p', 1).default('p', '8080').describe('p', 'Server port')
+      .alias('h', 'host').nargs('h', 1).default('h', process.env.AIO_CLIENT_HOST || 'io.adafruit.com').describe('h', 'Server hostname')
+      .alias('p', 'port').nargs('p', 1).default('p', process.env.AIO_CLIENT_PORT || '443').describe('p', 'Server port')
       .alias('u', 'username').demand('username').nargs('u', 1).describe('u', 'Adafruit IO Username')
       .alias('k', 'key').demand('key').nargs('k', 1).describe('k', 'Adafruit IO Key')
       .help('help').argv;
