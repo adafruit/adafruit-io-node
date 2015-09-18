@@ -7,7 +7,8 @@ cli._name = 'adafruit-io';
 
 cli
   .version(package.version)
-  .command('server [cmd]', 'Local Adafruit IO server')
+  .command('server [cmd]', 'Adafruit IO local server')
+  .command('client [cmd]', 'Adafruit IO client')
   .command('tunnel [cmd]', 'io.adafruit.com TLS tunnel')
   .parse(process.argv);
 
