@@ -36,7 +36,7 @@ class ServerCLI extends CLI {
     const command = argv._[0];
 
     if(command === 'help')
-      return yargs.showHelp();
+      return this.yargs.showHelp();
 
     if(command === 'config')
       return this.requireAuth(Yargs(process.argv.slice(4)));

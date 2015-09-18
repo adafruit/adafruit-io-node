@@ -33,7 +33,7 @@ class TunnelCLI extends CLI {
     const command = argv._[0];
 
     if(command === 'help')
-      return yargs.showHelp();
+      return this.yargs.showHelp();
 
     process.env.AIO_TUNNEL_MQTT = argv.mqtt;
     process.env.AIO_TUNNEL_HTTP = argv.http;

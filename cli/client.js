@@ -58,7 +58,7 @@ class ClientCLI extends CLI {
 
     const argv = yargs
       .demand(1, 'You must supply a valid client command')
-      .help('help').argv;
+      .argv;
 
     const command = argv._[0];
 
@@ -96,7 +96,7 @@ class ClientCLI extends CLI {
     if(command === 'help')
       return yargs.showHelp();
 
-    this.client[api][command]({}).then(res => this.info(util.inspect(res.obj))).catch(console.log);
+    this.client[api][command]({}).then(res => console.log(util.inspect(res.obj))).catch(console.log);
 
   }
 
