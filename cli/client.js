@@ -1,0 +1,192 @@
+'use strict';
+
+const Client = require('../client'),
+      CLI = require('./index'),
+      Yargs = require('yargs'),
+      inquirer = require('inquirer');
+
+class ClientCLI extends CLI {
+
+  constructor() {
+
+    super('client');
+
+    this.yargs = Yargs(process.argv.slice(3));
+    this.client = false;
+
+    this.init();
+
+  }
+
+  init() {
+
+    if(! process.env.AIO_CLIENT_USER || ! process.env.AIO_CLIENT_KEY) {
+      this.error('Client not configured');
+      return this.requireAuth(this.yargs);
+    }
+
+    const options = {
+      success: this.setupAPI.bind(this, this.yargs),
+      failure: this.error.bind(this)
+    };
+
+    if(process.env.AIO_CLIENT_HOST)
+      options.host = process.env.AIO_CLIENT_HOST;
+
+    if(process.env.AIO_CLIENT_PORT)
+      options.port = process.env.AIO_CLIENT_PORT;
+
+    this.client = new Client(process.env.AIO_CLIENT_USER, process.env.AIO_CLIENT_KEY, options);
+
+  }
+
+  setupAPI(yargs) {
+
+    yargs
+      .usage('Usage: adafruit-io client <command> [options]')
+      .command('config', 'Configure the client', this.requireAuth.bind(this));
+
+    const apis = this.client.swagger.apis;
+
+    Object.keys(apis).forEach(api => {
+
+      if(api === 'help') return;
+
+      yargs.command(api.toLowerCase(), `Adafruit IO ${api} API commands`);
+
+    });
+
+    yargs.command('help', 'Show help');
+
+    const argv = yargs
+      .demand(1, 'You must supply a valid client command')
+      .argv;
+
+    const command = argv._[0][0].toUpperCase() + argv._[0].slice(1);
+
+    if(command === 'Help')
+      return yargs.showHelp();
+
+    if(command === 'Config')
+      return;
+
+    if(Object.keys(apis).indexOf(command) < 0)
+      return yargs.showHelp();
+
+    this.setupOperations(command, Yargs(process.argv.slice(4)));
+
+  }
+
+  setupOperations(api, yargs) {
+
+    const operations = this.client.swagger.apis[api].operations;
+
+    yargs.usage(`Usage: adafruit-io client ${api.toLowerCase()} <action>`);
+
+    Object.keys(operations).forEach(operation => {
+      yargs.command(`${operation}`, operations[operation].summary, this.handleOperation.bind(this, api, operation));
+    });
+
+    yargs.command('help', 'Show help');
+
+    const argv = yargs
+      .demand(1, 'You must supply a valid command')
+      .updateStrings({
+        'Commands:': 'Actions:'
+      })
+      .argv;
+
+    const command = argv._[0];
+
+    if(command === 'help')
+      return yargs.showHelp();
+
+    if(Object.keys(operations).indexOf(command) < 0)
+      return yargs.showHelp();
+
+  }
+
+  pathParams(operation) {
+    return operation.parameters.filter(param => param.in === 'path' && param.required);
+  }
+
+  bodyParam(operation) {
+    return operation.parameters.find(param => param.in === 'body' && param.required);
+  }
+
+  handleOperation(api, operation, yargs) {
+
+    const operations = this.client.swagger.apis[api].operations,
+          params = this.pathParams(operations[operation]);
+
+    params.forEach(param => yargs.command(param.name, param.description));
+
+    const argv = yargs
+      .usage(`Usage: adafruit-io client ${api.toLowerCase()} ${operation}` + this.pathParams(operations[operation]).map(param => ` <${param.name}>`).join(''))
+      .updateStrings({
+        'Commands:': 'Parameters:'
+      })
+      .argv;
+
+    if(argv._[1] === 'help')
+      return yargs.showHelp();
+
+    if(argv._.length < (params.length + 1))
+      return yargs.showHelp();
+
+    const body = this.bodyParam(operations[operation]),
+          args = {};
+
+    params.forEach((param, index) => {
+      args[param.name] = argv._[index + 1];
+    });
+
+    if(! body) {
+      return this.client[api][operation](args)
+        .then(res => { this.info('Success'); console.log(res.obj); })
+        .catch(res => this.error(res.obj.toString().replace('Error: ', '')));
+    }
+
+    const questions = Object.keys(body.schema.properties).map(name => {
+      const prop = body.schema.properties[name];
+      return {
+        type: prop.enum ? 'list' : 'string',
+        name: name,
+        choices: prop.enum ? prop.enum : [],
+        message: `${body.name}.${name} (${prop.required ? 'required' : 'optional'}):`
+      };
+    });
+
+    inquirer.prompt(questions, answers => {
+      this.client[api][operation]({ [body.name]: answers })
+        .then(res => { this.info('Success'); console.log(res.obj); })
+        .catch(res => this.error(res.obj.toString().replace('Error: ', '')));
+    });
+
+  }
+
+  requireAuth(yargs) {
+
+    const argv = yargs
+      .usage('Usage: adafruit-io client config [options]')
+      .alias('h', 'host').nargs('h', 1).default('h', process.env.AIO_CLIENT_HOST || 'io.adafruit.com').describe('h', 'Server hostname')
+      .alias('p', 'port').nargs('p', 1).default('p', process.env.AIO_CLIENT_PORT || '443').describe('p', 'Server port')
+      .alias('u', 'username').demand('username').nargs('u', 1).describe('u', 'Adafruit IO Username')
+      .alias('k', 'key').demand('key').nargs('k', 1).describe('k', 'Adafruit IO Key')
+      .command('help', 'Show help')
+      .argv;
+
+    process.env.AIO_CLIENT_HOST = argv.host;
+    process.env.AIO_CLIENT_PORT = argv.port;
+    process.env.AIO_CLIENT_USER = argv.username;
+    process.env.AIO_CLIENT_KEY  = argv.key;
+
+    this.saveEnv();
+
+    this.info('Client settings saved');
+
+  }
+
+}
+
+exports = module.exports = ClientCLI;

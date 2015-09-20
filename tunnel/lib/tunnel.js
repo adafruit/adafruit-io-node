@@ -6,10 +6,10 @@ exports = module.exports = function(options) {
 
   options.secureProtocol =  'TLSv1_2_method';
   options.rejectUnauthorized = true;
-  options.ciphers = [
+  /*options.ciphers = [
     'ecdhe-rsa-aes256-gcm-sha384',
     'ecdhe-rsa-aes128-gcm-sha256'
-  ].join(':');
+  ].join(':');*/
 
   var client = tls.connect(options);
 
