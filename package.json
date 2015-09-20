@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/adafruit/adafruit-io-node#readme",
   "devDependencies": {
-    "dotenv": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-jshint": "^1.11.2",
     "gulp-mocha": "^2.1.3",

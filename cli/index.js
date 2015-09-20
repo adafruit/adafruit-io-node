@@ -39,7 +39,8 @@ class CLI {
       .command('tunnel', 'TLS tunnel to io.adafruit.com')
       .command('help', 'Show help')
       .command('version', 'Show version info')
-      .demand(1, 'must provide a valid command')
+      .command('completion', 'Output Bash command completion script')
+      .demand(1, 'Please provide a valid command')
       .argv;
 
     const command = argv._[0];
@@ -52,11 +53,19 @@ class CLI {
       process.exit();
     }
 
+    if(command === 'completion') {
+      yargs.showCompletionScript();
+      process.exit();
+    }
+
     const sub = {
       client: require('./client'),
       server: require('./server'),
       tunnel: require('./tunnel')
     };
+
+    if(Object.keys(sub).indexOf(command) < 0)
+      return yargs.showHelp();
 
     new sub[command]();
 
