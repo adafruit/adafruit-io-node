@@ -166,7 +166,8 @@ class ClientCLI extends CLI {
     yargs.command('help', 'Show help');
 
     const argv = yargs
-      .usage(`Usage: adafruit-io client ${api.toLowerCase()} ${operation}` + this.pathParams(operations[operation]).map(param => ` <${param.name}>`).join(''))
+      .usage(`Usage: adafruit-io client ${api.toLowerCase()} ${operation}` + this.pathParams(operations[operation]).map(param => ` <${param.name}>`).join('') + ' [Options]')
+      .alias('j', 'json').describe('j', 'JSON output')
       .updateStrings({
         'Commands:': 'Parameters:'
       })
@@ -187,7 +188,13 @@ class ClientCLI extends CLI {
 
     if(! body) {
       return this.client[api][operation](args)
-        .then(res => { this.info('Success'); console.log(res.obj); })
+        .then(res => {
+          if(argv.json)
+            return console.log(JSON.stringify(res.obj));
+
+          this.info('Success');
+          console.log(res.obj);
+        })
         .catch(res => this.error(res.obj.toString().replace('Error: ', '')));
     }
 
@@ -204,7 +211,13 @@ class ClientCLI extends CLI {
     inquirer.prompt(questions, answers => {
       args[body.name] = answers;
       this.client[api][operation](args)
-        .then(res => { this.info('Success'); console.log(res.obj); })
+        .then(res => {
+          if(argv.json)
+            return console.log(JSON.stringify(res.obj));
+
+          this.info('Success');
+          console.log(res.obj);
+        })
         .catch(res => this.error(res.obj.toString().replace('Error: ', '')));
     });
 
@@ -217,6 +230,7 @@ class ClientCLI extends CLI {
 
     const argv = yargs
       .usage(`Usage: adafruit-io client ${api.toLowerCase()} watch <id>`)
+      .alias('j', 'json').describe('j', 'JSON output')
       .updateStrings({
         'Commands:': 'Parameters:'
       })
@@ -229,8 +243,13 @@ class ClientCLI extends CLI {
       return yargs.showHelp();
 
     this.client[api].readable(argv._[1]).on('data', obj => {
-      this.info(`New value for ${api.toLowerCase()}/${obj.name || obj.id}`);
+
+      if(argv.json)
+        return console.log(JSON.stringify(obj));
+
+      this.info(`${api} -> ${obj.name || obj.id}`);
       console.log(obj);
+
     });
 
   }
