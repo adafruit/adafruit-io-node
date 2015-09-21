@@ -27,7 +27,7 @@ class CLI {
           level: 'debug',
           formatter: options => {
             const level = chalk.bold(`[${options.level}]`);
-            return `${level}: ${options.message || '' }`;
+            return `${level} ${options.message || '' }`;
           }
         })
       ]

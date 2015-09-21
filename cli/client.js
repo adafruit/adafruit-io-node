@@ -202,7 +202,8 @@ class ClientCLI extends CLI {
     });
 
     inquirer.prompt(questions, answers => {
-      this.client[api][operation]({ [body.name]: answers })
+      args[body.name] = answers;
+      this.client[api][operation](args)
         .then(res => { this.info('Success'); console.log(res.obj); })
         .catch(res => this.error(res.obj.toString().replace('Error: ', '')));
     });

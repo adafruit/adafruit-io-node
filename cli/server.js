@@ -109,11 +109,12 @@ class ServerCLI extends CLI {
   requireAuth(yargs) {
 
     const argv = yargs
-      .usage('Usage: adafruit-io server [options]')
+      .usage('Usage: adafruit-io server config [options]')
       .alias('p', 'port').nargs('p', 1).default('p', '8080').describe('p', 'Server port')
       .alias('u', 'username').demand('username').nargs('u', 1).describe('u', 'Local Adafruit IO Username')
       .alias('k', 'key').demand('key').nargs('k', 1).describe('k', 'Local Adafruit IO Key')
-      .help('help').argv;
+      .command('help', 'Show help')
+      .argv;
 
     process.env.AIO_SERVER_PORT = argv.port;
     process.env.AIO_SERVER_USER = argv.username;

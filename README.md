@@ -26,48 +26,26 @@ $ npm install -g forever-service
   * [Security Considerations](#security-considerations)
   * [Usage](#usage-1)
 * [Client](#client)
-  * [Feeds](#feeds)
-    * [Create](#feed-creation)
-    * [Read](#feed-retrieval)
-    * [Update](#feed-updating)
-    * [Delete](#feed-deletion)
-  * [Data](#data)
-    * [Create](#data-creation)
-    * [Read](#data-retrieval)
-    * [Update](#data-updating)
-    * [Delete](#data-deletion)
-    * [Helper Methods](#helper-methods)
-      * [Send](#send)
-      * [Next](#next)
-      * [Last](#last)
-      * [Previous](#previous)
-    * [Readable](#readable-data)
-    * [Writable](#writable-data)
-  * [Groups](#groups)
-    * [Create](#group-creation)
-    * [Read](#group-retrieval)
-    * [Update](#group-updating)
-    * [Delete](#group-deletion)
+  * [Usage](#usage-2)
+    * [Authentication](#authentication-2)
+    * [Feeds](#feeds)
+    * [Data](#data)
+    * [Groups](#groups)
 
 ## Help
 View the available sub commands for `adafruit-io`:
 
 ```console
 $ adafruit-io help
+Usage: adafruit-io <command>
 
-  Usage: adafruit-io [options] [command]
-
-
-  Commands:
-
-    server [cmd]  Local Adafruit IO server
-    tunnel [cmd]  io.adafruit.com TLS tunnel
-    help [cmd]    display help for [cmd]
-
-  Options:
-
-    -h, --help     output usage information
-    -V, --version  output the version number
+Commands:
+  server      Adafruit IO local server
+  client      Adafruit IO client
+  tunnel      TLS tunnel to io.adafruit.com
+  help        Show help
+  version     Show version info
+  completion  generate bash completion script
 ```
 
 The three main commands available are `service`, `tunnel`, and `help`.
@@ -77,49 +55,40 @@ The server included in this package is an open source API compatible version of
 Adafruit IO that you can run locally. Future additions to io.adafruit.com will
 allow you to sync your local data with the hosted service.
 
-## Usage
-Let's look at the available commands for `adafruit-io server`:
+### Usage
+The tunnel commands will always be prefixed with `adafruit-io server`, and you can always get more information
+about the available commands by running `adafruit-io server help`.
+
+#### Configuration
+
+First, you will need to configure the server with a `username` and `key` that
+you will expect when clients make requests to the server. Let's look at the help
+for `adafruit-io server config help`.
 
 ```console
-$ adafruit-io help server
+$ adafruit-io server config help
+Usage: adafruit-io server config [options]
 
-  Usage: adafruit-io server [options] [command]
+Commands:
+  help  Show help
 
-
-  Commands:
-
-    config    configure the local server
-    install   installs server service (linux only)
-    remove    removes server service (linux only)
-    start     starts server daemon
-    restart   restarts server daemon
-    stop      stops server daemon
-
-  Options:
-
-    -h, --help      output usage information
-    -V, --version   output the version number
-    -p, --port <n>  http port
-
+Options:
+  -p, --port      Server port                    [default: "8080"]
+  -u, --username  Local Adafruit IO Username            [required]
+  -k, --key       Local Adafruit IO Key                 [required]
 ```
 
+The `--username` and `--key` you set here will be used by the server to authenticate requests from
+your devices. You can set them to any value, but make sure the Adafruit IO Key is not easily
+guessable.
+
+```console
+$ adafruit-io server config --username test_user --key efoih3r8hsfdfh1r31rhsdhf
+[info] Server settings saved
+```
 To start the server daemon, you can run the following command on the default port of `8080`
 ```console
 $ adafruit-io server start
-```
-You will then be prompted to enter a `username` and `AIO Key`. The `username`
-and `AIO Key` you set here will be used by the server to authenticate requests from
-your devices. You can set them to any value, but make sure the `AIO Key` is not easily
-guessable.
-```console
-Adafruit IO Local Setup
-? Username to use when authenticating requests locally: testing
-? Adafruit IO Key to use when authenticating requests locally: askjh33rfsdfkjhwer342r2rois
-```
-After you have entered the `username` and `AIO Key`, the server will start. These values will be saved,
-but you can change them by running `adafruit-io server config` and restarting the server.
-```console
-
                                      ▄▄
                                    ▄████
                                  ▄███████
@@ -144,16 +113,15 @@ but you can change them by running `adafruit-io server config` and restarting th
 ----------------------------------------------------------------------
                            adafruit io
 ----------------------------------------------------------------------
-[status]  starting server...
-[status]  adafruit io is now ready at http://localhost:8080/api
-[info]    documentation is available at http://localhost:8080/api/docs
+[info] server ready at http://todd.local:8080/
+[info] documentation is available at http://todd.local:8080/api/docs
 ```
 The server will stay up until you shut down your computer, or stop the server.
 To stop the server, run the following command:
 
 ```console
 $ adafruit-io server stop
-[status] stopping server...
+[info] stopping server...
 ```
 
 If you would like to run the server on a different port, you can use the `-p` option
@@ -185,28 +153,24 @@ However, this service runs as an unauthenticated service on your network. This i
 Lastly, this service does not protect cellular modules. If you have something like a Adafruit FONA, then it makes an Internet connection directly through the cellular system and unless there is a TLS stack on the module, than most likely it's not end-to-end encrypted.
 
 ### Usage
-Let's look at the available commands for `adafruit-io tunnel`:
+The tunnel commands will always be prefixed with `adafruit-io tunnel`, and you can always get more information
+about the available commands by running `adafruit-io tunnel help`.
 
 ```console
-$ adafruit-io help tunnel
+$ adafruit-io tunnel help
+Usage: adafruit-io tunnel <command> [options]
 
-  Usage: adafruit-io tunnel [options] [command]
+Commands:
+  install  Install tunnel service (linux only)
+  remove   Remove tunnel service (linux only)
+  start    Start tunnel daemon
+  restart  Restart tunnel daemon
+  stop     Stop tunnel daemon
+  help     Show help
 
-
-  Commands:
-
-    install   installs tunnel service (linux only)
-    remove    removes tunnel service (linux only)
-    start     starts tunnel daemon
-    restart   restarts tunnel daemon
-    stop      stops tunnel daemon
-
-  Options:
-
-    -h, --help     output usage information
-    -V, --version  output the version number
-    --http <n>     http port
-    --mqtt <n>     mqtt port
+Options:
+  -h, --http  HTTP port             [default: "8888"]
+  -m, --mqtt  MQTT port             [default: "1883"]
 ```
 
 To start the tunnel daemon, you can run the following command on the default port of `8888`:
@@ -236,9 +200,8 @@ $ adafruit-io tunnel start
 ----------------------------------------------------------------------
                            adafruit io
 ----------------------------------------------------------------------
-[status]  starting tunnel...
-[status]  io.adafruit.com HTTPS tunnel running: http://localhost:8888/
-[status]  io.adafruit.com MQTTS tunnel running: mqtt://localhost:1883
+[info] io.adafruit.com HTTPS tunnel running: http://todd.local:8888/
+[info] io.adafruit.com MQTTS tunnel running: mqtt://todd.local:1883
 ```
 
 The tunnel will stay up until you shut down your computer, or stop the tunnel.
@@ -246,34 +209,44 @@ To stop the tunnel daemon, run the following command:
 
 ```console
 $ adafruit-io tunnel stop
-[status] stopping tunnel...
+[info] stopping tunnel...
 ```
 
 If you would like to run the tunnel on a different ports, you can use the `--http` & `--mqtt` options
 to set the ports you wish to use. **Note**: As as a general rule processes running
 without root privileges cannot bind to ports below 1024. Use a port > 1024, or run
 the tunnel using elevated privileges via `sudo`, but this is not recommended.
+
 ## Client
 
-A [node.js][9] client for use with [io.adafruit.com][6].
-
-### Installation
-
-```
-$ npm install adafruit-io
-```
+A CLI client for use with [io.adafruit.com][6] or the local Adafruit IO server included in this package.
 
 ### Usage
 
-To include this module in your project, you must pass your [AIO Key][8] to the `AIO` constructor.
+The client commands will always be prefixed with `adafruit-io client`, and you can append `help` to any
+command to get more info about that command.
 
-```js
+#### Authentication
+```console
+$ adafruit-io client config help
+Usage: adafruit-io client config [options]
 
-var AIO = require('adafruit-io');
+Commands:
+  help  Show help
 
-// replace xxxxxxxxxxxx with your AIO Key
-aio = AIO('your_username', 'xxxxxxxxxxxx');
+Options:
+  -h, --host      Server hostname                   [default: "io.adafruit.com"]
+  -p, --port      Server port                                    [default: "80"]
+  -u, --username  Adafruit IO Username                                [required]
+  -k, --key       Adafruit IO Key                                     [required]
 
+```
+
+You can then use your Adafruit IO `username` and `key` to authenticate yourself.
+
+```console
+$ adafruit-io client config --username testing_username --key xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+[info] Client settings saved
 ```
 
 #### Feeds
@@ -282,406 +255,197 @@ Feeds are the core of the Adafruit IO system. The feed holds metadata about data
 have one feed for each type of data you send to the system. You can have separate feeds for each
 sensor in a project, or you can use one feed to contain JSON encoded data for all of your sensors.
 
-##### Feed Creation
+```console
+$ adafruit-io client feeds help
+Usage: adafruit-io client feeds <action>
 
-You have two options here, you can create a feed by passing a feed name, or you can pass an object if you would
-like to define more properties.  If you would like to find information about what properties are available, please
-visit the [Adafruit IO feed API docs][7].
-
-```js
-// option 1
-
-aio.create_feed('Test Feed', function(err, success) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  console.log(success ? 'created!' : 'creation failed :(');
-
-});
-
-
-// option 2:
-// defining additional options
-
-var feed_options = {
-  name: 'Test Feed Two',
-  description: 'Testing adding a description'
-};
-
-aio.create_feed(feed_options, function(err, success) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  console.log(success ? 'created!' : 'creation failed :(');
-
-});
+Actions:
+  all      All feeds for current user
+  create   Create a new Feed
+  destroy  Delete an existing Feed
+  get      Get feed by ID, Feed key, or Feed Name
+  update   Update properties of an existing Feed
+  replace  Replace an existing Feed
+  watch    Listen for new values
+  help     Show help
 ```
 
-##### Feed Retrieval
-
-You can get a list of your feeds by using the `aio.feeds(cb)` method.
-
-```js
-// create an instance
-aio = AIO('your_username', 'xxxxxxxxxxxx');
-
-// get a list of all feeds
-aio.feeds(function(err, feeds) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log feeds array
-  console.log(feeds);
-
-});
+**Example:** List all feeds for your user
+```console
+$ adafruit-io client feeds all
+[info] Success
+[ { id: 1000,
+    key: 'frontdoor',
+    name: 'frontdoor',
+    description: '',
+    unit_type: null,
+    unit_symbol: null,
+    last_value: 'open',
+    status: 'offline',
+    visibility: 'private',
+    enabled: true,
+    license: null,
+    group_id: null,
+    created_at: '2015-08-28T17:13:12.516Z',
+    updated_at: '2015-09-21T17:20:04.630Z' } ]
 ```
 
-You can also get a specific feed by ID, key, or name by using the `aio.feeds(id, cb)` method.
+Some commands will expect paramaters, so you can also view help on each command. Let's
+take a look at the parameters expected by `update`.
 
-```js
-aio.feeds('Test Feed Two', function(err, feed) {
+```console
+$ adafruit-io client feeds update help
+Usage: adafruit-io client feeds update <id>
 
-  if(err) {
-    return console.error(err);
-  }
-
-  // log feed object
-  console.log(feed);
-
-});
+Parameters:
+  id    ID, key, or name of feed to use
+  help  Show help
 ```
-##### Feed Updating
 
-You can update [feed properties][7] using the `aio.feeds(id).update(data, cb)` method.
+**Example:** Update `frontdoor` feed name to be `Front`
 
-```js
-// define the data to update
-var update_data = {
-  description: 'Testing updating a description'
-};
-
-// update the description of feed 'Test Feed Two'
-aio.feeds('Test Feed Two').update(update_data, function(err, updated) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log updated feed
-  console.log(updated);
-
-});
+```console
+$ adafruit-io client feeds update frontdoor
+? feed.name (optional): Front
+? feed.key (optional):
+? feed.description (optional):
+? feed.unit_type (optional):
+? feed.unit_symbol (optional):
+? feed.visibility (optional):
+? feed.license (optional):
+? feed.group_id (optional):
+[info] Success
+{ id: 1000,
+  key: 'frontdoor',
+  name: 'Front',
+  description: '',
+  unit_type: '',
+  unit_symbol: '',
+  last_value: 'open',
+  status: 'offline',
+  visibility: 'private',
+  enabled: true,
+  license: null,
+  group_id: null,
+  created_at: '2015-08-28T17:13:12.516Z',
+  updated_at: '2015-09-21T21:12:37.958Z' }
 ```
-##### Feed Deletion
 
-You can delete a feed by ID, key, or name by using the `aio.feeds(id).delete(cb)` method.
-
-```js
-// delete 'Test Feed Two' by key
-aio.feeds('test-feed-two').delete(function(err, deleted) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  console.log(deleted ? 'Test Feed Two deleted!' : 'deletion failed :(');
-
-});
+**Example:** Listen for changes to the `frontdoor` feed
+```console
+$ adafruit-io client feeds watch door
+[info] New data for feeds/Front
+{ id: 1000,
+  key: 'frontdoor',
+  name: 'Front',
+  description: '',
+  unit_type: '',
+  unit_symbol: '',
+  last_value: 'closed',
+  status: 'offline',
+  visibility: 'private',
+  user_id: 5,
+  created_at: '2015-08-28T17:13:12.516Z',
+  updated_at: '2015-09-21T21:12:37.958Z',
+  mode: null,
+  enabled: true,
+  fixed: false,
+  last_value_at: '2015-09-21T15:10:34.048Z',
+  license: null,
+  group_id: null,
+  feed_alias: null,
+  recorded: 'just now',
+  last_geo: { lat: null, lon: null, ele: null }
+}
 ```
 
 #### Data
 
-Data represents the data contained in feeds. You can read, add, modify, and delete data. There are also
-a few convienient methods for sending data to feeds and selecting certain pieces of data.
+Data represents the actual stored data sent to Adafruit IO feeds.
 
-##### Data Creation
+```console
+$ adafruit-io client data help
+Usage: adafruit-io client data <action>
 
-Data can be created [after you create a feed](#data-creation), by using the
-`aio.feeds(id).create_data(value, cb);` method.
-
-```js
-// assumes you have already created 'Test'
-aio.feeds('Test').create_data(10, function(err, success) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  console.log(success ? 'created data!' : 'creation failed :(');
-
-});
+Actions:
+  all       All data for current feed
+  create    Create new Data
+  send      Create new Data and Feed
+  receive   Receive data?
+  previous  Previous Data in Queue
+  next      Next Data in Queue
+  last      Last Data in Queue
+  destroy   Delete existing Data
+  get       Returns data based on ID
+  update    Update properties of existing Data
+  replace   Replace existing Data
+  watch     Listen for new values
+  help      Show help
 ```
 
-##### Data Retrieval
+Let's look at the `all` operation as an example.
 
-You can get all of the data data by using the `aio.feeds(id).data(cb);` method. The
-callback will be called with errors and the data array as arguments.
+```console
+$ adafruit-io client data all help
+Usage: adafruit-io client data all <feed_id>
 
-```js
-// get an array of all data from feed 'Test'
-aio.feeds('Test').data(function(err, data) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log data array
-  console.log(data);
-
-});
+Parameters:
+  feed_id  ID, key, or name of feed
+  help     Show help
 ```
 
-You can also get a specific value by ID by using the `aio.feeds(id).data(id, cb);` method.
+**Example:** View all feed data
 
-```js
-// get a specific value by id.
-// this example assumes 1 is a valid data ID in the 'Test' feed
-aio.feeds('Test').data(1, function(err, data) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log data object
-  console.log(data);
-
-});
-```
-
-##### Data Updating
-
-Values can be updated by using the `aio.feeds(id).data(id).update(value, cb);` method.
-
-```js
-// update the value of ID 1
-aio.feeds('Test')data(1).update(5, function(err, updated) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log updated value
-  console.log(updated);
-
-});
-
-```
-
-##### Data Deletion
-
-Values can be deleted by using the `aio.feeds(id).data(id).delete(cb);` method.
-
-```js
-// delete data ID 1 in `Test' feed
-aio.feeds('Test').data(1).delete(function(err, deleted) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  console.log(deleted ? 'data deleted!' : 'deletion failed :(');
-
-});
-```
-
-##### Helper Methods
-
-There are a few helper methods that can make interacting with data a bit easier.
-
-###### Send
-
-You can use the `aio.send(name, value, cb);` method to find or create the feed based on the name passed,
-and also save the value passed.
-
-```js
-aio.send('Test Send Data', 98.6, function(err, data) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  console.log(data);
-
-});
-
-```
-
-###### Last
-
-You can get the last inserted value by using the `aio.feeds(id).last(cb);` method.
-
-```js
-aio.feeds('Test').last(function(err, data) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log data object
-  console.log(data);
-
-});
-
-```
-
-###### Next
-
-You can get the first inserted value that has not been processed by using the `aio.feeds(id).next(cb);` method.
-
-```js
-aio.feeds('Test').next(function(err, data) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log data object
-  console.log(data);
-
-});
-```
-
-###### Previous
-
-You can get the the last record that has been processed by using the `aio.feeds(id).previous(cb);` method.
-
-```js
-aio.feeds('Test').previous(function(err, data) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log data object
-  console.log(data);
-
-});
-```
-
-##### Readable Stream
-
-You can get a readable stream of live data from your feed by listening to the data event.
-
-```js
-aio.feeds('Test').on('data', function(data) {
-  console.log(data.toString());
-});
-```
-
-You can also pipe the live data, just like any node.js readable data.
-
-```js
-aio.feeds('Test').pipe(process.stdout);
-```
-
-##### Writable Stream
-
-You can use node's writable stream interface with any feed.
-
-```js
-aio.feeds('Test').write(100);
-```
-
-You can also pipe data to the stream, just like any node.js writable data.
-
-```js
-process.stdin.pipe(aio.feeds('Test'));
+```console
+$ adafruit-io client data all door
+[info] Success
+[ { id: 122222,
+    value: 'open',
+    position: null,
+    feed_id: 1000,
+    group_id: null,
+    expiration: null,
+    lat: null,
+    lon: null,
+    ele: null,
+    completed_at: null,
+    created_at: '2015-09-21T15:10:34.048Z',
+    updated_at: '2015-09-21T15:10:34.048Z',
+    created_epoch: 1442848234.04861 } ]
 ```
 
 #### Groups
 
-Groups allow you to update and retrieve multiple feeds with one request. You can add feeds
-to multiple groups.
+Groups allow you to update and retrieve multiple feeds with one request.
 
-##### Group Creation
+```console
+$ adafruit-io client groups help
+Usage: adafruit-io client groups <action>
 
-You can create a group by passing an object of group properties.  If you would like to find
-information about what properties are available, please visit the [Adafruit IO group API docs][6].
-
-```js
-aio.create_group({name: 'Test'}, function(err, success) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  console.log(success ? 'created group!' : 'creation failed :(');
-
-});
+Actions:
+  all      All groups for current user
+  create   Create a new Group
+  destroy  Delete an existing Group
+  get      Returns Group based on ID
+  update   Update properties of an existing Group
+  replace  Replace an existing Group
+  watch    Listen for new values
+  help     Show help
 ```
-
-##### Group Retrieval
-
-You can get a list of your groups by using the `aio.groups(cb)` method.
-
-```js
-// get a list of all groups
-aio.groups(function(err, data) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log data array
-  console.log(data);
-
-});
-```
-
-You can also get a specific group by ID, key, or name by using the `aio.groups(id, cb)` method.
-
-```js
-// get a specific group by name
-aio.groups('Test', function(err, data) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log data object
-  console.log(data);
-
-});
-```
-##### Group Updating
-
-You can update [group properties][6] using the `aio.groups(id).update(data, cb)` method.
-
-```js
-// update the name of group 'Test'
-aio.groups('Test').update({name: 'TestTwo'}, function(err, updated) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  // log updated group
-  console.log(updated ? updated : 'update failed');
-
-});
-```
-
-##### Group Deletion
-
-You can delete a group by ID, key, or name by using the `aio.group(id).delete(cb)` method.
-
-```js
-// delete group 'Test'
-aio.groups('Test').delete(function(err, deleted) {
-
-  if(err) {
-    return console.error(err);
-  }
-
-  console.log(deleted ? 'group deleted!' : 'deletion failed :(');
-
-});
+**Example:** List all groups for your user
+```console
+$ adafruit-io client groups all
+[info] Success
+[ { id: 5,
+    name: 'weather',
+    key: 'weather',
+    description: null,
+    source: null,
+    properties: null,
+    source_keys: null,
+    created_at: '2015-07-14T22:41:48.898Z',
+    updated_at: '2015-07-14T22:41:48.898Z',
+    feeds: [ [Object], [Object] ] } ]
 ```
 
 ## License
