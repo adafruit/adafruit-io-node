@@ -23,7 +23,11 @@ gulp.task('lint', function() {
   return gulp.src([
     'index.js',
     'cli/*.js',
-    'client/*.js'
+    'client/**/*.js',
+    'server/index.js',
+    'server/lib/*.js',
+    'tunnel/index.js',
+    'tunnel/lib/*.js'
   ]).pipe(lint).pipe(jshint.reporter('jshint-stylish'));
 
 });
