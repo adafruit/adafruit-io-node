@@ -9,9 +9,18 @@ class ServerCLI extends CLI {
 
     super('server');
 
-    this.yargs = Yargs(process.argv.slice(3));
+    this.completions = [
+      'help',
+      'config',
+      'start',
+      'restart',
+      'stop'
+    ];
 
-    this.init();
+    if(require('os').platform() === 'linux')
+      this.completions.push('install', 'remove');
+
+    this.yargs = Yargs(process.argv.slice(3));
 
   }
 
@@ -20,18 +29,28 @@ class ServerCLI extends CLI {
     if(! process.env.AIO_SERVER_USER || ! process.env.AIO_SERVER_KEY)
       return this.requireAuth(this.yargs);
 
-    const argv = this.yargs
+    this.yargs
       .usage('Usage: adafruit-io server <command> [options]')
-      .command('config', 'Configure the local server')
-      .command('install', 'Install server service (linux only)')
-      .command('remove', 'Remove server service (linux only)')
+      .command('config', 'Configure the local server');
+
+    if(require('os').platform() === 'linux') {
+      this.yargs.command('install', 'Install server service (linux only)');
+      this.yargs.command('remove', 'Remove server service (linux only)');
+    }
+
+    const argv = this.yargs
       .command('start', 'Start server daemon')
       .command('restart', 'Restart server daemon')
       .command('stop', 'Stop server daemon')
       .command('help', 'Show help')
-      .alias('p', 'port').nargs('p', 1).default('p', process.env.AIO_SERVER_PORT || '8080').describe('p', 'Server port')
+      .alias('p', 'port')
+      .nargs('p', 1).default('p', process.env.AIO_SERVER_PORT || '8080')
+      .describe('p', 'Server port')
       .demand(1, 'You must supply a valid server command')
       .argv;
+
+    if(! argv)
+      return;
 
     const command = argv._[0];
 

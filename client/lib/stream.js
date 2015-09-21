@@ -35,7 +35,7 @@ class Stream extends DuplexStream {
     this.client = mqtt.connect({
       host: this.host,
       port: this.port,
-      protocol: (this.port == 8883 ? 'mqtts' : 'mqtt'),
+      protocol: (parseInt(this.port) === 8883 ? 'mqtts' : 'mqtt'),
       username: this.username,
       password: this.key,
       keepalive: 3600

@@ -11,11 +11,13 @@ class ClientCLI extends CLI {
 
     super('client');
 
+    this.completions = [
+      'help',
+      'config'
+    ];
+
     this.yargs = Yargs(process.argv.slice(3));
     this.client = false;
-
-    this.init();
-
   }
 
   init() {
@@ -40,6 +42,41 @@ class ClientCLI extends CLI {
 
   }
 
+  setupCompletions(ready) {
+
+    if(! process.env.AIO_CLIENT_USER || ! process.env.AIO_CLIENT_KEY)
+      return ready();
+
+    const parse = function() {
+
+      const apis = this.client.swagger.apis;
+
+      Object.keys(apis).forEach(api => {
+
+        if(api === 'help') return;
+
+        const lower = api.toLowerCase();
+        this.completions.push(lower);
+        this.completions[lower] = ['help', 'watch'];
+
+        Object.keys(apis[api].operations).forEach(operation => {
+          this.completions[lower].push(operation);
+          this.completions[lower][operation] = ['help'];
+        });
+
+      });
+
+      ready();
+
+    };
+
+    this.client = new Client(process.env.AIO_CLIENT_USER, process.env.AIO_CLIENT_KEY, {
+      success: parse.bind(this),
+      failure: this.error.bind(this)
+    });
+
+  }
+
   setupAPI(yargs) {
 
     yargs
@@ -61,6 +98,9 @@ class ClientCLI extends CLI {
     const argv = yargs
       .demand(1, 'You must supply a valid client command')
       .argv;
+
+    if(! argv)
+      return;
 
     const command = argv._[0][0].toUpperCase() + argv._[0].slice(1);
 

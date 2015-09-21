@@ -9,16 +9,30 @@ class TunnelCLI extends CLI {
 
     super('tunnel');
 
-    this.yargs = Yargs(process.argv.slice(3));
+    this.completions = [
+      'help',
+      'start',
+      'restart',
+      'stop'
+    ];
 
-    this.init();
+    if(require('os').platform() === 'linux')
+      this.completions.push('install', 'remove');
+
+    this.yargs = Yargs(process.argv.slice(3));
 
   }
 
   init() {
 
+    this.yargs.usage('Usage: adafruit-io tunnel <command> [options]');
+
+    if(require('os').platform() === 'linux') {
+      this.yargs.command('install', 'Install server service (linux only)');
+      this.yargs.command('remove', 'Remove server service (linux only)');
+    }
+
     const argv = this.yargs
-      .usage('Usage: adafruit-io tunnel <command> [options]')
       .command('install', 'Install tunnel service (linux only)')
       .command('remove', 'Remove tunnel service (linux only)')
       .command('start', 'Start tunnel daemon')
@@ -29,6 +43,9 @@ class TunnelCLI extends CLI {
       .alias('m', 'mqtt').nargs('m', 1).default('m', process.env.AIO_TUNNEL_MQTT || '1883').describe('m', 'MQTT port')
       .demand(1, 'You must supply a valid tunnel command')
       .argv;
+
+    if(! argv)
+      return;
 
     const command = argv._[0];
 
