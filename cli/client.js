@@ -22,10 +22,8 @@ class ClientCLI extends CLI {
 
   init() {
 
-    if(! process.env.AIO_CLIENT_USER || ! process.env.AIO_CLIENT_KEY) {
-      this.error('Client not configured');
+    if(! process.env.AIO_CLIENT_USER || ! process.env.AIO_CLIENT_KEY)
       return this.requireAuth(this.yargs);
-    }
 
     const options = {
       success: this.setupAPI.bind(this, this.yargs),
