@@ -190,8 +190,26 @@ class CLI {
 
     });
 
+  }
+
+  portAvailable(port) {
+
+    return new Promise((resolve, reject) => {
+
+     const test = require('net')
+      .createServer()
+      .once('error', err => {
+        reject();
+      })
+      .once('listening', () => {
+        test.once('close', () => resolve()).close();
+      })
+      .listen(port);
+
+    });
 
   }
+
 
 }
 
