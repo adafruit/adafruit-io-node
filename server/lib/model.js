@@ -112,13 +112,13 @@ class Model {
 
     return new Promise((resolve, reject) => {
 
-      db.findOne(id_query(type, id), (err, doc) => {
+      db.findOne(this.idQuery(id), (err, doc) => {
 
         if(err)
           return reject(err.message);
 
         if(! doc)
-          return reject(`${this.type()} not found`);
+          return reject(`${type} not found`);
 
         doc[type].id = doc._id;
         resolve(new this(doc[type]));
@@ -168,7 +168,7 @@ class Model {
       sent.updated_at = new Date();
       obj[type] = sent;
 
-      db.update(id_query(type, id), obj, {}, (err, replaced, doc) => {
+      db.update(this.idQuery(id), obj, {}, (err, replaced, doc) => {
 
         if(err)
           return reject(err.message);
@@ -187,14 +187,12 @@ class Model {
 
   static update(id, sent) {
 
-    const type = this.type();
-
     return new Promise((resolve, reject) => {
 
       delete sent.id;
       sent.updated_at = new Date();
 
-      db.update(id_query(type, id), set_fields(type, sent), {}, (err, replaced, doc) => {
+      db.update(this.idQuery(id), this.setFields(sent), {}, (err, replaced, doc) => {
 
         if(err)
           return reject(err.message);
@@ -218,11 +216,9 @@ class Model {
 
   static destroy(id) {
 
-    const type = this.type();
-
     return new Promise((resolve, reject) => {
 
-      db.remove(id_query(type, id), {}, (err, removed) => {
+      db.remove(this.idQuery(id), {}, (err, removed) => {
 
         if(err)
           return reject(err.message);
@@ -238,34 +234,37 @@ class Model {
 
   }
 
+  static idQuery(id_key_name) {
+
+    const type = this.type();
+
+    const query = {
+      type: type,
+      '$or': [
+        {_id: id_key_name}
+      ]
+    };
+
+    query['$or'].push({[`${type}.key`]: id_key_name});
+    query['$or'].push({[`${type}.name`]: id_key_name});
+
+    return query;
+
+  }
+
+  static setFields(sent) {
+
+    const type = this.type(),
+          obj = { '$set': {} };
+
+    Object.keys(sent).forEach(key => {
+      obj['$set'][`${type}.${key}`] = sent[key];
+    });
+
+    return obj;
+
+  }
+
 }
-
-const id_query = function(type, id_key_name) {
-
-  const query = {
-    type: type,
-    '$or': [
-      {_id: id_key_name}
-    ]
-  };
-
-  query['$or'].push({[`${type}.key`]: id_key_name});
-  query['$or'].push({[`${type}.name`]: id_key_name});
-
-  return query;
-
-};
-
-const set_fields = function(type, sent) {
-
-  const obj = { '$set': {} };
-
-  Object.keys(sent).forEach(key => {
-    obj['$set'][`${type}.${key}`] = sent[key];
-  });
-
-  return obj;
-
-};
 
 exports = module.exports = Model;

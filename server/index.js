@@ -24,7 +24,7 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
     res.header("Access-Control-Allow-Headers", "Origin, X-AIO-Key, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "OPTIONS, GET, PATCH, PUT, DELETE, POST");
 
-    if(req.method != 'OPTIONS')
+    if(req.method !== 'OPTIONS')
       return next();
 
     res.send();
@@ -35,22 +35,16 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
   app.use(middleware.swaggerSecurity({
     HeaderKey: function(req, def, scopes, next) {
 
-      if(req.headers['x-aio-key'] == AIO_KEY) {
+      if(req.headers['x-aio-key'] === AIO_KEY)
         return next();
-      }
 
       next(new Error('unauthorized'));
 
     },
     QueryKey: function(req, def, scopes, next) {
 
-      if(req.query['x-aio-key'] == AIO_KEY) {
+      if(req.query['x-aio-key'] === AIO_KEY || req.query['X-AIO-Key'] === AIO_KEY)
         return next();
-      }
-
-      if(req.query['X-AIO-Key'] == AIO_KEY) {
-        return next();
-      }
 
       next(new Error('unauthorized'));
 
@@ -85,3 +79,4 @@ swaggerTools.initializeMiddleware(api, function(middleware) {
 
 });
 
+exports = module.exports = app;

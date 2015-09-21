@@ -1,5 +1,7 @@
 'use strict';
 
+const xml = require('xml');
+
 exports = module.exports;
 
 module.exports.handleResponse = function handleResponse(res, data) {
