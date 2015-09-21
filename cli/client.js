@@ -87,6 +87,8 @@ class ClientCLI extends CLI {
       yargs.command(`${operation}`, operations[operation].summary, this.handleOperation.bind(this, api, operation));
     });
 
+    yargs.command('watch', 'Listen for new values', this.handleWatch.bind(this, api));
+
     yargs.command('help', 'Show help');
 
     const argv = yargs
@@ -100,6 +102,9 @@ class ClientCLI extends CLI {
 
     if(command === 'help')
       return yargs.showHelp();
+
+    if(command === 'watch')
+      return;
 
     if(Object.keys(operations).indexOf(command) < 0)
       return yargs.showHelp();
@@ -120,6 +125,7 @@ class ClientCLI extends CLI {
           params = this.pathParams(operations[operation]);
 
     params.forEach(param => yargs.command(param.name, param.description));
+    yargs.command('help', 'Show help');
 
     const argv = yargs
       .usage(`Usage: adafruit-io client ${api.toLowerCase()} ${operation}` + this.pathParams(operations[operation]).map(param => ` <${param.name}>`).join(''))
@@ -165,12 +171,37 @@ class ClientCLI extends CLI {
 
   }
 
+  handleWatch(api, yargs) {
+
+    yargs.command('id', 'ID, key, or name to watch');
+    yargs.command('help', 'Show help');
+
+    const argv = yargs
+      .usage(`Usage: adafruit-io client ${api.toLowerCase()} watch <id>`)
+      .updateStrings({
+        'Commands:': 'Parameters:'
+      })
+      .argv;
+
+    if(argv._[1] === 'help')
+      return yargs.showHelp();
+
+    if(argv._.length < 2)
+      return yargs.showHelp();
+
+    this.client[api].readable(argv._[1]).on('data', obj => {
+      this.info(`New value for ${api.toLowerCase()}/${obj.name || obj.id}`);
+      console.log(obj);
+    });
+
+  }
+
   requireAuth(yargs) {
 
     const argv = yargs
       .usage('Usage: adafruit-io client config [options]')
       .alias('h', 'host').nargs('h', 1).default('h', process.env.AIO_CLIENT_HOST || 'io.adafruit.com').describe('h', 'Server hostname')
-      .alias('p', 'port').nargs('p', 1).default('p', process.env.AIO_CLIENT_PORT || '443').describe('p', 'Server port')
+      .alias('p', 'port').nargs('p', 1).default('p', process.env.AIO_CLIENT_PORT || '80').describe('p', 'Server port')
       .alias('u', 'username').demand('username').nargs('u', 1).describe('u', 'Adafruit IO Username')
       .alias('k', 'key').demand('key').nargs('k', 1).describe('k', 'Adafruit IO Key')
       .command('help', 'Show help')

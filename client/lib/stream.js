@@ -1,3 +1,5 @@
+'use strict';
+
 const DuplexStream = require('stream').Duplex,
       mqtt = require('mqtt');
 
@@ -5,7 +7,10 @@ class Stream extends DuplexStream {
 
   constructor(options) {
 
-    super();
+    super({
+      readableObjectMode: true,
+      writableObjectMode: true
+    });
 
     this.type = 'feeds';
     this.host = 'io.adafruit.com';
@@ -14,11 +19,9 @@ class Stream extends DuplexStream {
     this.key = false;
     this.id = false;
     this.buffer = [];
+    this.client = false;
 
     Object.assign(this, options || {});
-
-    this._writableState.objectMode = true;
-    this._readableState.objectMode = true;
 
     if(this.type === 'data')
       this.type = 'feeds';
@@ -32,6 +35,7 @@ class Stream extends DuplexStream {
     this.client = mqtt.connect({
       host: this.host,
       port: this.port,
+      protocol: (this.port == 8883 ? 'mqtts' : 'mqtt'),
       username: this.username,
       password: this.key,
       keepalive: 3600
@@ -42,6 +46,8 @@ class Stream extends DuplexStream {
       this.connected = true;
       this.emit('connected');
     });
+
+    this.client.on('error', (err) => this.emit('error', err));
 
     this.client.on('offline', () => this.connected = false);
 
