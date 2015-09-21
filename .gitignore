@@ -3,3 +3,4 @@ node_modules
 *.swp
 *.swo
 server/.aio_auth
+.env
