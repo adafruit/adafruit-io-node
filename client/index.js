@@ -1,12 +1,14 @@
 'use strict';
 
-const Swagger = require('swagger-client-promises');
+const Swagger = require('swagger-client-promises'),
+      Stream = require('./lib/stream');
 
 class Client {
 
   constructor(username, key, options) {
 
     this.host = 'io.adafruit.com';
+    this.port = 80;
     this.username = username || false;
     this.key = key || false;
     this.swagger_path = '/api/docs/api.json';
@@ -22,7 +24,7 @@ class Client {
       throw new Error('client key is required');
 
     this.swagger = new Swagger({
-      url: `http://${this.host}${this.swagger_path}`,
+      url: `http://${this.host}:${this.port}${this.swagger_path}`,
       success: this._defineGetters.bind(this),
       failure: this.failure,
       authorizations: {
@@ -35,6 +37,17 @@ class Client {
   _defineGetters() {
 
     Object.keys(this.swagger.apis).forEach(api => {
+
+      const stream = new Stream({
+        type: api.toLowerCase(),
+        username: this.username,
+        key: this.key,
+        host: this.host,
+        port: (this.host === 'io.adafruit.com' ? 8883 : 1883)
+      });
+
+      this.swagger[api].readable = (id) => { stream.connect(id); return stream; };
+      this.swagger[api].writable = (id) => { stream.connect(id); return stream; };
 
       Object.defineProperty(this, api, {
         get: () => {

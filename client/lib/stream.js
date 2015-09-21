@@ -7,7 +7,7 @@ class Stream extends DuplexStream {
 
     super();
 
-    this.type = 'f';
+    this.type = 'feeds';
     this.host = 'io.adafruit.com';
     this.port = 8883;
     this.username = false;
@@ -20,9 +20,14 @@ class Stream extends DuplexStream {
     this._writableState.objectMode = true;
     this._readableState.objectMode = true;
 
+    if(this.type === 'data')
+      this.type = 'feeds';
+
   }
 
-  connect() {
+  connect(id) {
+
+    this.id = id || this.id;
 
     this.client = mqtt.connect({
       host: this.host,
