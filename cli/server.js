@@ -60,8 +60,10 @@ class ServerCLI extends CLI {
     if(command === 'config')
       return this.requireAuth(Yargs(process.argv.slice(4)));
 
-    process.env.AIO_SERVER_PORT = argv.port;
-    this.saveEnv();
+    if(parseInt(process.env.AIO_SERVER_PORT) !== parseInt(argv.port)) {
+      process.env.AIO_SERVER_PORT = argv.port;
+      this.saveEnv();
+    }
 
     this[command]();
 
@@ -120,9 +122,11 @@ class ServerCLI extends CLI {
     process.env.AIO_SERVER_USER = argv.username;
     process.env.AIO_SERVER_KEY  = argv.key;
 
-    this.saveEnv();
-
-    this.info('Server settings saved');
+    this.constructor.getDbPath()
+      .then(db => {
+        process.env.AIO_SERVER_DB = db;
+        this.saveEnv();
+      }).catch(this.error);
 
   }
 

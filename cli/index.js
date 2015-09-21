@@ -6,7 +6,8 @@ const yargs = require('yargs'),
       version = require('../package.json').version,
       spawn = require('child_process').spawn,
       fs = require('fs'),
-      path = require('path');
+      path = require('path'),
+      mkdir = require('mkdirp');
 
 class CLI {
 
@@ -134,8 +135,14 @@ class CLI {
       if(/^AIO/.test(key)) out += `${key}=${process.env[key]}\n`;
     });
 
-    if(out)
-      fs.writeFileSync(path.join(__dirname, '..', '.env'), out);
+    if(out) {
+      this.constructor.getConfigPath()
+        .then(f => {
+          fs.writeFileSync(f, out);
+          this.info('Configuration saved');
+        })
+        .catch(this.error);
+    }
 
   }
 
@@ -210,6 +217,36 @@ class CLI {
 
   }
 
+  static getUserHome() {
+    return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+  }
+
+  static getAdafruitIoFolder() {
+
+    const folder = path.join(this.getUserHome(), '.adafruit_io');
+
+    return new Promise((resolve, reject) => {
+
+      mkdir(path.join(this.getUserHome(), '.adafruit_io'), err => {
+
+        if(err)
+          return reject(err);
+
+        resolve(folder);
+
+      });
+
+    });
+
+  }
+
+  static getConfigPath() {
+    return this.getAdafruitIoFolder().then(folder => path.join(folder, 'config'));
+  }
+
+  static getDbPath() {
+    return this.getAdafruitIoFolder().then(folder => path.join(folder, 'adafruit_io.db'));
+  }
 
 }
 

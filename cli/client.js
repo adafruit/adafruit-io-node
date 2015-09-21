@@ -272,8 +272,6 @@ class ClientCLI extends CLI {
 
     this.saveEnv();
 
-    this.info('Client settings saved');
-
   }
 
 }

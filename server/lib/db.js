@@ -4,7 +4,7 @@ const nedb = require('nedb'),
       path = require('path');
 
 const db = new nedb({
-  filename: path.join(__dirname, '..', 'adafruit-io.db')
+  filename: process.env.AIO_SERVER_DB || path.join(__dirname, '..', 'adafruit-io.db')
 });
 
 db.loadDatabase();

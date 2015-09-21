@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 
 process.title = 'adafruit-io';
-const path = require('path');
-require('dotenv').config({silent: true, path: path.join(__dirname, '.env')});
 
-const CLI = require('./cli/index'),
-      cli = new CLI();
+const CLI = require('./cli/index');
 
-cli.init();
+CLI.getConfigPath().then(path => {
+
+  require('dotenv').config({silent: true, path: path});
+
+  const cli = new CLI();
+  cli.init();
+
+}).catch(console.error);
