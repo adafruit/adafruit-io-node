@@ -18,6 +18,7 @@ class Stream extends DuplexStream {
     Object.assign(this, options || {});
 
     this._writableState.objectMode = true;
+    this._readableState.objectMode = true;
 
   }
 
@@ -32,7 +33,7 @@ class Stream extends DuplexStream {
     });
 
     this.client.on('connect', () => {
-      this.client.subscribe(`${this.username}/${this.type}/${this.id}`);
+      this.client.subscribe(`${this.username}/${this.type}/${this.id}/json`);
       this.connected = true;
       this.emit('connected');
     });
@@ -56,7 +57,12 @@ class Stream extends DuplexStream {
     if(this.buffer.length === 0)
       return this.once('message', () => this._read());
 
-    this.push(this.buffer.shift());
+    try {
+      this.push(JSON.parse(this.buffer.shift().toString()));
+    } catch(err) {
+      this.emit('error', err);
+      this.once('message', () => this._read());
+    }
 
   }
 
