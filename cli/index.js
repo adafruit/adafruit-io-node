@@ -201,17 +201,18 @@ class CLI {
 
   portAvailable(port) {
 
+    const net = require('net');
+
     return new Promise((resolve, reject) => {
 
-     const test = require('net')
-      .createServer()
-      .once('error', err => {
-        reject();
-      })
-      .once('listening', () => {
-        test.once('close', () => resolve()).close();
-      })
-      .listen(port);
+     const socket = new net.Socket();
+
+      socket
+        .once('error', err => resolve())
+        .once('timeout', () => { socket.destroy(); resolve(); })
+        .once('connect', () => { socket.destroy(); reject(); })
+        .once('close', err => { reject(); })
+        .connect(port, '127.0.0.1');
 
     });
 

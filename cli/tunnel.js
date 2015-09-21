@@ -66,9 +66,23 @@ class TunnelCLI extends CLI {
       return this.error('running adafruit io as a service is only supported on linux');
 
     this.logo();
-    this.foreverService('install');
-    this.info(`io.adafruit.com HTTPS tunnel running: http://${this.hostname()}:${process.env.AIO_TUNNEL_HTTP}/`);
-    this.info(`io.adafruit.com MQTTS tunnel running: mqtt://${this.hostname()}:${process.env.AIO_TUNNEL_MQTT}`);
+    this.info('installing service...');
+
+    this.portAvailable(process.env.AIO_TUNNEL_HTTP)
+      .catch(err => {
+        this.error(`HTTP Port ${process.env.AIO_TUNNEL_HTTP} is not available.\nPlease set another with the --http option`);
+        process.exit(1);
+      })
+      .then(() => this.portAvailable(process.env.AIO_TUNNEL_MQTT))
+      .then(() => {
+        this.foreverService('install');
+        this.info(`io.adafruit.com HTTPS tunnel running: http://${this.hostname()}:${process.env.AIO_TUNNEL_HTTP}/`);
+        this.info(`io.adafruit.com MQTTS tunnel running: mqtt://${this.hostname()}:${process.env.AIO_TUNNEL_MQTT}`);
+      })
+      .catch(err => {
+        this.error(`MQTT Port ${process.env.AIO_TUNNEL_MQTT} is not available.\nPlease set another with the --mqtt option`);
+        process.exit(1);
+      });
 
   }
 
@@ -84,9 +98,24 @@ class TunnelCLI extends CLI {
 
   start() {
     this.logo();
-    this.forever('start');
-    this.info(`io.adafruit.com HTTPS tunnel running: http://${this.hostname()}:${process.env.AIO_TUNNEL_HTTP}/`);
-    this.info(`io.adafruit.com MQTTS tunnel running: mqtt://${this.hostname()}:${process.env.AIO_TUNNEL_MQTT}`);
+    this.info('starting tunnel...');
+
+    this.portAvailable(process.env.AIO_TUNNEL_HTTP)
+      .catch(err => {
+        this.error(`HTTP Port ${process.env.AIO_TUNNEL_HTTP} is not available.\nPlease set another with the --http option`);
+        process.exit(1);
+      })
+      .then(() => this.portAvailable(process.env.AIO_TUNNEL_MQTT))
+      .then(() => {
+        this.forever('start');
+        this.info(`io.adafruit.com HTTPS tunnel running: http://${this.hostname()}:${process.env.AIO_TUNNEL_HTTP}/`);
+        this.info(`io.adafruit.com MQTTS tunnel running: mqtt://${this.hostname()}:${process.env.AIO_TUNNEL_MQTT}`);
+      })
+      .catch(err => {
+        this.error(`MQTT Port ${process.env.AIO_TUNNEL_MQTT} is not available.\nPlease set another with the --mqtt option`);
+        process.exit(1);
+      });
+
   }
 
   restart() {

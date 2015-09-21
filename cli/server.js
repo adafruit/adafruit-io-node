@@ -75,9 +75,18 @@ class ServerCLI extends CLI {
       return this.error('running adafruit io as a service is only supported on linux');
 
     this.logo();
-    this.foreverService('install');
-    this.info(`server ready at http://${this.hostname()}:${process.env.AIO_SERVER_PORT}/`);
-    this.info(`documentation is available at http://${this.hostname()}:${process.env.AIO_SERVER_PORT}/api/docs`);
+    this.info('installing service...');
+
+    this.portAvailable(process.env.AIO_SERVER_PORT)
+      .then(() => {
+        this.foreverService('install');
+        this.info(`server ready at http://${this.hostname()}:${process.env.AIO_SERVER_PORT}/`);
+        this.info(`documentation is available at http://${this.hostname()}:${process.env.AIO_SERVER_PORT}/api/docs`);
+      })
+      .catch(err => {
+        this.error(`Port ${process.env.AIO_SERVER_PORT} is not available.\nPlease set another with the --port option`);
+        process.exit(1);
+      });
 
   }
 
@@ -93,9 +102,19 @@ class ServerCLI extends CLI {
 
   start() {
     this.logo();
-    this.forever('start');
-    this.info(`server ready at http://${this.hostname()}:${process.env.AIO_SERVER_PORT}/`);
-    this.info(`documentation is available at http://${this.hostname()}:${process.env.AIO_SERVER_PORT}/api/docs`);
+    this.info('starting server...');
+
+    this.portAvailable(process.env.AIO_SERVER_PORT)
+      .then(() => {
+        this.forever('start');
+        this.info(`server ready at http://${this.hostname()}:${process.env.AIO_SERVER_PORT}/`);
+        this.info(`documentation is available at http://${this.hostname()}:${process.env.AIO_SERVER_PORT}/api/docs`);
+      })
+      .catch(err => {
+        this.error(`Port ${process.env.AIO_SERVER_PORT} is not available.\nPlease set another with the --port option`);
+        process.exit(1);
+      });
+
   }
 
   restart() {
