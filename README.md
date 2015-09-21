@@ -27,7 +27,7 @@ $ npm install -g forever-service
   * [Usage](#usage-1)
 * [Client](#client)
   * [Usage](#usage-2)
-    * [Authentication](#authentication-2)
+    * [Authentication](#authentication)
     * [Feeds](#feeds)
     * [Data](#data)
     * [Groups](#groups)
@@ -365,7 +365,8 @@ $ adafruit-io client feeds watch door
 All operations can also output raw JSON so they can be piped to tools like [jq](https://stedolan.github.io/jq/)
 for processing incoming data.
 
-**Example:** Get all feeds as JSON, and pipe the output to `jq` to extract the feed names
+**Example:** Get all feeds as JSON, and pipe the output to [jq](https://stedolan.github.io/jq/)
+to extract the feed names.
 ```console
 $adafruit-io client feeds all --json | jq '.[] | .name' --raw-output
 Front
@@ -461,6 +462,14 @@ $ adafruit-io client groups all
     created_at: '2015-07-14T22:41:48.898Z',
     updated_at: '2015-07-14T22:41:48.898Z',
     feeds: [ [Object], [Object] ] } ]
+```
+
+**Example:** Get the `weather` group as JSON and parse the feed names with [jq](https://stedolan.github.io/jq/)
+
+```console
+$ adafruit-io client groups get weather --json | jq '.feeds[] | .name' --raw-output
+humidity
+temp
 ```
 
 ## License
