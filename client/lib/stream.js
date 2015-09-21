@@ -3,17 +3,21 @@ const DuplexStream = require('stream').Duplex,
 
 class Stream extends DuplexStream {
 
-  constructor(username, key, id, options) {
+  constructor(options) {
 
     super();
 
-    this.username = username;
-    this.key = key;
-    this.id = id;
+    this.type = 'f';
+    this.host = 'io.adafruit.com';
+    this.port = 8883;
+    this.username = false;
+    this.key = false;
+    this.id = false;
+    this.buffer = [];
+
+    Object.assign(this, options || {});
 
     this._writableState.objectMode = true;
-
-    this.connect();
 
   }
 
@@ -28,18 +32,14 @@ class Stream extends DuplexStream {
     });
 
     this.client.on('connect', () => {
-      this.client.subscribe(this.username + '/f/' + this.id);
+      this.client.subscribe(`${this.username}/${this.type}/${this.id}`);
       this.connected = true;
       this.emit('connected');
     });
 
-    this.client.on('offline', () => {
-      this.connected = false;
-    });
+    this.client.on('offline', () => this.connected = false);
 
-    this.client.on('close', () => {
-      this.connected = false;
-    });
+    this.client.on('close', () => this.connected = false);
 
     this.client.on('message', (topic, message) => {
       this.buffer.push(message);
@@ -50,36 +50,25 @@ class Stream extends DuplexStream {
 
   _read() {
 
-    if(! this.connected) {
-      return this.once('connected', () => {
-        this._read();
-      });
-    }
+    if(! this.connected)
+      return this.once('connected', () => this._read());
 
-    if(this.buffer.length === 0) {
-      return this.once('message', () => {
-        this._read();
-      });
-    }
+    if(this.buffer.length === 0)
+      return this.once('message', () => this._read());
 
     this.push(this.buffer.shift());
 
   }
 
-  _write(data, encoding, cb) {
+  _write(data, encoding, next) {
 
-    if(! this.connected) {
-      return this.once('connected', () => {
-        this._write(data, encoding, cb);
-      });
-    }
+    if(! this.connected)
+      return this.once('connected', () => this._write(data, encoding, next));
 
-    if(! data || ! data.toString) {
-      return cb('invalid data sent to feed');
-    }
+    if(! data || ! data.toString)
+      return next('invalid data sent to feed');
 
-    this.client.publish(this.username + '/f/' + this.id, data.toString());
-    cb();
+    this.client.publish(`${this.username}/${this.type}/${this.id}`, data.toString(), next);
 
   }
 
