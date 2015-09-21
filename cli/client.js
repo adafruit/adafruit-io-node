@@ -119,7 +119,7 @@ class ClientCLI extends CLI {
 
     const operations = this.client.swagger.apis[api].operations;
 
-    yargs.usage(`Usage: adafruit-io client ${api.toLowerCase()} <action>`);
+    yargs.usage(`Usage: adafruit-io client ${api.toLowerCase()} <action> [options]`);
 
     Object.keys(operations).forEach(operation => {
       yargs.command(`${operation}`, operations[operation].summary, this.handleOperation.bind(this, api, operation));
@@ -166,7 +166,7 @@ class ClientCLI extends CLI {
     yargs.command('help', 'Show help');
 
     const argv = yargs
-      .usage(`Usage: adafruit-io client ${api.toLowerCase()} ${operation}` + this.pathParams(operations[operation]).map(param => ` <${param.name}>`).join('') + ' [Options]')
+      .usage(`Usage: adafruit-io client ${api.toLowerCase()} ${operation}` + this.pathParams(operations[operation]).map(param => ` <${param.name}>`).join('') + ' [options]')
       .alias('j', 'json').describe('j', 'JSON output')
       .updateStrings({
         'Commands:': 'Parameters:'

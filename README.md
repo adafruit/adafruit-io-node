@@ -295,11 +295,14 @@ take a look at the parameters expected by `update`.
 
 ```console
 $ adafruit-io client feeds update help
-Usage: adafruit-io client feeds update <id>
+Usage: adafruit-io client feeds update <id> [options]
 
 Parameters:
   id    ID, key, or name of feed to use
   help  Show help
+
+Options:
+  -j, --json  JSON output
 ```
 
 **Example:** Update `frontdoor` feed name to be `Front`
@@ -357,6 +360,18 @@ $ adafruit-io client feeds watch door
   recorded: 'just now',
   last_geo: { lat: null, lon: null, ele: null }
 }
+```
+
+All operations can also output raw JSON so they can be piped to tools like [jq](https://stedolan.github.io/jq/)
+for processing incoming data.
+
+**Example:** Get all feeds as JSON, and pipe the output to `jq` to extract the feed names
+```console
+$adafruit-io client feeds all --json | jq '.[] | .name' --raw-output
+Front
+temperature
+battery
+fan
 ```
 
 #### Data
