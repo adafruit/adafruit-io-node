@@ -53,10 +53,8 @@ class CLI {
       .command('help', 'Show help')
       .command('version', 'Show version info');
 
-    if(process.platform !== 'win32') {
+    if(process.platform !== 'win32')
       yargs.completion('completion', this.getCompletions.bind(this, sub));
-      yargs.command('completion', 'Output bash shell command completion script');
-    }
 
     const argv = yargs.demand(1, 'Please provide a valid command').argv;
 
