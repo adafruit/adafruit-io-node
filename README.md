@@ -1,8 +1,8 @@
-# Adafruit IO
+# Adafruit IO [![Build Status](https://travis-ci.org/adafruit/adafruit-io-node.svg?branch=master)](https://travis-ci.org/adafruit/adafruit-io-node)
 A Node.js Adafruit IO Client, Local Server, & io.adafruit.com TLS Tunnel.
 
 ## Installation
-Make sure you have the latest stable version of [Node.js][3] installed on your computer.
+Make sure you have [Node.js][3] **v4.0.0 or higher** installed on your computer.
 
 ```console
 $ node -v
