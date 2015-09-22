@@ -334,10 +334,12 @@ $ adafruit-io client feeds update frontdoor
   updated_at: '2015-09-21T21:12:37.958Z' }
 ```
 
+You can also listen for realtime changes to your feeds by using the `watch` command.
+
 **Example:** Listen for changes to the `frontdoor` feed
 ```console
 $ adafruit-io client feeds watch door
-[info] New data for feeds/Front
+[info] Feeds -> Front
 { id: 1000,
   key: 'frontdoor',
   name: 'Front',
@@ -368,11 +370,21 @@ for processing incoming data.
 **Example:** Get all feeds as JSON, and pipe the output to [jq](https://stedolan.github.io/jq/)
 to extract the feed names.
 ```console
-$adafruit-io client feeds all --json | jq '.[] | .name' --raw-output
+$ adafruit-io client feeds all --json | jq '.[] | .name' --raw-output
 Front
 temperature
 battery
 fan
+door
+```
+
+**Example:** Watch the `door` feed for changes, output new values as JSON,
+and pipe the output to [jq](https://stedolan.github.io/jq/).
+```console
+$ adafruit-io client feeds watch door --json | jq .last_value --raw-output
+open
+closed
+open
 ```
 
 #### Data
