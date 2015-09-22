@@ -52,9 +52,11 @@ class TunnelCLI extends CLI {
     if(command === 'help')
       return this.yargs.showHelp();
 
-    process.env.AIO_TUNNEL_MQTT = argv.mqtt;
-    process.env.AIO_TUNNEL_HTTP = argv.http;
-    this.saveEnv();
+    if(parseInt(process.env.AIO_TUNNEL_HTTP) !== parseInt(argv.http) || parseInt(process.env.AIO_TUNNEL_MQTT) !== parseInt(argv.mqtt)) {
+      process.env.AIO_TUNNEL_MQTT = argv.mqtt;
+      process.env.AIO_TUNNEL_HTTP = argv.http;
+      this.saveEnv();
+    }
 
     this[command]();
 
