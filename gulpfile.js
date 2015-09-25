@@ -1,24 +1,16 @@
 'use strict';
 
 const gulp = require('gulp'),
-      jshint = require('gulp-jshint');
+      eslint = require('gulp-eslint');
 
 gulp.task('lint', function() {
 
-  const lint = jshint({
-    "esnext": true,
-    "curly": false,
-    "eqeqeq": true,
-    "immed": true,
-    "newcap": false,
-    "noarg": true,
-    "sub": true,
-    "unused": "var",
-    "boss": true,
-    "eqnull": true,
-    "node": true,
-    "-W086": true
-  });
+  const config = {
+    ecmaFeatures: {
+      templateStrings: true
+    },
+    env: ['node', 'es6']
+  };
 
   return gulp.src([
     'index.js',
@@ -28,7 +20,7 @@ gulp.task('lint', function() {
     'server/lib/*.js',
     'tunnel/index.js',
     'tunnel/lib/*.js'
-  ]).pipe(lint).pipe(jshint.reporter('jshint-stylish'));
+  ]).pipe(eslint(config)).pipe(eslint.format()).pipe(eslint.failAfterError());
 
 });
 
