@@ -1,7 +1,8 @@
 'use strict';
 
 const Swagger = require('swagger-client-promises'),
-      Stream = require('./lib/stream');
+      Stream = require('./lib/stream'),
+      Signature = require('./lib/signature');
 
 class Client {
 
@@ -59,6 +60,14 @@ class Client {
 
     this.success();
 
+  }
+
+  static get Signature() {
+    return Signature;
+  }
+
+  static get Stream() {
+    return Stream;
   }
 
 }
