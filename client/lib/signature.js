@@ -34,22 +34,29 @@ class Signature {
           step2 = this.hmac(step1, this.host),
           step3 = this.hmac(step2, this.method),
           step4 = this.hmac(step3, this.params);
+
+    const signing_key = this.hmac(step4, this.version),
+          canonical_request = this.hash(this.request),
+          to_sign = `${this.algorithm}\n${this.date}\n${canonical_request}`;
+
+    return this.hmac(signing_key, to_sign);
+
   }
 
   get request() {
 
-    // const request_path = request.original_fullpath.split('?')
-    // canonical_request  = method + "\n"
-    // canonical_request += request.original_fullpath.split('?').first
-    // canonical_request += params.keys.sort.map{ |k| k + "=" + URI.escape(params[k]) }.join('&')
-    // canonical_request += "\n"
-    // canonical_request += 'host:' + signature[:host].strip + "\n"
-    // canonical_request += 'x-aio-date:' + signature[:date].strip + "\
+    return `${this.method}\n${this.path}?${this.params}
+            host: ${this.host}
+            x-aio-date: ${this.date}`;
 
   }
 
   get version() {
     return 'aio-signature-v1';
+  }
+
+  get credential() {
+    return `${this.username}/${this.version}`;
   }
 
   get date() {
@@ -71,10 +78,15 @@ class Signature {
   set path(path) {
 
     this.parsed = url.parse(path, true);
-    this.params = Object.keys(this.parsed.query).map(q => q.toLowerCase()).join('&');
+    this.params = Object.keys(this.parsed.query).sort().map(q => q.toLowerCase()).join('&');
     this.host = this.parsed.host;
     this.path = this.parsed.href.split('?')[0];
 
+  }
+
+  hash(data) {
+    const hash = crypto.createHash(this.algorithm());
+    return hmac.update(data).digest('hex');
   }
 
   hmac(key, data) {
