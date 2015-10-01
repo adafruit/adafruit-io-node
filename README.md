@@ -2,7 +2,7 @@
 A Node.js Adafruit IO Client, Local Server, & io.adafruit.com TLS Tunnel.
 
 ## Installation
-Make sure you have [Node.js][3] **v4.0.0 or higher** installed on your computer.
+Make sure you have [Node.js][5] **v4.0.0 or higher** installed on your computer.
 
 ```console
 $ node -v
@@ -491,9 +491,9 @@ Copyright (c) 2015 [Adafruit Industries](https://adafruit.com). Licensed under t
 
 [1]: https://github.com/swagger-api/swagger-codegen
 [2]: https://io.adafruit.com/api/docs/
-[3]: https://github.com/swagger-api/swagger-codegen#build-and-run-using-docker
+[3]: https://github.com/swagger-api/swagger-codegen
 [4]: https://raw.githubusercontent.com/adafruit/io-swagger-templates
-[5]: http://nodejs.org
+[5]: https://nodejs.org
 [6]: https://io.adafruit.com
 [7]: https://learn.adafruit.com/adafruit-io/feeds
 [8]: https://learn.adafruit.com/adafruit-io/api-key
