@@ -65,6 +65,9 @@ class ServerCLI extends CLI {
       this.saveEnv();
     }
 
+    if(! this[command])
+      return this.yargs.showHelp();
+
     this[command]();
 
   }
