@@ -85,7 +85,7 @@ class Stream extends DuplexStream {
     if(! data || ! data.toString)
       return next('invalid data sent to feed');
 
-    this.client.publish(`${this.username}/${this.type}/${this.id}`, data.toString(), next);
+    this.client.publish(`${this.username}/${this.type}/${this.id}`, data.toString().trim(), next);
 
   }
 
