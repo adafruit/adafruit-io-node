@@ -80,11 +80,8 @@ class Stream extends DuplexStream {
 
   _write(data, encoding, next) {
 
-
     if(! this.connected)
       return this.once('connected', () => this._write(data, encoding, next));
-
-    console.log(data.length);
 
     this.client.publish(`${this.username}/${this.type}/${this.id}`, data.toString().trim(), next);
 
