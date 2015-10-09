@@ -243,10 +243,12 @@ class ClientCLI extends CLI {
     if(argv._.length < 2)
       return yargs.showHelp();
 
-    this.client[api].readable(argv._[1]).on('data', obj => {
+    this.client[api].readable(argv._[1]).on('data', message => {
 
       if(argv.json)
-        return console.log(JSON.stringify(obj));
+        return console.log(message.toString());
+
+      const obj = JSON.parse(message);
 
       this.info(`${api} -> ${obj.name || obj.id}`);
       console.log(obj);

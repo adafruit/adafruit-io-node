@@ -39,6 +39,9 @@ class Client {
 
     Object.keys(this.swagger.apis).forEach(api => {
 
+      if(api === 'help')
+        return;
+
       const stream = new Stream({
         type: api.toLowerCase(),
         username: this.username,
