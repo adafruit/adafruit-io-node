@@ -22,6 +22,12 @@ class CLI {
       'version'
     ];
 
+    this.sub = {
+      client: require('./client'),
+      server: require('./server'),
+      tunnel: require('./tunnel')
+    };
+
     this.logger = new (winston.Logger)({
       transports: [
         new (winston.transports.Console)({
@@ -39,12 +45,6 @@ class CLI {
   }
 
   init() {
-
-    const sub = {
-      client: require('./client'),
-      server: require('./server'),
-      tunnel: require('./tunnel')
-    };
 
     yargs
       .usage('Usage: adafruit-io <command>')
@@ -77,10 +77,10 @@ class CLI {
       process.exit();
     }
 
-    if(Object.keys(sub).indexOf(command) < 0)
+    if(Object.keys(this.sub).indexOf(command) < 0)
       return yargs.showHelp();
 
-    const child = new sub[command]();
+    const child = new this.sub[command]();
 
     child.init();
 
