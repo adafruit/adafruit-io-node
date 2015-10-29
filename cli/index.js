@@ -46,7 +46,7 @@ class CLI {
 
   init() {
 
-    yargs
+    this.yargs
       .usage('Usage: adafruit-io <command>')
       .command('server', 'Adafruit IO local server')
       .command('client', 'Adafruit IO client')
@@ -55,9 +55,9 @@ class CLI {
       .command('version', 'Show version info');
 
     if(process.platform !== 'win32')
-      yargs.completion('completion', this.getCompletions.bind(this, this.sub));
+      this.yargs.completion('completion', this.getCompletions.bind(this, this.sub));
 
-    const argv = yargs.demand(1, 'Please provide a valid command').argv;
+    const argv = this.yargs.demand(1, 'Please provide a valid command').argv;
 
     if(! argv)
       return;
@@ -65,7 +65,7 @@ class CLI {
     const command = argv._[0];
 
     if(command === 'help')
-      return yargs.showHelp();
+      return this.yargs.showHelp();
 
     if(command === 'version') {
       console.log(version);
@@ -73,12 +73,12 @@ class CLI {
     }
 
     if(command === 'completion') {
-      yargs.showCompletionScript();
+      this.yargs.showCompletionScript();
       process.exit();
     }
 
     if(Object.keys(this.sub).indexOf(command) < 0)
-      return yargs.showHelp();
+      return this.yargs.showHelp();
 
     const child = new this.sub[command]();
 
