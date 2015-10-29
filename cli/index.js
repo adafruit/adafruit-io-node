@@ -40,6 +40,7 @@ class CLI {
       ]
     });
 
+    this.yargs = yargs;
     this.logger.extend(this);
 
   }
