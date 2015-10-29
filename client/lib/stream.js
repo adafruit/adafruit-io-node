@@ -39,10 +39,17 @@ class Stream extends DuplexStream {
       protocol: (parseInt(this.port) === 8883 ? 'mqtts' : 'mqtt'),
       username: this.username,
       password: this.key,
+      connectTimeout: 60 * 1000,
       keepalive: 3600
     });
 
     this.client.on('connect', () => {
+      this.client.subscribe(`${this.username}/${this.type}/${this.id}/json`);
+      this.connected = true;
+      this.emit('connected');
+    });
+
+    this.client.on('reconnect', () => {
       this.client.subscribe(`${this.username}/${this.type}/${this.id}/json`);
       this.connected = true;
       this.emit('connected');
