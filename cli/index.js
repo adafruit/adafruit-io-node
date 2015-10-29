@@ -55,7 +55,7 @@ class CLI {
       .command('version', 'Show version info');
 
     if(process.platform !== 'win32')
-      yargs.completion('completion', this.getCompletions.bind(this, sub));
+      yargs.completion('completion', this.getCompletions.bind(this, this.sub));
 
     const argv = yargs.demand(1, 'Please provide a valid command').argv;
 
