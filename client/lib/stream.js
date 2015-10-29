@@ -90,7 +90,9 @@ class Stream extends DuplexStream {
     if(! this.connected)
       return this.once('connected', () => this._write(data, encoding, next));
 
-    this.client.publish(`${this.username}/${this.type}/${this.id}`, data.toString().trim(), next);
+    this.client.publish(`${this.username}/${this.type}/${this.id}`, data.toString().trim());
+
+    next();
 
   }
 
