@@ -4,12 +4,15 @@ const Client = require('../client'),
       CLI = require('./index'),
       Yargs = require('yargs'),
       uuid = require('hap-nodejs').uuid,
+      storage = require('node-persist'),
       Bridge = require('hap-nodejs').Bridge,
       Accessory = require('hap-nodejs').Accessory,
       inquirer = require('inquirer'),
       Accessories = require('../homekit');
 
-class ClientCLI extends CLI {
+storage.initSync();
+
+class HomekitCLI extends CLI {
 
   constructor() {
 
@@ -55,20 +58,19 @@ class ClientCLI extends CLI {
     if(! argv)
       return;
 
-    const command = argv._[0],
-          run = `homekit${command.toUppercase()}`;
+    const command = argv._[0];
 
     if(command === 'help')
       return yargs.showHelp();
 
-    if(! this[run])
+    if(! this[command])
       return yargs.showHelp();
 
-    this[run](Yargs(process.argv.slice(4)));
+    this[command](Yargs(process.argv.slice(4)));
 
   }
 
-  homekitLight() {
+  light(yargs) {
 
     yargs.usage(`Usage: adafruit-io homekit light [options]`)
          .command('help', 'Show help')
@@ -85,7 +87,10 @@ class ClientCLI extends CLI {
           bridge = new Bridge('Adafruit IO Bridge', uuid.generate('Adafruit IO Bridge'));
 
     bridge.on('identify', (paired, cb) => cb());
-    bridge.addBridgedAccessory((new Accessories.light(name, this.client)));
+
+    const light = new Accessories.light(name, this.client);
+
+    bridge.addBridgedAccessory(light);
 
     bridge.publish({
       username: "CC:22:3D:E3:CE:F6",
@@ -118,4 +123,4 @@ class ClientCLI extends CLI {
 
 }
 
-exports = module.exports = ClientCLI;
+exports = module.exports = HomekitCLI;
