@@ -8,9 +8,11 @@ const Client = require('../client'),
       Bridge = require('hap-nodejs').Bridge,
       Accessory = require('hap-nodejs').Accessory,
       inquirer = require('inquirer'),
-      Accessories = require('../homekit');
+      Accessories = require('../homekit'),
+      crypto = require('crypto');
 
 storage.initSync();
+
 
 class HomekitCLI extends CLI {
 
@@ -84,7 +86,7 @@ class HomekitCLI extends CLI {
       return yargs.showHelp();
 
     const name = argv.name || 'light',
-          bridge = new Bridge('Adafruit IO Bridge', uuid.generate('Adafruit IO Bridge'));
+          bridge = new Bridge('Adafruit IO', uuid.generate('Adafruit IO'));
 
     bridge.on('identify', (paired, cb) => cb());
 
@@ -92,10 +94,14 @@ class HomekitCLI extends CLI {
 
     bridge.addBridgedAccessory(light);
 
+    this.logo();
+    this.info('advertising homekit light accessory...');
+    this.info('PIN: 100-11-100');
+
     bridge.publish({
-      username: "CC:22:3D:E3:CE:F6",
-      port: 51826,
-      pincode: "031-45-154",
+      username: 'AD:A0:AD:A0:AD:A0',
+      port: 60000,
+      pincode: '100-11-100',
       category: Accessory.Categories.BRIDGE
     });
 

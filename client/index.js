@@ -1,6 +1,6 @@
 'use strict';
 
-const Swagger = require('swagger-client-promises'),
+const Swagger = require('swagger-client'),
       Stream = require('./lib/stream'),
       Signature = require('./lib/signature');
 
@@ -14,7 +14,6 @@ class Client {
     this.key = key || false;
     this.swagger_path = '/api/docs/api.json';
     this.success = function() {};
-    this.failure = function(err) { throw err; };
 
     Object.assign(this, options);
 
@@ -24,13 +23,15 @@ class Client {
     if(! this.key)
       throw new Error('client key is required');
 
-    this.swagger = new Swagger({
+    new Swagger({
       url: `http://${this.host}:${this.port}${this.swagger_path}`,
-      success: this._defineGetters.bind(this),
-      failure: this.failure,
+      usePromise: true,
       authorizations: {
         HeaderKey: new Swagger.ApiKeyAuthorization('X-AIO-Key', this.key, 'header')
       }
+    }).then((client) => {
+      this.swagger = client;
+      this._defineGetters();
     });
 
   }
