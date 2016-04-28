@@ -11,7 +11,7 @@ class Client {
     this.port = 80;
     this.username = username || false;
     this.key = key || false;
-    this.swagger_path = '/api/docs/api.json';
+    this.swagger_path = '/api/docs/v1.json';
     this.success = function() {};
     this.failure = function(err) { throw err; };
 
