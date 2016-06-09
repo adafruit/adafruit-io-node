@@ -2,7 +2,23 @@
 
 const Swagger = require('swagger-client'),
       Stream = require('./lib/stream'),
-      Signature = require('./lib/signature');
+      Signature = require('./lib/signature'),
+      pkg = require('../package.json');
+
+class HeaderKey  {
+
+  constructor(key) {
+    this.key = key;
+  }
+
+  apply(obj, authorizations) {
+    obj.headers['X-AIO-Key'] = this.key;
+    obj.headers['User-Agent'] = `AdafruitIO-Node/${pkg.version} (${process.platform} ${process.arch} ${process.version})`;
+    return true;
+  }
+
+}
+>>>>>>> add user agent to client headers
 
 class Client {
 
@@ -27,7 +43,7 @@ class Client {
       url: `http://${this.host}:${this.port}${this.swagger_path}`,
       usePromise: true,
       authorizations: {
-        HeaderKey: new Swagger.ApiKeyAuthorization('X-AIO-Key', this.key, 'header')
+        HeaderKey: new HeaderKey(this.key)
       }
     }).then((client) => {
       this.swagger = client;
