@@ -1,6 +1,6 @@
 {
   "name": "adafruit-io",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Adafruit IO Client, Local Server, & io.adafruit.com TLS Tunnel",
   "bin": "./cli.js",
   "main": "index.js",
