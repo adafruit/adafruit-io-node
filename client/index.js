@@ -1,7 +1,22 @@
 'use strict';
 
 const Swagger = require('swagger-client-promises'),
-      Stream = require('./lib/stream');
+      Stream = require('./lib/stream'),
+      pkg = require('../package.json');
+
+class HeaderKey  {
+
+  constructor(key) {
+    this.key = key;
+  }
+
+  apply(obj, authorizations) {
+    obj.headers['X-AIO-Key'] = this.key;
+    obj.headers['User-Agent'] = `AdafruitIO-Node/${pkg.version} (${process.platform} ${process.arch} ${process.version})`;
+    return true;
+  }
+
+}
 
 class Client {
 
@@ -25,10 +40,11 @@ class Client {
 
     this.swagger = new Swagger({
       url: `http://${this.host}:${this.port}${this.swagger_path}`,
+      debug: true,
       success: this._defineGetters.bind(this),
       failure: this.failure,
       authorizations: {
-        HeaderKey: new Swagger.ApiKeyAuthorization('X-AIO-Key', this.key, 'header')
+        HeaderKey: new HeaderKey(this.key)
       }
     });
 
