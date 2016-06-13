@@ -22,13 +22,10 @@ class ClientCLI extends CLI {
 
   init() {
 
+    let options = {};
+
     if(! process.env.AIO_CLIENT_USER || ! process.env.AIO_CLIENT_KEY)
       return this.requireAuth(this.yargs);
-
-    const options = {
-      success: this.setupAPI.bind(this, this.yargs),
-      failure: this.error.bind(this)
-    };
 
     if(process.env.AIO_CLIENT_HOST)
       options.host = process.env.AIO_CLIENT_HOST;
@@ -36,7 +33,12 @@ class ClientCLI extends CLI {
     if(process.env.AIO_CLIENT_PORT)
       options.port = process.env.AIO_CLIENT_PORT;
 
-    this.client = new Client(process.env.AIO_CLIENT_USER, process.env.AIO_CLIENT_KEY, options);
+    new Client(process.env.AIO_CLIENT_USER, process.env.AIO_CLIENT_KEY, options)
+      .then((client) => {
+        this.client = client;
+        this.setupAPI(this.yargs);
+      })
+      .catch((err) => this.error(JSON.stringify(err)));
 
   }
 
@@ -68,10 +70,12 @@ class ClientCLI extends CLI {
 
     };
 
-    this.client = new Client(process.env.AIO_CLIENT_USER, process.env.AIO_CLIENT_KEY, {
-      success: parse.bind(this),
-      failure: this.error.bind(this)
-    });
+    new Client(process.env.AIO_CLIENT_USER, process.env.AIO_CLIENT_KEY)
+      .then((client) => {
+        this.client = client;
+        parse();
+      })
+      .catch(this.error.bind(this));
 
   }
 
@@ -196,7 +200,14 @@ class ClientCLI extends CLI {
           this.info('Success');
           console.log(res.obj);
         })
-        .catch(res => this.error(res.obj.toString().replace('Error: ', '')));
+        .catch(res => {
+
+          if(argv.json)
+            return console.log(res.statusText);
+
+          this.error(JSON.parse(res.statusText).error);
+
+        });
     }
 
     const questions = Object.keys(body.schema.properties).map(name => {
@@ -219,7 +230,14 @@ class ClientCLI extends CLI {
           this.info('Success');
           console.log(res.obj);
         })
-        .catch(res => this.error(res.obj.toString().replace('Error: ', '')));
+        .catch(res => {
+
+          if(argv.json)
+            return console.log(res.statusText);
+
+          this.error(JSON.parse(res.statusText).error);
+
+        });
     });
 
   }

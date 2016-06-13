@@ -16,6 +16,7 @@ class CLI {
     this.type = type || 'cli';
     this.completions = [
       'client',
+      'homekit',
       'server',
       'tunnel',
       'help',
@@ -24,6 +25,7 @@ class CLI {
 
     this.sub = {
       client: require('./client'),
+      homekit: require('./homekit'),
       server: require('./server'),
       tunnel: require('./tunnel')
     };
@@ -50,6 +52,7 @@ class CLI {
     this.yargs
       .usage('Usage: adafruit-io <command>')
       .command('server', 'Adafruit IO local server')
+      .command('homekit', 'Adafruit IO homekit bridge')
       .command('client', 'Adafruit IO client')
       .command('tunnel', 'TLS tunnel to io.adafruit.com')
       .command('help', 'Show help')
@@ -163,7 +166,7 @@ class CLI {
     if(Object.keys(children).indexOf(commands[0]) < 0)
       return done([]);
 
-    if(commands[0] === 'server' || commands[0] === 'tunnel') {
+    if(commands[0] === 'server' || commands[0] === 'tunnel' || commands[0] === 'homekit') {
 
       const child = new children[commands[0]]();
 

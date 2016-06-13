@@ -23,6 +23,7 @@ gulp.task('lint', function() {
   return gulp.src([
     'index.js',
     'cli/*.js',
+    'homekit/*.js',
     'client/**/*.js',
     'server/index.js',
     'server/lib/*.js',
