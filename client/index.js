@@ -18,7 +18,6 @@ class HeaderKey  {
   }
 
 }
->>>>>>> add user agent to client headers
 
 class Client {
 
