@@ -28,6 +28,9 @@ class Client {
     this.username = username || false;
     this.key = key || false;
     this.swagger_path = '/api/docs/v2.json';
+    this.authorizations = {
+      HeaderKey: new HeaderKey(this.key)
+    };
 
     Object.assign(this, options || {});
 
@@ -40,9 +43,7 @@ class Client {
     return new Swagger({
       url: `http://${this.host}:${this.port}${this.swagger_path}`,
       usePromise: true,
-      authorizations: {
-        HeaderKey: new HeaderKey(this.key)
-      }
+      authorizations: this.authorizations
     }).then((client) => {
       this.swagger = client;
       this._defineGetters();
