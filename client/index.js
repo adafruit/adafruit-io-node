@@ -1,6 +1,6 @@
 'use strict';
 
-const Swagger = require('swagger-client'),
+const Swagger = require('./lib/client'),
       Stream = require('./lib/stream'),
       pkg = require('../package.json');
 
