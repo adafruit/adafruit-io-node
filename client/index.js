@@ -27,10 +27,9 @@ class Client {
     this.port = 80;
     this.username = username || false;
     this.key = key || false;
-    this.swagger_path = '/api/docs/v1.json';
-    this.success = function() {};
+    this.swagger_path = '/api/docs/v2.json';
 
-    Object.assign(this, options);
+    Object.assign(this, options || {});
 
     if(! this.username)
       throw new Error('client username is required');
@@ -38,7 +37,7 @@ class Client {
     if(! this.key)
       throw new Error('client key is required');
 
-    new Swagger({
+    return new Swagger({
       url: `http://${this.host}:${this.port}${this.swagger_path}`,
       usePromise: true,
       authorizations: {
@@ -47,6 +46,7 @@ class Client {
     }).then((client) => {
       this.swagger = client;
       this._defineGetters();
+      return this;
     });
 
   }
@@ -69,6 +69,7 @@ class Client {
       this.swagger[api].readable = (id) => { stream.connect(id); return stream; };
       this.swagger[api].writable = (id) => { stream.connect(id); return stream; };
 
+      // add dynamic getter to this class for the API
       Object.defineProperty(this, api, {
         get: () => {
           return this.swagger[api];
@@ -76,8 +77,6 @@ class Client {
       });
 
     });
-
-    this.success();
 
   }
 
